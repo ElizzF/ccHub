@@ -15,7 +15,7 @@
 
         <div class='chatList'>
             <van-swipe-cell style="align-items: center;" class='chatListItem'>
-                <van-cell title="路人甲" label="阿巴阿巴阿巴" value="昨天" to="/" style="align-items: center;">
+                <van-cell title="路人甲" label="阿巴阿巴阿巴" value="昨天" to="/chatPage" style="align-items: center;">
                     <template #icon>
                         <van-image
                             round
