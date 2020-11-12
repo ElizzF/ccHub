@@ -1,5 +1,5 @@
 <template>
-    <div class='container' style="background: #FBFBFB;">
+    <div class='container' style="background: rgba(242,242,242);">
         <!-- 导航栏 -->
         <van-nav-bar
             title="首页"
