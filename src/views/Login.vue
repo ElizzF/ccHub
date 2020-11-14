@@ -49,7 +49,8 @@ export default {
                     "phone": this.phone,
                     "password": this.password,
                 },
-            }).then(() => {
+            }).then((res) => {
+                localStorage.setItem('userData', JSON.stringify(res.data.data));
                 this.$router.push({
                     path: '/'
                 })
@@ -60,12 +61,6 @@ export default {
                     message: error.response.data.message,
                     confirmButtonColor: '#1989FA'
                 })
-                .then(() => {
-                    
-                })
-                .catch(() => {
-                    // on cancel
-                });
             });
             
         },

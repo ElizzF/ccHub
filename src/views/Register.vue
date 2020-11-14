@@ -85,12 +85,6 @@ export default {
                     theme: 'round-button',
                     confirmButtonColor: '#1989FA'
                 })
-                .then(() => {
-                    
-                })
-                .catch(() => {
-                    // on cancel
-                });
                 return;
             }
             this.axios({
@@ -120,9 +114,6 @@ export default {
                         path: '/login'
                     })
                 })
-                .catch(() => {
-                    // on cancel
-                });
             }).catch((error) => {
                 Dialog.alert({
                     title: '警告',
@@ -130,12 +121,6 @@ export default {
                     message: error.response.data.message,
                     confirmButtonColor: '#1989FA'
                 })
-                .then(() => {
-                    
-                })
-                .catch(() => {
-                    // on cancel
-                });
             });
             
         },

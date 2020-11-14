@@ -4,7 +4,7 @@ module.exports = {
         
     },
     devServer: {
-        host: 'localhost', // ip  192.168.0.109
+        host: '192.168.0.109', // ip  192.168.0.109
         port: 8080, // 设置端口号
         https: false, // https:{type:Boolean}
         open: false, //配置自动启动浏览器

@@ -6,13 +6,13 @@
             class="navbar"
         />
 
-        <van-cell title="路人甲" label="描述信息" is-link to="/personInfo" style="padding-top: 60px; align-items: center;">
+        <van-cell :title="username" :label="description" is-link to="/personInfo" style="padding-top: 60px; align-items: center;">
             <template #icon>
                 <van-image
                     round
                     width="3rem"
                     height="3rem"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
+                    :src="avatarImg"
                     style="margin-right: 10px;"
                 />
             </template>
@@ -46,9 +46,31 @@ export default {
     data() {
         return {
             active: 4,
+            
+            username: '',
+            description: '',
+            avatarImg: ''
         };
     },
+    created() {
+        this.initUserData();
+    },
     methods: {
+        initUserData() {
+            let userKey = JSON.parse(localStorage.getItem('userData'));
+            this.axios({
+                method: "GET",
+                url: "http://49.234.239.138:82/user/getInfo/0",
+                headers: {
+                    'Authorization': userKey.accesstoken
+                }
+            }).then((res) => {
+                let userData = res.data.data;
+                this.username = userData.username;
+                this.description = userData.description;
+                this.avatarImg = userData.avatar_url;
+            })
+        },
         logout() {
             this.$router.push({
                 path: '/login'
