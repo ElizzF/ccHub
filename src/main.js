@@ -13,6 +13,11 @@ import VEmojiPicker from 'v-emoji-picker';
 
 Vue.use(VEmojiPicker);
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios);
+
 
 new Vue({
   router,

@@ -5,15 +5,15 @@
             class="navbar"
         />
 
-        <div class='main'>
+        <van-image width="100" height="100" :src="require('../assets/image/logo.jpg')" />
+        <div class='main' style="margin-top: 40px;">
             <van-field
-                v-model="username"
+                v-model="phone"
                 name="手机号码" 
                 placeholder="手机号码"
                 left-icon="contact"
                 center
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
-                :rules="[{ required: true, message: '请填写手机号码' }]"
             />
             <van-field
                 v-model="password"
@@ -23,7 +23,6 @@
                 center
                 left-icon="star-o"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
-                :rules="[{ required: true, message: '请填写密码' }]"
             />
             <div class='forgetPassword'>忘记密码</div>
             <van-button type="info" @click="login" round block style="margin-top: 20px;">登录</van-button>
@@ -33,18 +32,42 @@
 </template>
 
 <script>
+import { Dialog } from 'vant' 
 export default {
     data() {
         return {
-            username: '',
+            phone: '',
             password: '',
         }
     },
     methods: {
         login() {
-            this.$router.push({
-                path: '/'
-            })
+            this.axios({
+                method: "POST",
+                url: "http://49.234.239.138:82/user/login",
+                data: {
+                    "phone": this.phone,
+                    "password": this.password,
+                },
+            }).then(() => {
+                this.$router.push({
+                    path: '/'
+                })
+            }).catch((error) => {
+                Dialog.alert({
+                    title: '警告',
+                    theme: 'round-button',
+                    message: error.response.data.message,
+                    confirmButtonColor: '#1989FA'
+                })
+                .then(() => {
+                    
+                })
+                .catch(() => {
+                    // on cancel
+                });
+            });
+            
         },
         register() {
             this.$router.push({
@@ -84,6 +107,7 @@ export default {
     font-size: 13px;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 </style>
 
@@ -93,5 +117,8 @@ export default {
 }
 .van-cell__value {
     margin-left: 20px !important;
+}
+.van-image__img {
+    border-radius: 13px;
 }
 </style>
