@@ -7,12 +7,20 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v2.3.2
+
+    - name: 🚚 Set Up Node
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+
+    - run: npm i
+    - run: npm build
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
         server: 112.74.61.151
         username: sas
-        password: ${{ secrets.ftp_password }}
+        password: saser
         local-dir: "./dist/"
         server-dir: "./cc/"  
