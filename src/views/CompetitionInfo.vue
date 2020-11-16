@@ -8,10 +8,8 @@
         left-arrow
         @click-left="onClickLeft"
     />
-    <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" height="200px">
-      <template v-slot:loading>
-        <van-loading type="spinner" size="20" />
-      </template>
+    <van-image class='topImg' style="padding-top: 45px;" :src="require('../assets/image/imgTest.jpg')" height="200px" width="100%">
+      
     </van-image>
     <van-cell-group>
       <van-cell title="2020年工业大数据创新竞赛" 
@@ -95,7 +93,7 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.push({
-        path: '/'
+        path: '/competition'
       })
     }
   }
@@ -153,5 +151,8 @@ export default {
 }
 .van-collapse-item__content {
   font-size: 17px;
+}
+.topImg .van-image__img {
+  border-radius: 0
 }
 </style>

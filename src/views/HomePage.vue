@@ -15,20 +15,24 @@
             />
             <van-row type="flex" justify="space-around" class="infoBar">
                 <van-col span="6">
+
+
+
                     <div class='item' @click="toCom()">
-                        <van-button type="info" class='toCompetition' icon></van-button>
+                        
+                        <van-button type="info" class='toCompetition'><van-icon class-prefix="iconfont icon" name="trophy" size='23px' /></van-button>
                         <div class='itemTxt' style="margin-top: 7px;">竞赛</div>
                     </div>
                 </van-col>
                 <van-col span="6">
                     <div class='item' @click="toCer()">
-                        <van-button type="info" class='toCompetition' icon></van-button>
+                        <van-button type="info" class='toCompetition'><van-icon class-prefix="iconfont icon" name="jiangbei" size='23px' /></van-button>
                         <div class='itemTxt' style="margin-top: 7px;">考证</div>
                     </div>
                 </van-col>
                 <van-col span="6">
-                    <div class='item'>
-                        <van-button type="info" class='toCompetition' icon></van-button>
+                    <div class='item' @click="toTeam()">
+                        <van-button type="info" class='toCompetition'><van-icon name='friends-o' size='25px'></van-icon></van-button>
                         <div class='itemTxt' style="margin-top: 7px;">组队</div>
                     </div>
                 </van-col>
@@ -39,38 +43,38 @@
         <div class="myRoute" style="background: #fff;">
             <div class='myRouteTxt'>
                 <div class='myRouteTitleTxt'>我的路线</div>
-                <div class='aboutMore'>更多></div>
+                <div class='aboutMore' @click="toMoreRoute">更多></div>
             </div>
             <div class='routeTime'>
                 <div class="lineTime">
                     <div class='lineTimeItem'>
                         <div class='itemTop'>3.24</div>
                         <div class='itemBottom'>
-                            <div class='txt'>大物上发</div>
+                            <div class='txt'>某某比赛</div>
                         </div>
                     </div>
                    <div class='lineTimeItem'>
-                        <div class='itemTop'>3.24</div>
+                        <div class='itemTop'>4.24</div>
                         <div class='itemBottom'>
-                            <div class='txt'>大物上发我发誓发送发发</div>
+                            <div class='txt'>某某比赛</div>
                         </div>
                     </div>
                     <div class='lineTimeItem'>
-                        <div class='itemTop'>3.24</div>
+                        <div class='itemTop'>5.24</div>
                         <div class='itemBottom'>
-                            <div class='txt'>大物上发我发誓发送发发</div>
+                            <div class='txt'>某某比赛某某比赛某某比赛</div>
                         </div>
                     </div>
                     <div class='lineTimeItem'>
-                        <div class='itemTop'>3.24</div>
+                        <div class='itemTop'>6.24</div>
                         <div class='itemBottom'>
-                            <div class='txt'>大物上发我发誓发送发发</div>
+                            <div class='txt'>某某比赛某某比赛</div>
                         </div>
                     </div>
                     <div class='lineTimeItem'>
-                        <div class='itemTop'>3.24</div>
+                        <div class='itemTop'>7.24</div>
                         <div class='itemBottom'>
-                            <div class='txt'>大物上发我发誓发送发发</div>
+                            <div class='txt'>某某比赛</div>
                         </div>
                     </div>
                 </div>
@@ -82,11 +86,11 @@
         <div class="recentEvent" style="background: #fff;">
             <div class='recentTxt'>
                 <div class='recentTitleTxt'>近期赛事</div>
-                <div class='recentAboutMore'>更多></div>
+                <div class='recentAboutMore' @click="toMoreCompetition">更多></div>
             </div>
             <div class='eventList'>
                 <div class='eventItem' @click="toComInfo">
-                    <van-image width="158" height="98" radius="15" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -94,7 +98,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -102,7 +106,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -110,7 +114,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -121,9 +125,9 @@
             </div>
         </div>
         <van-tabbar v-model="active" route>
-            <van-tabbar-item icon="wap-home-o" to='/'>首页</van-tabbar-item>
-            <van-tabbar-item icon="search" to='competition'>竞赛</van-tabbar-item>
-            <van-tabbar-item icon="friends-o" to='/certificate'>证书</van-tabbar-item>
+            <van-tabbar-item icon='wap-home-o' to='/'>首页</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='trophy' to='/competition'>竞赛</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='jiangbei' to='/certificate'>证书</van-tabbar-item>
             <van-tabbar-item icon="chat-o" badge="20" to='/chat'>聊天</van-tabbar-item>
             <van-tabbar-item icon="user-o" to='/mine'>我的</van-tabbar-item>
         </van-tabbar>
@@ -149,9 +153,24 @@ export default {
                 path: '/certificate'
             })
         },
+        toTeam() {
+            this.$router.push({
+                path: '/myTeam'
+            })
+        },
         toComInfo() {
             this.$router.push({
                 path: '/competitionInfo'
+            })
+        },
+        toMoreCompetition() {
+            this.$router.push({
+                path: '/competition'
+            })
+        },
+        toMoreRoute() {
+            this.$router.push({
+                path: '/moreRoute'
             })
         }
     }
@@ -295,5 +314,8 @@ export default {
     border-radius: 50%;
     width: 44px;
     height: 44px;
+}
+.trophy .iconfont {
+    font-size: 22px;
 }
 </style>

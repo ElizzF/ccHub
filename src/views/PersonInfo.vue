@@ -37,7 +37,7 @@
         </div>
 
         <div class='cellList'>
-            <van-cell title="教育经历" size='large' is-link @click="uploadAvatar"/>
+            <van-cell title="教育经历" size='large' is-link/>
             <van-cell title="获奖经历" size='large' is-link />
         </div>
 
@@ -67,7 +67,9 @@ export default {
             sex: '未知',
 
             fileList: [],
-            avatarImg: 'https://img.yzcdn.cn/vant/cat.jpeg'
+            avatarImg: '',
+
+            flag: 0
         };
     },
     created() {
@@ -88,7 +90,7 @@ export default {
                 this.phone = userData.phone;
                 this.email = userData.email;
                 this.description = userData.description;
-                this.avatarImg = userData.avatar_url;
+                this.avatarImg = userData.avatar_url + "?id="+ Math.random();
             })
         },
         updateUserData() {
@@ -101,6 +103,10 @@ export default {
                     confirmButtonColor: '#1989FA'
                 })
                 return;
+            }
+            if(this.flag) {
+                this.uploadAvatar();
+                this.flag = 0;
             }
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
@@ -133,10 +139,8 @@ export default {
         },
         afterRead(file) {
             // 此时可以自行将文件上传至服务器
-            console.log(file);
             this.avatarImg = file.content;
-            console.log(this.dataURLtoBlob(file.content));
-            
+            this.flag = 1;  //表明已经换头像了
         },
         sexSelect(item) {
             this.show = false;
@@ -149,6 +153,7 @@ export default {
         },
 
         dataURLtoBlob(dataurl) {
+            console.log(dataurl);
             var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                 bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
             while (n--) {
@@ -169,8 +174,7 @@ export default {
                     'Authorization': userKey.accesstoken
                 },
                 data: form
-            }).then((res) => {
-                console.log(res);
+            }).then(() => {
             })
         }
     }

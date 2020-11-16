@@ -1,5 +1,5 @@
 <template>
-<div class='container' style="background: rgba(242,242,242);">
+<div class='container' style="background: rgba(249, 249, 249); height: 100%">
     <!-- 导航栏 -->
     <div class='navTop'>
         <van-nav-bar title="我的组队" class="navbar" 
@@ -15,7 +15,7 @@
                 </van-tabs>
         </van-cell>
     </div>
-    <div class='itemList' v-if="isDisplayJ">
+    <div class='itemList' v-if="isDisplayJ" style="background: rgba(249, 249, 249);">
         <div class='item'>
             <div class='itemTitle'>2020年工业大数据创新竞赛</div>
             <van-cell title="路人甲" label="小组成员数：2" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
@@ -31,7 +31,7 @@
             </van-cell>
         </div>
 
-        <div class='item'>
+        <div class='item' >
             <div class='itemTitle'>2020年工业大数据创新竞赛</div>
             <van-cell title="路人甲" label="小组成员数：2" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
                 <template #icon>
@@ -63,7 +63,7 @@
       </div>
       
 
-       <div class='itemList' v-if="isDisplayZ">
+       <div class='itemList' v-if="isDisplayZ" style="background: rgba(249, 249, 249);">
 
         <div class='item'>
             <div class='itemTitle'>2020年工业大数据创新竞赛</div>
@@ -207,4 +207,7 @@ export default {
 .comImg {
     position: static;
 }
+.item .van-cell, .item .van-image {
+  position: static;
+} 
 </style>

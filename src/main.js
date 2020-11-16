@@ -18,6 +18,8 @@ import VueAxios from 'vue-axios'
 
 Vue.use(VueAxios, axios);
 
+import './assets/icon/iconfont.css';
+
 
 new Vue({
   router,

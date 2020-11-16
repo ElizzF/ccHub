@@ -8,13 +8,13 @@
         left-arrow
         @click-left="onClickLeft"
     />
-    <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" height="200px">
+    <van-image class='topImg' style="padding-top: 45px;" :src="require('../assets/image/u808.png')" height="200px" width="100%">
       <template v-slot:loading>
         <van-loading type="spinner" size="20" />
       </template>
     </van-image>
     <van-cell-group>
-      <van-cell title="2020年工业大数据创新竞赛" 
+      <van-cell title="2020年下半年CET考试" 
                 label="8888 浏览 | 624 关注" 
                 title-class='comTitle'
                 label-class="comLabel"
@@ -67,7 +67,7 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.push({
-        path: '/'
+        path: '/certificate'
       })
     }
   }
@@ -127,5 +127,8 @@ export default {
 }
 .van-collapse-item__content {
   font-size: 17px;
+}
+.topImg .van-image__img {
+  border-radius: 0
 }
 </style>

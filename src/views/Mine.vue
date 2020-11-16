@@ -26,15 +26,15 @@
         </div>
 
         <div class='cellSafeList'>
-            <van-cell title="账号与安全" is-link to="index" />
+            <van-cell title="修改密码" is-link to="modifyPassword" />
         </div>
 
         <van-button type="primary" block style="margin-top: 20px;" @click="logout">退出当前账号</van-button>
 
         <van-tabbar v-model="active" route>
-            <van-tabbar-item icon="wap-home-o" to='/'>首页</van-tabbar-item>
-            <van-tabbar-item icon="search" to='competition'>竞赛</van-tabbar-item>
-            <van-tabbar-item icon="friends-o" to='/certificate'>证书</van-tabbar-item>
+            <van-tabbar-item icon='wap-home-o' to='/'>首页</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='trophy' to='/competition'>竞赛</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='jiangbei' to='/certificate'>证书</van-tabbar-item>
             <van-tabbar-item icon="chat-o" badge="20" to='/chat'>聊天</van-tabbar-item>
             <van-tabbar-item icon="user-o" to='/mine'>我的</van-tabbar-item>
         </van-tabbar>
@@ -68,7 +68,7 @@ export default {
                 let userData = res.data.data;
                 this.username = userData.username;
                 this.description = userData.description;
-                this.avatarImg = userData.avatar_url;
+                this.avatarImg = userData.avatar_url + "?id="+Math.random();
             })
         },
         logout() {
@@ -97,5 +97,7 @@ export default {
 .navbar .van-nav-bar__title {
     color: #FFF;
 }
-
+.trophy .iconfont {
+    font-size: 22px;
+}
 </style>

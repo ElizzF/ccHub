@@ -25,7 +25,11 @@
                 left-icon="contact"
                 center
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
-            />
+            >
+                <template #left-icon>
+                    <van-icon class-prefix="iconfont icon" name="phone" />
+                </template>
+            </van-field>
            
             <van-field
                 v-model="password"
@@ -33,9 +37,13 @@
                 name="密码"
                 placeholder="密码"
                 center
-                left-icon="star-o"
+                
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
-            />
+            >
+                <template #left-icon>
+                    <van-icon class-prefix="iconfont icon" name="password" />
+                </template>
+            </van-field>
             <van-field
                 v-model="email"
                 name="邮箱"
@@ -43,7 +51,11 @@
                 center
                 left-icon="star-o"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
-            />
+            >
+                <template #left-icon>
+                    <van-icon class-prefix="iconfont icon" name="email" />
+                </template>
+            </van-field>
             <van-field
                 v-model="sno"
                 name="学号"

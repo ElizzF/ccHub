@@ -78,7 +78,22 @@ const routes = [
     path:'/myTeam',
     name:'MyTeam',
     component: () => import('../views/MyTeam.vue')
-  }
+  },
+  {
+    path:'/modifyPassword',
+    name:'ModifyPassword',
+    component: () => import('../views/ModifyPassword.vue')
+  },
+  {
+    path:'/forgetPassword',
+    name:'ForgetPassword',
+    component: () => import('../views/ForgetPassword.vue')
+  },
+  {
+    path:'/moreRoute',
+    name:'MoreRoute',
+    component: () => import('../views/MoreRoute.vue')
+  },
 ]
 
 const router = new VueRouter({

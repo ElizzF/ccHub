@@ -15,59 +15,30 @@
 
         <div class='comList'>
             <div class='comListItem' @click="toCerInfo">
-                <van-image class='comImg' width="100%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/u808.png')" />
                 <div class='itemTop'>
                     <div class='itemState'>正在报名</div>
                     <div class='itemDistance'>离报名截止还有45天</div>
                 </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemRegisterTime'>报名时间 2020.10.01——2020.12.01</div>
-                <div class='itemBeginTime'>比赛时间 2020.10.01——2020.12.31</div>
-                <div class='itemAbout'>阿巴阿巴阿巴</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
+                <div class='itemTitle'>2020年下半年CET考试</div>
+                <div class='itemInfo'>8888 浏览 | 624 关注 | 通用型证书</div>
             </div>
             <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/u815.png')" />
                 <div class='itemTop'>
                     <div class='itemState'>正在报名</div>
                     <div class='itemDistance'>离报名截止还有45天</div>
                 </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemRegisterTime'>报名时间 2020.10.01——2020.12.01</div>
-                <div class='itemBeginTime'>比赛时间 2020.10.01——2020.12.31</div>
-                <div class='itemAbout'>阿巴阿巴阿巴</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
+                <div class='itemTitle'>2020年ACCA国际注册会计师</div>
+                <div class='itemInfo'>8888 浏览 | 624 关注 | 国际级证书</div>
             </div>
-            <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
-                <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemRegisterTime'>报名时间 2020.10.01——2020.12.01</div>
-                <div class='itemBeginTime'>比赛时间 2020.10.01——2020.12.31</div>
-                <div class='itemAbout'>阿巴阿巴阿巴</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
-            <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
-                <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemRegisterTime'>报名时间 2020.10.01——2020.12.01</div>
-                <div class='itemBeginTime'>比赛时间 2020.10.01——2020.12.31</div>
-                <div class='itemAbout'>阿巴阿巴阿巴</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
+            
         </div>
 
         <van-tabbar v-model="active" route>
-            <van-tabbar-item icon="wap-home-o" to='/'>首页</van-tabbar-item>
-            <van-tabbar-item icon="search" to='/competition'>竞赛</van-tabbar-item>
-            <van-tabbar-item icon="friends-o" to='/certificate'>证书</van-tabbar-item>
+            <van-tabbar-item icon='wap-home-o' to='/'>首页</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='trophy' to='/competition'>竞赛</van-tabbar-item>
+            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='jiangbei' to='/certificate'>证书</van-tabbar-item>
             <van-tabbar-item icon="chat-o" badge="20" to='/chat'>聊天</van-tabbar-item>
             <van-tabbar-item icon="user-o" to='/mine'>我的</van-tabbar-item>
         </van-tabbar>
@@ -178,5 +149,8 @@ export default {
 }
 .comImg {
     position: static;
+}
+.trophy .iconfont {
+    font-size: 22px;
 }
 </style>
