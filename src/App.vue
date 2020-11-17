@@ -19,6 +19,9 @@ export default {
         };
     },
     mounted() {
+        // setTimeout(()=>{
+        //     this.pwaButtonVisible=true
+        // },1000)
         window.onload=function () {  
             document.addEventListener('touchstart',function (event) {  
                 if(event.touches.length>1){  
