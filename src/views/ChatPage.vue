@@ -28,8 +28,11 @@
 </template>
 
 <script>
-
+import { VEmojiPicker } from "v-emoji-picker";
 export default {
+  components: {
+    VEmojiPicker
+  },
   data() {
     return {
       showDialog: false,

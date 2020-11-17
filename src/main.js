@@ -14,10 +14,6 @@ Vue.use(Step);
 Vue.use(Vant);
 Vue.config.productionTip = false
 
-import VEmojiPicker from 'v-emoji-picker';
-
-Vue.use(VEmojiPicker);
-
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 

@@ -293,7 +293,7 @@ export default {
 .eventState {
     background: rgba(112, 182, 3, 0.23921568627451);
     color:#70B603;
-    width: 50px;
+    display: inline-block;
     padding: 3px;
     font-size: 10px;
     margin-top: 3px;
