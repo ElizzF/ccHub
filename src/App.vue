@@ -27,6 +27,7 @@ export default {
     },
     methods: {
         showPwaApplicationAddWindow() {
+            this.pwaButtonVisible= false;
             this.pwaEvent.prompt();
             this.pwaEvent.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === "accepted") {
