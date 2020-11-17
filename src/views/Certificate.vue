@@ -2,7 +2,7 @@
     <div class='container' style="background: #FEFEFE;">
         <!-- 导航栏 -->
         <div class='navTop'>
-            <van-nav-bar title="证书" class="navbar" >
+            <van-nav-bar title="证书" class="navbar" @click-right="onClickRight">
                 <template #right>
                     <van-icon name="search" color="#FFF" size="18" />
                 </template>
@@ -15,7 +15,8 @@
 
         <div class='comList'>
             <div class='comListItem' @click="toCerInfo">
-                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/u808.png')" />
+                
+                <van-image width="100%" height="140" :src="require('../assets/image/u808.png')" />
                 <div class='itemTop'>
                     <div class='itemState'>正在报名</div>
                     <div class='itemDistance'>离报名截止还有45天</div>
@@ -46,6 +47,7 @@
 </template>
 
 <script>
+
 export default {
     data() {
         return {
@@ -78,7 +80,12 @@ export default {
             this.$router.push({
                 path: '/certificateInfo'
             })
-        }
+        },
+        onClickRight() {
+            this.$router.push({
+                path: '/searchPage'
+            })
+        },
     }
 }
 </script>
@@ -92,19 +99,24 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1;
 }
 .comList {
-    padding-top: 100px;
-    padding-left: 20px;
-    padding-right: 20px;
+    background: rgba(242,242,242);
+    padding-top: 110px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-bottom: 45px;
 }
 .comListItem {
+    border-radius: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
     display: flex;
     flex-direction: column;
     background: #fff;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     margin-bottom: 15px;
 }
 .itemImg {
@@ -118,22 +130,22 @@ export default {
     align-items: center;
 }
 .itemState {
-    font-size: 20px;
+    font-size: 16px;
     color: #008080;
     font-weight: 600;
 }
 .itemDistance {
     margin-left: 25px;
-    font-size: 17px;
+    font-size: 16px;
     color: #AAAAAA;
 }
 .itemTitle {
     margin-top: 5px;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
 }
 .itemRegisterTime, .itemBeginTime {
-    font-size: 17px;
+    font-size: 16px;
     margin-top: 5px;
 }
 .itemAbout, .itemInfo {
@@ -147,9 +159,7 @@ export default {
 .navbar .van-nav-bar__title {
     color: #FFF;
 }
-.comImg {
-    position: static;
-}
+
 .trophy .iconfont {
     font-size: 22px;
 }

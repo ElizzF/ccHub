@@ -2,7 +2,7 @@
 <div class='container' style="background: rgba(242,242,242);">
     <!-- 导航栏 -->
     <div class='navTop'>
-        <van-nav-bar title="我的注册" class="navbar" 
+        <van-nav-bar title="我的收藏" class="navbar" 
           left-text="返回"
           left-arrow
           @click-left="onClickLeft"
@@ -117,6 +117,7 @@ export default {
 <style scoped>
 .navbar {
     background: #0079FE;
+    z-index: 1;
 }
 
 .itemList {
@@ -197,7 +198,5 @@ export default {
     color: #0079FE;
     border-right: 1px solid #0079FE;
 }
-.comImg {
-    position: static;
-}
+
 </style>

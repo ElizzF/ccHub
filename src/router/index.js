@@ -94,6 +94,11 @@ const routes = [
     name:'MoreRoute',
     component: () => import('../views/MoreRoute.vue')
   },
+  {
+    path:'/searchPage',
+    name:'SearchPage',
+    component: () => import('../views/SearchPage.vue')
+  },
 ]
 
 const router = new VueRouter({

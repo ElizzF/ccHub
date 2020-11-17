@@ -2,10 +2,14 @@
     <div class='container' style="background: rgba(245,245,249); height: 100%">
         <!-- 导航栏 -->
         <van-nav-bar title="路人甲" class="navbar" 
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
+          left-text="返回"
+          left-arrow
+          @click-left="onClickLeft"
+          @click-right="onClickRight"
         >
+          <template #right>
+            <van-icon class-prefix="iconfont icon" name="caidan" size='23px' color="#FFF"/>
+          </template>
         </van-nav-bar>
 
         
@@ -48,8 +52,10 @@ export default {
             path: '/chat'
         })
     },
-   selectEmoji(emoji) {
-      console.log(emoji)
+    onClickRight() {
+        this.$router.push({
+            path: '/'
+        })
     },
     toogleDialogEmoji() {
       this.showDialog = !this.showDialog;
@@ -58,8 +64,6 @@ export default {
     },
     onSelectEmoji(emoji) {
       this.valueInput += emoji.data;
-      // Optional
-      // this.toogleDialogEmoji();
     }
   }
 }

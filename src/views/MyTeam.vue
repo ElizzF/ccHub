@@ -129,6 +129,7 @@ export default {
 <style scoped>
 .navbar {
     background: #0079FE;
+    z-index: 1;
 }
 
 .itemList {
@@ -203,9 +204,6 @@ export default {
 .van-tabs__nav--card .van-tab {
     color: #0079FE;
     border-right: 1px solid #0079FE;
-}
-.comImg {
-    position: static;
 }
 .item .van-cell, .item .van-image {
   position: static;

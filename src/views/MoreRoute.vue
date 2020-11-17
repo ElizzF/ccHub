@@ -9,7 +9,7 @@
             @click-left="onClickLeft"
         />
         
-        <div class='main' style="padding-top: 45px" v-if="display">
+        <div class='main' style="padding-top: 45px; height: 100%;" v-if="display">
             <div class='majorTxt'>您的专业是：</div>
             <van-grid :border="false" :column-num="3">
                 <van-grid-item v-for="item in majorItems" :key="item.id" class='selectItem'>
@@ -27,7 +27,7 @@
             </van-grid>
             
             <div class='gradeTxt'>您现在是：</div>
-            <van-grid :border="false" :column-num="3">
+            <van-grid :border="false" :column-num="3" style="margin-bottom: 30px;">
                 <van-grid-item v-for="item in gradeItems" :key="item.id" class='selectItem'>
                     <van-button
                         round 
@@ -39,10 +39,9 @@
                         {{ item.name }}
                     </van-button>
                 </van-grid-item>
-                
             </van-grid>
 
-            <van-button type="info" @click="confirm" round block style="margin-top: 30px; width: 230px; margin: 0 auto;">确定</van-button>
+            <van-button type="info" @click="confirm" round block style="width: 230px; margin: 0 auto;">确定</van-button>
         </div>
         
         
@@ -114,6 +113,11 @@ export default {
             //console.log(e.currentTarget.id);
             let target = e.currentTarget.id;
             this.majorItems[target - 1].plain = !this.majorItems[target - 1].plain;
+            this.majorItems.forEach((item) => {
+                if(item.id != target) {
+                    item.plain = true;
+                }
+            })
             
             //遍历选择项，找到已选择的
             let newSelectedList = this.majorItems.filter( (item) => {
@@ -126,6 +130,11 @@ export default {
             //console.log(e.currentTarget.id);
             let target = e.currentTarget.id;
             this.gradeItems[target - 1].plain = !this.gradeItems[target - 1].plain;
+            this.gradeItems.forEach((item) => {
+                if(item.id != target) {
+                    item.plain = true;
+                }
+            })
             
             //遍历选择项，找到已选择的
             let newSelectedList = this.gradeItems.filter( (item) => {
@@ -172,10 +181,8 @@ export default {
     color: #FFF;
 }
 
-.van-cell__value {
-    margin-left: 20px !important;
-}
 .selectItem .van-button {
     width: 100px;
+    height: 35px;
 }
 </style>

@@ -12,6 +12,7 @@
                 name="手机号码" 
                 placeholder="手机号码"                
                 center
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
             >
                 <template #left-icon>
@@ -24,6 +25,7 @@
                 name="密码"
                 placeholder="密码"
                 center
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
             >
                 <template #left-icon>

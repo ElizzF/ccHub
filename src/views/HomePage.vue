@@ -16,8 +16,6 @@
             <van-row type="flex" justify="space-around" class="infoBar">
                 <van-col span="6">
 
-
-
                     <div class='item' @click="toCom()">
                         
                         <van-button type="info" class='toCompetition'><van-icon class-prefix="iconfont icon" name="trophy" size='23px' /></van-button>
@@ -90,7 +88,7 @@
             </div>
             <div class='eventList'>
                 <div class='eventItem' @click="toComInfo">
-                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
+                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -98,7 +96,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
+                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -106,7 +104,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
+                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -114,7 +112,7 @@
                     </div>
                 </div>
                 <div class='eventItem'>
-                    <van-image width="158" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
+                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
                     <div class='eventInfo'>
                         <div class='eventTxt'>第四届工业大数据创新竞赛</div>
                         <div class='eventState'>正在进行</div>
@@ -275,8 +273,8 @@ export default {
     text-align: center;
 }
 .eventList {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
     padding-bottom: 60px;
 }
 .eventItem {
@@ -287,8 +285,12 @@ export default {
     margin-left: 20px;
 }
 .eventTxt {
-    font-size: 19px;
-    margin-top: 3px;
+    font-size: 18px;
+    margin-top: 7px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    width: 200px;
 }
 .eventState {
     background: rgba(112, 182, 3, 0.23921568627451);
@@ -296,12 +298,12 @@ export default {
     display: inline-block;
     padding: 3px;
     font-size: 10px;
-    margin-top: 3px;
+    margin-top: 5px;
 }
 .eventTime {
     font-size: 10px;
     color: #AAAAAA;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 </style>
