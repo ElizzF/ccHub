@@ -1,7 +1,7 @@
 <template>
     <div id="app" style="background: rgb(242, 242, 242)">
         <router-view />
-        <pwa-button ref="button" v-show="pwaButtonVisible" @click="showPwaApplicationAddWindow"/>
+        <pwa-button ref="button" v-show="pwaButtonVisible" @click="showPwaApplicationAddWindow" @hide="pwaButtonVisible=false"/>
     </div>
 </template>
 
