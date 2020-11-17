@@ -6,6 +6,11 @@ import store from './store'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 
+import Step from 'ant-design-vue/lib/steps';
+import 'ant-design-vue/dist/antd.css';
+
+Vue.use(Step);
+
 Vue.use(Vant);
 Vue.config.productionTip = false
 

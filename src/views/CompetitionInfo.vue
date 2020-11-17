@@ -69,7 +69,6 @@
       v-model="showShare"
       title="立即分享给好友"
       :options="options"
-      @select="onSelect"
     />
   </div>
 </template>
