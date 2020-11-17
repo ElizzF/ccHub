@@ -6,20 +6,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-window.onload = function() {
-  document.addEventListener('touchstart', function(event) {
-    if (event.touches.length > 1) {
-      event.preventDefault()
-    }
-  })
-  document.addEventListener('gesturestart', function(event) {
-    event.preventDefault()
-  })
-}
-</script>
 
-=======
 import PwaButton from "@/components/common/pwaButton.vue";
 export default {
     components: {
@@ -32,12 +19,28 @@ export default {
         };
     },
     mounted() {
+        window.onload=function () {  
+            document.addEventListener('touchstart',function (event) {  
+                if(event.touches.length>1){  
+                    event.preventDefault();  
+                }  
+            })  
+            var lastTouchEnd=0;  
+            document.addEventListener('touchend',function (event) {  
+                var now=(new Date()).getTime();  
+                if(now-lastTouchEnd<=300){  
+                    event.preventDefault();  
+                }  
+                lastTouchEnd=now;  
+            },false)  
+        }
         // 提示安装pwa 应用
         window.addEventListener("beforeinstallprompt", (evt) => {
             evt.preventDefault();
             this.pwaButtonVisible = true;
             this.pwaEvent = evt;
         });
+       
     },
     methods: {
         showPwaApplicationAddWindow() {
@@ -55,7 +58,6 @@ export default {
     },
 };
 </script>
->>>>>>> 62b1832d3da31a76f360916acf88d116d6aba4f2
 <style>
 /* Reset Css */
 body,
