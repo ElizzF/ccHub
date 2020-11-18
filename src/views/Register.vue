@@ -16,6 +16,7 @@
                 placeholder="用户名"
                 left-icon="contact"
                 center
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
             />
             <van-field
@@ -24,6 +25,7 @@
                 placeholder="手机号码"
                 left-icon="contact"
                 center
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
             >
                 <template #left-icon>
@@ -37,7 +39,7 @@
                 name="密码"
                 placeholder="密码"
                 center
-                
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
             >
                 <template #left-icon>
@@ -50,6 +52,7 @@
                 placeholder="邮箱"
                 center
                 left-icon="star-o"
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
             >
                 <template #left-icon>
@@ -62,6 +65,7 @@
                 placeholder="学号"
                 center
                 left-icon="star-o"
+                autocomplete="off"
                 style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;margin-bottom: 8px;"
             />
             <div class='readed' style="margin-top: 30px">
@@ -101,7 +105,7 @@ export default {
             }
             this.axios({
                 method: "POST",
-                url: "http://49.234.239.138:82/user/register",
+                url: "https://soft.leavessoft.cn/user/register",
                 data: {
                     "username": this.username,
                     "phone": this.phone,

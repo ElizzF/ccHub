@@ -1,5 +1,5 @@
 <template>
-  <div class='container'>
+  <div class='container' style="height: 100%">
     <!-- 导航栏 -->
     <van-nav-bar
         title="证书详情"
@@ -13,24 +13,26 @@
         <van-loading type="spinner" size="20" />
       </template>
     </van-image>
-    <van-cell-group>
-      <van-cell title="2020年下半年CET考试" 
-                label="8888 浏览 | 624 关注" 
-                title-class='comTitle'
-                label-class="comLabel"
-      />
-      <van-cell title="报名时间 2020.10.01——2020.12.01" title-class="cellStyle"/>
-      <van-cell title="比赛时间 2020.12.01——2020.12.31" title-class="cellStyle"/>
-      <van-cell title="主办方 巴拉巴拉考试中心" title-class="cellStyle"/>
-    </van-cell-group>
-    <van-collapse v-model="activeNames1" >
-        <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
+    <div style="padding-bottom: 50px;">
+      <van-cell-group>
+        <van-cell title="2020年下半年CET考试" 
+                  label="8888 浏览 | 624 关注" 
+                  title-class='comTitle'
+                  label-class="comLabel"
+        />
+        <van-cell title="报名时间 2020.10.01——2020.12.01" title-class="cellStyle"/>
+        <van-cell title="比赛时间 2020.12.01——2020.12.31" title-class="cellStyle"/>
+        <van-cell title="主办方 巴拉巴拉考试中心" title-class="cellStyle"/>
+      </van-cell-group>
+      <van-collapse v-model="activeNames1" >
+          <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
+        </van-collapse>
+
+      <van-collapse v-model="activeNames2" style="margin-top: 10px;">
+        <van-collapse-item title="备考材料" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
       </van-collapse>
-
-    <van-collapse v-model="activeNames2" style="margin-top: 10px;">
-      <van-collapse-item title="备考材料" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
-    </van-collapse>
-
+      
+    </div>
     <van-goods-action class='bottomBar'>
       <div class='barIcon'>
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
@@ -38,6 +40,7 @@
       </div>
       <van-button round type="info">我要报名</van-button>
     </van-goods-action>
+
 
     <van-share-sheet
       v-model="showShare"
@@ -82,11 +85,14 @@ export default {
     left: 0;
     width: 100%;
 }
+.container {
+  height: 100%;
+}
 .van-goods-action {
   display: flex;
   justify-content: space-between;
-  margin-left: 12px;
-  margin-right: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 .barIcon {
   display: flex;

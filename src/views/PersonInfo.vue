@@ -37,13 +37,9 @@
         </div>
 
         <div class='cellList'>
-            <van-cell title="教育经历" size='large' is-link/>
-            <van-cell title="获奖经历" size='large' is-link />
+            <van-cell title="个人简介" size='large' is-link to="/personalIntroduce" />
         </div>
 
-        <div class='cellList'>
-            <van-cell title="兴趣标签" size='large' is-link />
-        </div>
 
 
         
@@ -64,7 +60,7 @@ export default {
             phone: '',
             email: '',
             description: '',
-            sex: '未知',
+            sex: '',
 
             fileList: [],
             avatarImg: '',
@@ -80,7 +76,7 @@ export default {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "GET",
-                url: "http://49.234.239.138:82/user/getInfo/0",
+                url: "https://soft.leavessoft.cn/user/getInfo/0",
                 headers: {
                     'Authorization': userKey.accesstoken
                 }
@@ -91,6 +87,9 @@ export default {
                 this.email = userData.email;
                 this.description = userData.description;
                 this.avatarImg = userData.avatar_url + "?id="+ Math.random();
+                this.name = userData.name;
+                if(userData.sex == 1) this.sex = '男';
+                else this.sex = '女';
             })
         },
         updateUserData() {
@@ -109,9 +108,12 @@ export default {
                 this.flag = 0;
             }
             let userKey = JSON.parse(localStorage.getItem('userData'));
+            let sexKey = '';
+            if(this.sex == '女') sexKey = 0;
+            else if(this.sex == '男') sexKey = 1;
             this.axios({
                 method: "POST",
-                url: "http://49.234.239.138:82/user/update",
+                url: "https://soft.leavessoft.cn/user/update",
                 headers: {
                     'Authorization': userKey.accesstoken
                 },
@@ -119,7 +121,9 @@ export default {
                     "username": this.username,
                     "email": this.email, 
                     "phone": this.phone,
-                    "description": this.description
+                    "description": this.description,
+                    "name": this.name,
+                    "sex": sexKey
                 }
             }).then(() => {
                  Dialog.alert({
@@ -169,7 +173,7 @@ export default {
             form.append("avatar", avatar);
             this.axios({
                 method: "POST",
-                url: "http://49.234.239.138:82/user/uploadAvatar",
+                url: "https://soft.leavessoft.cn/user/uploadAvatar",
                 headers: {
                     'Authorization': userKey.accesstoken
                 },

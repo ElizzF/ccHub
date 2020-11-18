@@ -320,4 +320,5 @@ export default {
 .trophy .iconfont {
     font-size: 22px;
 }
+
 </style>

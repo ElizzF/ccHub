@@ -30,7 +30,8 @@
       <van-collapse-item title="通知公告（0）" name="2" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
     </van-collapse>
 
-    <div class='allTroopsTxt'>全部队伍</div>
+    <van-cell class='allTroopscellTxt' title="全部队伍" title-class="allTroopsTxt"/>
+    <!-- <div class='allTroopsTxt'>全部队伍</div> -->
     <div class='cellGroup' style="padding-bottom: 50px;">
       <van-cell title="路人甲" label="小组成员数：2" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
         <template #icon>
@@ -61,7 +62,7 @@
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
         <van-goods-action-icon icon="star-o" text="收藏"  />
       </div>
-      <van-button round type="info">我要当队长</van-button>
+      <van-button round type="info" @click="goCreateTeam">创建队伍</van-button>
       <van-button round type="info">我要报名</van-button>
     </van-goods-action>
 
@@ -93,6 +94,11 @@ export default {
     onClickLeft() {
       this.$router.push({
         path: '/competition'
+      })
+    },
+    goCreateTeam() {
+      this.$router.push({
+        path: '/createTeam'
       })
     }
   }
@@ -153,5 +159,10 @@ export default {
 }
 .topImg .van-image__img {
   border-radius: 0
+}
+.allTroopscellTxt {
+  background: rgb(242,242,242);
+    padding: 0;
+
 }
 </style>

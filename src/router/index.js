@@ -99,6 +99,16 @@ const routes = [
     name:'SearchPage',
     component: () => import('../views/SearchPage.vue')
   },
+  {
+    path:'/personalIntroduce',
+    name:'PersonalIntroduce',
+    component: () => import('../views/PersonalIntroduce.vue')
+  },
+  {
+    path:'/createTeam',
+    name:'CreateTeam',
+    component: () => import('../views/CreateTeam.vue')
+  },
 ]
 
 const router = new VueRouter({

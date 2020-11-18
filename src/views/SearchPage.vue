@@ -17,7 +17,7 @@
             show-action
         >
             <template #action>
-                <van-button round type="info" style="width: 60px; height: 30px;">搜索</van-button>
+                <van-button round type="info" style="height: 30px; display: inline-block">搜索</van-button>
             </template>
         </van-search>
        
@@ -61,7 +61,6 @@ export default {
             ],
             historyItems: [
                 { id: 1, value: '数学建模' },
-              
             ]
         };
     },

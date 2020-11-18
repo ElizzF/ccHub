@@ -92,7 +92,7 @@ export default {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "PUT",
-                url: "http://49.234.239.138:82/user/modifyPassword",
+                url: "https://soft.leavessoft.cn/user/modifyPassword",
                 data: {
                     "prePassword": this.oldPassword,
                     "password": this.newPassword,

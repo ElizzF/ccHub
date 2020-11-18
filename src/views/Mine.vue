@@ -60,7 +60,7 @@ export default {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "GET",
-                url: "http://49.234.239.138:82/user/getInfo/0",
+                url: "https://soft.leavessoft.cn/user/getInfo/0",
                 headers: {
                     'Authorization': userKey.accesstoken
                 }

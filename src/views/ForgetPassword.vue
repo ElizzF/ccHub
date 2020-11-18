@@ -95,7 +95,7 @@ export default {
             }
             this.axios({
                 method: "GET",
-                url: "http://49.234.239.138:7500/mail/sendResetEmail/" + this.email,
+                url: "https://soft.leavessoft.cn/mail/sendResetEmail/" + this.email,
                 data: {
                     "email": this.email
                 },
@@ -119,7 +119,7 @@ export default {
         resetPassword() {
             this.axios({
                 method: "POST",
-                url: "http://49.234.239.138:7500/user/resetPassword",
+                url: "https://soft.leavessoft.cn/user/resetPassword",
                 data: {
                     "email": this.email,
                     "password": this.password,
