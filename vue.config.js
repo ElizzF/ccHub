@@ -10,5 +10,8 @@ module.exports = {
         open: true, //配置自动启动浏览器
         proxy:null,  //设置代理,
         https: false
+    },
+    chainWebpack:config=>{
+        config.output.filename('[name].[hash].js').end()
     }
 }
