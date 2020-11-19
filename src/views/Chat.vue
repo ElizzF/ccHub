@@ -15,7 +15,7 @@
 
         <div class='chatList'>
             <van-swipe-cell style="align-items: center;" class='chatListItem'>
-                <van-cell title="路人甲" label="阿巴阿巴阿巴" value="昨天" to="/chatPage" style="align-items: center;">
+                <van-cell title="路人甲的队伍" label="阿巴阿巴阿巴" value="昨天" to="/chatPage" style="align-items: center;">
                     <template #icon>
                         <van-image
                             round
@@ -32,7 +32,7 @@
             </van-swipe-cell>
 
             <van-swipe-cell style="align-items: center;" class='chatListItem'>
-                <van-cell title="路人甲" label="阿巴阿巴阿巴" value="昨天" to="/chatPage" style="align-items: center;">
+                <van-cell title="路人丁" label="阿巴阿巴阿巴" value="昨天" to="/privateChat" style="align-items: center;">
                     <template #icon>
                         <van-image
                             round
@@ -66,7 +66,7 @@
             </van-swipe-cell>
 
              <van-swipe-cell style="align-items: center;" class='chatListItem'>
-                <van-cell title="消息" label="某人申请加入你的xxx队伍" value="周六" to="/" style="align-items: center;">
+                <van-cell title="消息" label="某人申请加入你的xxx队伍" value="周六" to="/application" style="align-items: center;">
                     <template #icon>
                         <van-button type="info" class='infoAvatar'><van-icon class-prefix="iconfont icon" name="bell" size='23px' /></van-button>
                     </template>
@@ -105,6 +105,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1;
 }
 .chatListItem {
     margin-bottom: 1px;

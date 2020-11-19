@@ -1,5 +1,5 @@
 <template>
-<div class='container' style="background: rgba(249, 249, 249); height: 100%">
+<div class='container' style="background: rgba(242, 242, 242); height: 100%">
     <!-- 导航栏 -->
     <div class='navTop'>
         <van-nav-bar title="我的组队" class="navbar" 
@@ -15,7 +15,7 @@
                 </van-tabs>
         </van-cell>
     </div>
-    <div class='itemList' v-if="isDisplayJ" style="background: rgba(249, 249, 249);">
+    <div class='itemList' v-if="isDisplayJ" style="background: rgba(242, 242, 242);">
         <div class='item'>
             <div class='itemTitle'>2020年工业大数据创新竞赛</div>
             <van-cell title="路人甲" label="小组成员数：2" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
@@ -129,7 +129,6 @@ export default {
 <style scoped>
 .navbar {
     background: #0079FE;
-    z-index: 1;
 }
 
 .itemList {
@@ -147,6 +146,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1;
 }
 .item {
   display: flex;

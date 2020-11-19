@@ -1,7 +1,7 @@
 <template>
     <div class='container' style="background: rgba(245,245,249); height: 100%">
         <!-- 导航栏 -->
-        <van-nav-bar title="路人甲的队伍" class="navbar" 
+        <van-nav-bar title="路人丁" class="navbar" 
           left-text="返回"
           left-arrow
           @click-left="onClickLeft"
@@ -54,7 +54,7 @@ export default {
     },
     onClickRight() {
         this.$router.push({
-            path: '/groupInfo'
+            path: '/privateChatInfo'
         })
     },
     toogleDialogEmoji() {

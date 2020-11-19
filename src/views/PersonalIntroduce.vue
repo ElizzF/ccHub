@@ -46,7 +46,7 @@
 </template>
 
 <script>
-// import { Dialog } from 'vant'
+import { Dialog } from 'vant'
 export default {
     data() {
         return {
@@ -55,7 +55,7 @@ export default {
             description: '',
             sex: '',
             avatarImg: '',
-            history: "2020.01.02 巴拉巴拉大赛二等奖" +"\n" + "2020.01.02 巴拉巴拉大赛二等奖"
+            history: ''
         };
     },
     created() {
@@ -73,12 +73,41 @@ export default {
             }).then((res) => {
                 let userData = res.data.data;
                 this.username = userData.username;
-                
+                this.history = userData.awards;
                 this.description = userData.description;
                 this.avatarImg = userData.avatar_url + "?id="+ Math.random();
    
                 if(userData.sex == 1) this.sex = '男';
                 else this.sex = '女';
+            })
+        },
+
+        updateUserData() {
+            let userKey = JSON.parse(localStorage.getItem('userData'));
+            this.axios({
+                method: "POST",
+                url: "https://soft.leavessoft.cn/user/update",
+                headers: {
+                    'Authorization': userKey.accesstoken
+                },
+                data: {
+                    "description": this.description,
+                    "awards": this.history
+                }
+            }).then(() => {
+                 Dialog.alert({
+                    title: '提示',
+                    theme: 'round-button',
+                    message: '修改信息成功！',
+                    confirmButtonColor: '#1989FA'
+                })
+            }).catch((error) => {
+                Dialog.alert({
+                    title: '警告',
+                    theme: 'round-button',
+                    message: error.response.data.message,
+                    confirmButtonColor: '#1989FA'
+                })
             })
         },
         
@@ -101,6 +130,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1;
 }
 .introduceTxt {
     background: #FFF;

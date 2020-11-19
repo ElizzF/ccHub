@@ -119,6 +119,26 @@ const routes = [
     name:'TeamInfo',
     component: () => import('../views/TeamInfo.vue')
   },
+  {
+    path:'/application',
+    name:'Application',
+    component: () => import('../views/Application.vue')
+  },
+  {
+    path:'/applicationInfo',
+    name:'ApplicationInfo',
+    component: () => import('../views/ApplicationInfo.vue')
+  },
+  {
+    path:'/privateChat',
+    name:'PrivateChat',
+    component: () => import('../views/PrivateChat.vue')
+  },
+  {
+    path:'/privateChatInfo',
+    name:'PrivateChatInfo',
+    component: () => import('../views/PrivateChatInfo.vue')
+  },
 ]
 
 const router = new VueRouter({

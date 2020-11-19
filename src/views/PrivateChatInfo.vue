@@ -2,7 +2,7 @@
     <div class='container' style="background: rgba(242,242,242); height:100%">
         <!-- 导航栏 -->
         <van-nav-bar
-            title="群聊设置"
+            title="聊天设置"
             class="navbar"
             left-text="返回"
             left-arrow
@@ -11,7 +11,9 @@
         
        
         <div class="cellList" style="padding-top: 47px;">
-            <van-cell :title="teamName" :label="sex" size='large' style="align-items: center;position: relative">
+            <van-cell :title="teamName" :label="sex" size='large' 
+                is-link style="align-items: center;position: relative"
+            >
                 <template #icon>
                     <van-image
                         round
@@ -26,45 +28,9 @@
         </div>
 
         <div class='cellList' style="margin-top: 10px;">
-            <van-cell title="群聊成员" value="共2人" is-link >
-                 <template #label>
-                    <div class='avatarList'>
-                        <div class='avatarItem'>
-                            <van-image
-                                round
-                                width="3rem"
-                                height="3rem"
-                                style="margin-right: 15px;"
-                                :src="avatarImg"
-                            />
-                            <div class='teammateName'>我是队员</div>
-                        </div>
-
-                        <div class='avatarItem'>
-                            <van-image
-                                round
-                                width="3rem"
-                                height="3rem"
-                                style="margin-right: 15px;"
-                                :src="avatarImg"
-                            />
-                            <div class='teammateName'>我是队员</div>
-                        </div>
-                    </div>
-                </template>
-            </van-cell>
-        </div>
-
-        <div class='cellList' style="margin-top: 10px;">
-            <van-cell title="群聊名称" value="群名称" is-link />
-            <van-cell center title="群公告" label="这是一条群公告" is-link />
-        </div>
-
-        <div class='cellList' style="margin-top: 10px;">
             <van-cell title="聊天记录" value="图片、文字等" is-link />
         </div>
 
-        <van-button type="default" style="width: 100%; margin-top:10px; border: none;">退出该群</van-button>
 
 
         
@@ -77,7 +43,7 @@
 export default {
     data() {
         return {
-            teamName: '路人甲的队伍',
+            teamName: '路人丁',
             checked: true,
         };
     },
@@ -92,7 +58,7 @@ export default {
        
         onClickLeft() {
             this.$router.push({
-                path: '/chatPage'
+                path: '/privateChat'
             })
         },
 
