@@ -64,6 +64,17 @@
                     <van-button square text="删除" type="danger" class="delete-button" />
                 </template>
             </van-swipe-cell>
+
+             <van-swipe-cell style="align-items: center;" class='chatListItem'>
+                <van-cell title="消息" label="某人申请加入你的xxx队伍" value="周六" to="/" style="align-items: center;">
+                    <template #icon>
+                        <van-button type="info" class='infoAvatar'><van-icon class-prefix="iconfont icon" name="bell" size='23px' /></van-button>
+                    </template>
+                </van-cell>
+                <template #right>
+                    <van-button square text="删除" type="danger" class="delete-button" />
+                </template>
+            </van-swipe-cell>
         </div>
 
         <van-tabbar v-model="active" route>
@@ -97,6 +108,12 @@ export default {
 }
 .chatListItem {
     margin-bottom: 1px;
+}
+.infoAvatar {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    margin-right: 10px;
 }
 </style>
 

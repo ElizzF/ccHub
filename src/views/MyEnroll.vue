@@ -116,7 +116,6 @@ export default {
 <style scoped>
 .navbar {
     background: #0079FE;
-    z-index: 1;
 }
 
 .itemList {
@@ -134,6 +133,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1;
 }
 .comImg {
   margin: 0 auto;

@@ -109,6 +109,16 @@ const routes = [
     name:'CreateTeam',
     component: () => import('../views/CreateTeam.vue')
   },
+  {
+    path:'/groupInfo',
+    name:'GroupInfo',
+    component: () => import('../views/GroupInfo.vue')
+  },
+  {
+    path:'/teamInfo',
+    name:'TeamInfo',
+    component: () => import('../views/TeamInfo.vue')
+  },
 ]
 
 const router = new VueRouter({

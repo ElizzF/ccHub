@@ -31,9 +31,9 @@
     </van-collapse>
 
     <van-cell class='allTroopscellTxt' title="全部队伍" title-class="allTroopsTxt"/>
-    <!-- <div class='allTroopsTxt'>全部队伍</div> -->
+
     <div class='cellGroup' style="padding-bottom: 50px;">
-      <van-cell title="路人甲" label="小组成员数：2" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
+      <van-cell title="路人甲 的队伍" label="小组成员数：2" is-link to="/teamInfo" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
         <template #icon>
           <van-image
               round
@@ -44,7 +44,7 @@
           />
         </template>
       </van-cell>
-      <van-cell title="路人甲" label="该小组暂时还没有成员" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
+      <van-cell title="路人甲 的队伍" label="该小组暂时还没有成员" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
         <template #icon>
           <van-image
               round
@@ -62,8 +62,10 @@
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
         <van-goods-action-icon icon="star-o" text="收藏"  />
       </div>
-      <van-button round type="info" @click="goCreateTeam">创建队伍</van-button>
-      <van-button round type="info">我要报名</van-button>
+      <div style="margin-right: 10px;">
+          <van-button round type="info" @click="goCreateTeam" style="height: 35px; margin-right: 10px;">创建队伍</van-button>
+          <van-button round type="info" style="height: 35px;">我要报名</van-button>
+      </div>
     </van-goods-action>
 
     <van-share-sheet
@@ -115,7 +117,7 @@ export default {
 }
 .van-goods-action {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .barIcon {
   display: flex;
@@ -162,7 +164,6 @@ export default {
 }
 .allTroopscellTxt {
   background: rgb(242,242,242);
-    padding: 0;
-
+  padding: 0;
 }
 </style>
