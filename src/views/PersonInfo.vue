@@ -32,6 +32,7 @@
             <van-action-sheet v-model="show" :actions="actions" @select="sexSelect" />
             <van-field label="电话号码" size='large' v-model="phone" clearable input-align="right"/>
             <van-field label="邮箱" size='large' v-model="email" clearable input-align="right"/>
+            <van-field label="签名" size='large' v-model="description" clearable input-align="right"/>
           
         </div>
 
@@ -55,10 +56,11 @@ export default {
             actions: [{ name: '男' }, { name: '女' }],
 
             username: '',
-            name: '',
+            name: '张三',
             phone: '',
             email: '',
-            sex: '未知',
+            description: '',
+            sex: '',
 
             fileList: [],
             avatarImg: '',
@@ -74,7 +76,7 @@ export default {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "GET",
-                url: "https://soft.leavessoft.cn/user/getInfo/0",
+                url: "/user/getInfo/0",
                 headers: {
                     'Authorization': userKey.accesstoken
                 }
@@ -83,6 +85,7 @@ export default {
                 this.username = userData.username;
                 this.phone = userData.phone;
                 this.email = userData.email;
+                this.description = userData.description;
                 this.avatarImg = userData.avatar_url + "?id="+ Math.random();
                 this.name = userData.name;
                 if(userData.sex == 1) this.sex = '男';
@@ -110,7 +113,7 @@ export default {
             else if(this.sex == '男') sexKey = 1;
             this.axios({
                 method: "POST",
-                url: "https://soft.leavessoft.cn/user/update",
+                url: "/user/update",
                 headers: {
                     'Authorization': userKey.accesstoken
                 },
@@ -118,6 +121,7 @@ export default {
                     "username": this.username,
                     "email": this.email, 
                     "phone": this.phone,
+                    "description": this.description,
                     "name": this.name,
                     "sex": sexKey
                 }
@@ -169,7 +173,7 @@ export default {
             form.append("avatar", avatar);
             this.axios({
                 method: "POST",
-                url: "https://soft.leavessoft.cn/user/uploadAvatar",
+                url: "/user/uploadAvatar",
                 headers: {
                     'Authorization': userKey.accesstoken
                 },
@@ -188,7 +192,6 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1;
 }
 .cellList, .cellSafeList {
     margin-top: 10px;

@@ -105,7 +105,7 @@ export default {
             }
             this.axios({
                 method: "POST",
-                url: "https://soft.leavessoft.cn/user/register",
+                url: "/user/register",
                 data: {
                     "username": this.username,
                     "phone": this.phone,

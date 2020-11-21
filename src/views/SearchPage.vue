@@ -16,7 +16,7 @@
             style="padding-top: 57px;"
             show-action
         >
-            <template #action>
+            <template #action> 
                 <van-button round type="info" style="height: 30px; display: inline-block">搜索</van-button>
             </template>
         </van-search>
@@ -85,7 +85,6 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1;
 }
 .container {
     height: 100%;
@@ -112,13 +111,11 @@ export default {
 <style>
 .navbar .van-nav-bar__title {
     color: #FFF;
-}
+}   
 .van-nav-bar .van-icon, .van-nav-bar__text {
     color: #FFF;
 }
 .toSearch .van-cell__value {
     margin-left: 20px !important;
 }
-
-
 </style>

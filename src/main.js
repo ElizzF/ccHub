@@ -17,6 +17,8 @@ Vue.config.productionTip = false
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+axios.defaults.baseURL = "https://soft.leavessoft.cn"
+
 Vue.use(VueAxios, axios);
 
 import './assets/icon/iconfont.css';

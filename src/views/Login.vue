@@ -52,7 +52,7 @@ export default {
         login() {
             this.axios({
                 method: "POST",
-                url: "https://soft.leavessoft.cn/user/login",
+                url: "/user/login",
                 data: {
                     "phone": this.phone,
                     "password": this.password,
