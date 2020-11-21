@@ -16,7 +16,7 @@
             style="padding-top: 57px;"
             show-action
         >
-            <template #action>
+            <template #action> 
                 <van-button round type="info" style="height: 30px; display: inline-block">搜索</van-button>
             </template>
         </van-search>
