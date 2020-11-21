@@ -267,7 +267,7 @@ export default {
     border: 10px solid;
     position: absolute;
     top: 35px;
-    left: 48px;
+    left: 43px;
     border-color:  transparent transparent #0079FE transparent;
 }
 .txt {
@@ -291,7 +291,7 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
-    width: 200px;
+    width: 90%;
 }
 .eventState {
     background: rgba(112, 182, 3, 0.23921568627451);

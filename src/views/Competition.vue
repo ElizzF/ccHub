@@ -8,50 +8,57 @@
                 </template>
             </van-nav-bar>
             <van-dropdown-menu>
-                <van-dropdown-item v-model="value1" :options="option1" :title="styleTitle" @change="changeStyleTitle"/>
+                <van-dropdown-item v-model="value1" :title="styleTitle" ref="item">
+                    <van-tree-select 
+                        @click-nav="initItem"
+                        @click-item="changeStyleTitle"
+                        :items="items"
+                        :active-id.sync="activeId"
+                        :main-active-index.sync="activeIndex"
+                    />
+                </van-dropdown-item>
                 <van-dropdown-item v-model="value2" :options="option2" :title="levelTitle" @change="changeLevelTitle"/>
                 <van-dropdown-item v-model="value3" :options="option3" :title="sortTitle" @change="changeSortTitle"/>
             </van-dropdown-menu>
         </div>
 
-        <div class='comList'>
-            <div class='comListItem' @click="lookMoreInfo()">
-                <van-image class='comImgs' width="100%" height="140" :src="require('../assets/image/imgTest.jpg')" />
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class='comList'>
+            <div v-if='noData' style="text-align: center">
+                暂无数据
+            </div>
+            <template v-else>
+                <van-list
+                    v-model="loading"
+                    :finished="finished"
+                    finished-text="- 没有更多了 -"
+                    @load="onLoad"
+                    :offset="130"
+                >
+                    <div v-for="item in competitionList" :key="item.id" class='comListItem' @click="lookMoreInfo(item.id)">
+                        <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl" />
+                        <div class='itemTop'>
+                            <div class='itemState' :style="{ color: item.stateColor }">{{ item.state }}</div>
+                            <div class='itemDistance'>{{ item.distance }}</div>
+                        </div>
+                        <div class='itemTitle'>{{ item.title }}</div>
+                        <div class='itemInfo'>8888 浏览 | 624 关注 | {{ item.level }}</div>
+                    </div>
+                </van-list>
+            </template>
+
+            <!-- <div v-for="item in competitionList" :key="item.id" class='comListItem' @click="lookMoreInfo()">
+                <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl" />
                 <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
+                    <div class='itemState'>{{ item.state }}</div>
                     <div class='itemDistance'>离报名截止还有45天</div>
                 </div>
                 <div class='itemTitle'>2020年工业大数据创新竞赛</div>
                 <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
-            <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/imgTest.jpg')" />
-                <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
-            <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/imgTest.jpg')" />
-                <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
-            <div class='comListItem'>
-                <van-image class='comImg' width="100%" height="140" :src="require('../assets/image/imgTest.jpg')" />
-                <div class='itemTop'>
-                    <div class='itemState'>正在报名</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div>
-        </div>
+            </div> -->
+           <!-- :src="require('../assets/image/imgTest.jpg')" -->
+        </van-pull-refresh>
+
+   
 
         <van-tabbar v-model="active" route>
             <van-tabbar-item icon='wap-home-o' to='/'>首页</van-tabbar-item>
@@ -67,6 +74,74 @@
 export default {
     data() {
         return {
+            items: [{
+                text: '全部'
+            }, {
+                text: '工科类',
+                children: [
+                    { text: '数学建模', id: 1 },
+                    { text: '程序设计', id: 2 },
+                    { text: '机器人', id: 3 },
+                    { text: '大数据', id: 4 },
+                    { text: '电子&自动化', id: 5 },
+                    { text: '工程机械', id: 6 },
+                    { text: '计算机&信息技术', id: 7 },
+                    { text: '土木建筑', id: 8 },
+                    { text: '交通车辆', id: 9 },
+                    { text: '航空航天', id: 10 },
+                    { text: '船舶海洋', id: 11 },
+                    { text: '材料高分子', id: 12 },
+                    { text: '环境能源', id: 13 }
+                ],
+            }, {
+                text: '理科类',
+                children: [
+                    { text: '数学', id: 1 },
+                    { text: '物理', id: 2 },
+                    { text: '化学化工', id: 3 },
+                    { text: '力学', id: 4 },
+                    { text: '健康生命&医学', id: 5 }
+                ],
+            }, {
+                text: '商科类',
+                children: [
+                    { text: '创业', id: 1 },
+                    { text: '创青春', id: 2 },
+                    { text: '商业', id: 3 }
+                ],
+            }, {
+                text: '文体类',
+                children: [
+                    { text: '外语', id: 1 },
+                    { text: 'UI设计', id: 2 },
+                    { text: '体育', id: 3 },
+                    { text: '工业&创意设计', id: 4 },
+                    { text: '服装设计', id: 5 },
+                    { text: '歌舞书画&摄影', id: 6 },
+                    { text: '模特', id: 7 },
+                    { text: '演讲主持&辩论', id: 8 },
+                    { text: '电子竞技', id: 9 },
+                    { text: '科学文化艺术节', id: 10 }
+                ],
+            }, {
+                text: '综合类',
+                children: [
+                    { text: '挑战杯', id: 1 },
+                    { text: '环保公益', id: 2 },
+                    { text: '职业技能', id: 3 },
+                    { text: '社会综合', id: 4 }
+                ],
+            }],
+            activeId: 1,
+            activeIndex: 0,
+
+            page: 1,
+            loading: false, // 当loading为true时，转圈圈
+            finished: false, // 数据是否请求结束，结束会先显示- 没有更多了 -
+            noData: false, // 如果没有数据，显示暂无数据
+            isLoading:false, // 下拉的加载图案
+
+
             active: 1,
             value1: '',
             styleTitle: '类别',
@@ -74,40 +149,138 @@ export default {
             levelTitle: '级别',
             value3: '',
             sortTitle: '排序',
-            option1: [
-                { text: '全部', value: 0 },
-                { text: '工科类', value: 1 },
-                { text: '商科类', value: 2 },
-                { text: '文体类', value: 3 },
-                { text: '综合类', value: 4 },
-            ],
             option2: [
                 { text: '全部', value: 0 },
-                { text: '国际级', value: 1 },
-                { text: '国家级', value: 2 },
-                { text: '省级', value: 3 },
-                { text: '市级', value: 4 },
-                { text: '校级', value: 5 },
+                { text: '自由', value: 1 },
+                { text: '国际级', value: 2 },
+                { text: '国家级', value: 3 },
+                { text: '省级', value: 4 },
+                { text: '市级', value: 5 },
+                { text: '校级', value: 6 },
             ],
             option3: [
-                { text: '综合', value: 0 },
-                { text: '最近更新', value: 1 },
-                { text: '近期报名', value: 2 },
+                { text: '报名时间', value: 0 },
+                { text: '比赛时间', value: 1 },
             ],
+
+            competitionList: []
         };
     },
+    created() {
+        this.initCompetitionList();
+    },
     methods: {
-        changeStyleTitle (i) {
-            this.styleTitle = this.option1[i].text;
+        initCompetitionList() {
+            let nowDate = new Date();
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  //
+            
+            let level = null;   //级别
+            let type = null;  //类别
+            if(this.levelTitle != '级别') {
+                level = this.levelTitle;
+            }
+            if(this.styleTitle != '类别') {
+                type = this.styleTitle;
+            }
+            let orderBy = null;  //排序
+            if(this.sortTitle == "报名时间") orderBy = "enrollStart";
+            else if(this.sortTitle == "比赛时间") orderBy = "contestStart";
+
+            this.axios({
+                method: "GET",
+                url: "https://soft.leavessoft.cn/contest",
+                params: {
+                    pageNum: this.page,
+                    level: level,
+                    type: type,
+                    orderBy: orderBy
+                }
+            }).then((res) => {
+                this.loading = false
+
+                let list = res.data.data.list;
+                // 如果没有数据，显示暂无数据
+                if (list.length == 0 && this.page == 1) {
+                    this.noData = true
+                }
+                
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.title = index.name;
+                    listItem.imageUrl = index.picUrl;
+                    listItem.level = index.level;
+                    listItem.id = index.id;
+
+                    let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
+                    let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
+                    if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+                        let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                        listItem.distance = '离报名截止还有' + distance + '天';
+                        listItem.state = '正在报名'; 
+                        listItem.stateColor = '#22BFA7';
+                    } 
+                    else if(new Date(nowTime) <= enrollStart) {
+                        listItem.state = '即将报名';
+                        listItem.stateColor = '#05C0FF';
+                    }
+                    else {
+                        listItem.state = '报名结束';
+                        listItem.stateColor = '#AAAAAA';
+                    }
+                    this.competitionList.push(listItem);
+                })
+                this.page++;
+                // 如果加载完毕，显示没有更多了
+                if (this.page == res.data.data.pages + 1) {
+                    this.finished = true;
+                }
+            }).catch(() => {
+                this.noData = true;
+            });
+        },
+        changeStyleTitle () {
+            if(this.activeIndex != 0) 
+                this.styleTitle = this.items[this.activeIndex].children[this.activeId - 1].text;
+            else this.styleTitle = "类别";
+            this.$refs.item.toggle();
+            // 重新初始化这些属性
+            this.isLoading = false
+            this.competitionList = []
+            this.page = 1
+            this.loading = false
+            this.finished = false
+            this.noData = false
+            // 请求信息
+            this.initCompetitionList();
         },
         changeLevelTitle (i) {
-            this.levelTitle = this.option2[i].text;
+            if(i == 0) this.levelTitle = "级别";
+            else this.levelTitle = this.option2[i].text;
+            // 重新初始化这些属性
+            this.isLoading = false
+            this.competitionList = []
+            this.page = 1
+            this.loading = false
+            this.finished = false
+            this.noData = false
+            // 请求信息
+            this.initCompetitionList();
         },
         changeSortTitle (i) {
             this.sortTitle = this.option3[i].text;
+            // 重新初始化这些属性
+            this.isLoading = false
+            this.competitionList = []
+            this.page = 1
+            this.loading = false
+            this.finished = false
+            this.noData = false
+            // 请求信息
+            this.initCompetitionList()
         },
 
-        lookMoreInfo() {
+        lookMoreInfo(e) {
+            localStorage.setItem("contestId", e);
             this.$router.push({
                 path: '/competitionInfo'
             })
@@ -117,6 +290,32 @@ export default {
                 path: '/searchPage'
             })
         },
+        initItem() {
+            if(this.activeIndex == 0) {
+               this.changeStyleTitle();
+            }
+            this.activeId = 1;
+        },
+        // 列表加载
+        onLoad () {
+            setTimeout(() => {
+                this.initCompetitionList()
+                this.loading = true
+            }, 500)
+        },
+        onRefresh () {
+            setTimeout(() => {
+                // 重新初始化这些属性
+                this.isLoading = false
+                this.competitionList = []
+                this.page = 1
+                this.loading = false
+                this.finished = false
+                this.noData = false
+                // 请求信息
+                this.initCompetitionList()
+            }, 500)
+        }
     }
 }
 </script>
@@ -161,7 +360,7 @@ export default {
 }
 .itemState {
     font-size: 16px;
-    color: #008080;
+    /* color: #008080; */
     font-weight: 600;
 }
 .itemDistance {

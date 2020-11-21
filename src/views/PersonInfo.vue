@@ -17,7 +17,7 @@
                     round
                     width="3rem"
                     height="3rem"
-                    style="position: absolute; right: 14px; pointer-events: none; z-index: 1;"
+                    style="position: absolute; right: 16px; pointer-events: none; z-index: 1;"
                     :src="avatarImg"
                 />
                 <van-uploader  :after-read="afterRead" multiple :max-count="1"/>

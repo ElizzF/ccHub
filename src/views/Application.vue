@@ -14,9 +14,8 @@
         
 
         <div class='cellList' style="padding-top: 47px;">
-            <van-cell title="路人丁" label="我想加入"
+            <van-cell 
                 size='large' style="align-items: center;position: relative;"
-                to="/applicationInfo"
             >
                 <template #icon>
                     <van-image
@@ -25,7 +24,16 @@
                         height="3rem"
                         style="margin-right: 15px;"
                         :src="avatarImg"
+                        @click="toAppliInfo"
                     />
+                </template>
+
+                <template #title>
+                    <div class='appliTitle' @click="toAppliInfo">路人丁</div>
+                </template>
+
+                <template #label>
+                    <div class='appliLabel' @click="toAppliInfo">我想加入</div>
                 </template>
 
                 <template #right-icon>
@@ -99,6 +107,11 @@ export default {
                 path: '/chat'
             })
         },
+        toAppliInfo() {
+            this.$router.push({
+                path: '/applicationInfo'
+            })
+        }
 
         
     }
