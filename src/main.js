@@ -9,6 +9,9 @@ import 'vant/lib/index.css';
 import Step from 'ant-design-vue/lib/steps';
 import 'ant-design-vue/dist/antd.css';
 
+import api from "./api";
+
+Vue.use(api);
 Vue.use(Step);
 
 Vue.use(Vant);

@@ -107,6 +107,9 @@ export default {
       isDisplayZ: false
     }
   },
+  mounted(){
+      this.getData()
+  },
   methods: {
     onClickLeft() {
       this.$router.push({
@@ -121,6 +124,14 @@ export default {
         this.isDisplayJ = false;
         this.isDisplayZ = true;
       }
+    },
+    init(){
+
+    },
+    getData(){
+        this.$api.Team.GetMyTeams().then(data=>{
+            console.log(data)
+        })
     }
   }
 }

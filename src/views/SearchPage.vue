@@ -16,12 +16,12 @@
             style="padding-top: 57px;"
             show-action
         >
-            <template #action> 
+            <template #action>
                 <van-button round type="info" style="height: 30px; display: inline-block">搜索</van-button>
             </template>
         </van-search>
        
-       <div class='searchMain'>
+       <!-- <div class='searchMain'>
            <div class='hotSearch'>
                <div class='txt'>热门搜索</div>
                <van-grid :border="false" :column-num="3">
@@ -39,12 +39,15 @@
                     </van-grid-item>
                 </van-grid>
            </div>
+       </div>     -->
+       <div class="search-not-found__container">
+           <!-- 搜索404页面 -->
+           <div class="">
+               <img src="@/assets/image/search-404.jpg" />
+               <div style="text-align:center;margin-top:5px;">搜不到想要的竞赛</div>
+               <div style="text-align:center;margin-top:2px;"><a href="feedback">点击我反馈</a></div>
+           </div>
        </div>
-        
-
-
-        
-      
     </div>
 </template>
 
@@ -61,7 +64,9 @@ export default {
             ],
             historyItems: [
                 { id: 1, value: '数学建模' },
-            ]
+            ],
+            IsNotFound:false,
+            search_value:""
         };
     },
     created() {
@@ -85,6 +90,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1;
 }
 .container {
     height: 100%;
@@ -106,12 +112,18 @@ export default {
     border: none;
     border-radius: 17px;
 }
+.search-not-found__container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - 120px)
+}
 </style>
 
 <style>
 .navbar .van-nav-bar__title {
     color: #FFF;
-}   
+}
 .van-nav-bar .van-icon, .van-nav-bar__text {
     color: #FFF;
 }

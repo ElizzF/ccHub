@@ -105,6 +105,7 @@ export default {
   methods: {
     initContestInfo() {
       let contestId = localStorage.getItem("contestId");
+      this.contestId = contestId
       this.axios({
         method: "GET",
         url: "https://soft.leavessoft.cn/contest/" + contestId,
@@ -129,7 +130,8 @@ export default {
     },
     goCreateTeam() {
       this.$router.push({
-        path: '/createTeam'
+        path: '/createTeam',
+        query: {contestId:this.contestId}
       })
     }
   }
