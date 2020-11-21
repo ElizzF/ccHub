@@ -6,9 +6,7 @@
             class="navbar"
         />
 
-        <van-cell :title="username" :label="description" is-link to="/personInfo" 
-            style="padding-top: 60px; align-items: center;"
-        >
+        <van-cell :title="username" :label="description" is-link to="/personInfo" style="padding-top: 60px; align-items: center;">
             <template #icon>
                 <van-image
                     round
@@ -62,7 +60,7 @@ export default {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "GET",
-                url: "https://soft.leavessoft.cn/user/getInfo/0",
+                url: "/user/getInfo/0",
                 headers: {
                     'Authorization': userKey.accesstoken
                 }
@@ -89,12 +87,10 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1;
 }
 .cellList, .cellSafeList {
     margin-top: 10px;
 }
-
 </style>
 
 <style>

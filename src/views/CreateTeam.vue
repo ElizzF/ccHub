@@ -1,5 +1,5 @@
 <template>
-    <div class='container' style="background: rgba(242,242,242); height: 100%">
+    <div class='container' style="background: #FFF; height: 100%">
         <!-- 导航栏 -->
         <van-nav-bar
             title="创建队伍"
@@ -19,13 +19,14 @@
                 
                 <van-field v-model="name" label="队长姓名*" />
                 <van-field v-model="phone" type="tel" label="手机号*" />
-                <van-field v-model="email" label="邮箱*" /> 
+                <van-field v-model="email" label="邮箱*" />
+              
                 <van-field v-model="description" type="textarea" label="拉人宣言*" />
 
             </div>
 
             <div class='bottom'>
-                <van-button round size="small" type="info" style="width: 120px;">创建队伍</van-button>
+                <van-button round type="info" style="width: 120px;">创建队伍</van-button>
             </div>
         </div>
        
@@ -84,14 +85,14 @@ export default {
     font-size: 14px;
 }
 .dataList {
-    margin: 0 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    padding-left: 20px;
+    padding-right: 20px;
 }
 .bottom {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 </style>
 
@@ -102,11 +103,11 @@ export default {
 .van-nav-bar .van-icon, .van-nav-bar__text {
     color: #FFF;
 }
-/* .dataList .van-cell {
+.dataList .van-cell {
     flex-direction: column;
 }
 .dataList .van-cell__value {
     border: 1px solid;
     margin-top: 2px;
-} */
+}
 </style>
