@@ -143,6 +143,11 @@ const routes = [
         path: "/feedback",
         name: 'FeedBack',
         component: () => import('@/views/FeedBack.vue')
+    },
+    {
+        path:"/jointeam",
+        name:'JoinTeam',
+        component:()=>import('@/views/JoinTeam.vue')
     }
 ]
 

@@ -7,10 +7,7 @@
             left-text="返回"
             left-arrow
             @click-left="onClickLeft"
-        />
-        
-        
-       
+        />   
         <div class="cellList" style="padding-top: 47px;">
             <div class='title'>{{teaminfo.name}}</div>
         </div>
@@ -47,12 +44,11 @@
         <div style="padding-top: 50px;">
             <van-goods-action class='bottomBar'>
                 <div class='barIcon'>
-                    <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
-                   
+                    <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />     
                 </div>
                 <div style="margin-right: 10px;">
                     <van-button round type="info" style="height: 35px; margin-right: 10px;" v-show="!isLeader">私聊队长</van-button>
-                    <van-button round type="info" style="height: 35px;" v-show="!isJoined">立即加入</van-button>
+                    <van-button round type="info" style="height: 35px;" v-show="!isJoined" @click="joinTeam">立即加入</van-button>
                 </div>
             </van-goods-action>
         </div>
@@ -115,6 +111,14 @@ export default {
         },
         onClickLeft() {
             this.$router.back()
+        },
+        joinTeam(){
+            if (!this.isJoined){
+                this.$router.push({
+                    path:"/jointeam",
+                    query:{teamid:this.teamid}
+                })
+            }
         }
 
         

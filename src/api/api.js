@@ -111,6 +111,28 @@ export class Team{
         })
     }
 
+    static async JoinTeam(teamId,requestText){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'post',
+                url:`/team/join/${teamId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{requestText}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
     static async GetContestTeam(contestId){
         return await new Promise((resolve,reject)=>{
             let options = {
@@ -139,6 +161,30 @@ export class Contest{
             let options = {
                 method: 'get',
                 url:`/contest/${contestId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+}
+
+export class Message{
+    static async GetMessageList(){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/message/list`,
                 headers:{
                     "Content-Type":"application/json"
                 },
