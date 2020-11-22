@@ -108,7 +108,7 @@ export default {
       this.contestId = contestId
       this.axios({
         method: "GET",
-        url: "https://soft.leavessoft.cn/contest/" + contestId,
+        url: "/contest/" + contestId,
       }).then((res) => {
         this.title = res.data.data.name;
         this.imgUrl = res.data.data.picUrl;
@@ -124,9 +124,7 @@ export default {
       });
     },
     onClickLeft() {
-      this.$router.push({
-        path: '/competition'
-      })
+      this.$router.back();
     },
     goCreateTeam() {
       this.$router.push({

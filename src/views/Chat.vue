@@ -6,12 +6,14 @@
             class="navbar"
         />
 
-        <van-search
-            v-model="search_value"
-            shape="round"
-            placeholder="搜索"
-            style="padding-top: 57px;"
-        />
+        <form action="javascript:return true" @submit.prevent="formSubmit">
+            <van-search
+                v-model="search_value"
+                shape="round"
+                placeholder="搜索"
+                style="padding-top: 57px;"
+            />
+        </form>
 
         <div class='chatList'>
             <van-swipe-cell style="align-items: center;" class='chatListItem'>
@@ -95,6 +97,11 @@ export default {
             search_value: '',
         };
     },
+    methods: {
+        formSubmit () {
+            return false; 
+        }
+    }
 }
 </script>
 

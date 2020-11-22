@@ -7,12 +7,15 @@
         />
         <!-- 这是首页头部搜索栏+索引栏 -->
         <div class='topBar' style="background: #fff; padding-bottom: 10px;">
-            <van-search
-                v-model="search_value"
-                shape="round"
-                placeholder="请输入你感兴趣的内容"
-                style="padding-top: 57px;"
-            />
+            <!-- 设置移动端软键盘有搜索 -->
+            <form action="javascript:return true" @submit.prevent="formSubmit">
+                <van-search
+                    v-model="search_value"
+                    shape="round"
+                    placeholder="请输入你感兴趣的内容"
+                    style="padding-top: 57px;"
+                />
+            </form>
             <van-row type="flex" justify="space-around" class="infoBar">
                 <van-col span="6">
 
@@ -87,36 +90,12 @@
                 <div class='recentAboutMore' @click="toMoreCompetition">更多></div>
             </div>
             <div class='eventList'>
-                <div class='eventItem' @click="toComInfo">
-                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
+                <div class='eventItem' v-for="item in recentList" :key="item.id" @click="lookMoreInfo(item.id)">
+                    <van-image width="50vw" height="98" radius="15" :src="item.imgUrl" />
                     <div class='eventInfo'>
-                        <div class='eventTxt'>第四届工业大数据创新竞赛</div>
-                        <div class='eventState'>正在进行</div>
-                        <div class="eventTime">12.01 07:00-12.31 23:59</div>
-                    </div>
-                </div>
-                <div class='eventItem'>
-                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
-                    <div class='eventInfo'>
-                        <div class='eventTxt'>第四届工业大数据创新竞赛</div>
-                        <div class='eventState'>正在进行</div>
-                        <div class="eventTime">12.01 07:00-12.31 23:59</div>
-                    </div>
-                </div>
-                <div class='eventItem'>
-                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
-                    <div class='eventInfo'>
-                        <div class='eventTxt'>第四届工业大数据创新竞赛</div>
-                        <div class='eventState'>正在进行</div>
-                        <div class="eventTime">12.01 07:00-12.31 23:59</div>
-                    </div>
-                </div>
-                <div class='eventItem'>
-                    <van-image width="166" height="98" radius="15" :src="require('../assets/image/testImg.svg')" />
-                    <div class='eventInfo'>
-                        <div class='eventTxt'>第四届工业大数据创新竞赛</div>
-                        <div class='eventState'>正在进行</div>
-                        <div class="eventTime">12.01 07:00-12.31 23:59</div>
+                        <div class='eventTxt'>{{ item.title }}</div>
+                        <div class='eventState'>{{ item.state }}</div>
+                        <div class="eventTime"> {{ item.time }}</div>
                     </div>
                 </div>
 
@@ -138,9 +117,49 @@ export default {
         return {
             search_value: '',
             active: 0,
+            recentList: []
         };
     },
+    created() {
+        this.initRecentEventList();
+    },
     methods: {
+        initRecentEventList() {
+            let nowDate = new Date();
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
+            this.axios({
+                method: "GET",
+                url: "/contest",
+                params: {
+                    pageSize: 6
+                }
+            }).then((res) => {
+                let list = res.data.data.list;
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.title = index.name;
+                    listItem.imgUrl = index.picUrl;
+                    listItem.id = index.id;
+                    if(index.contestStart == index.contestEnd) listItem.time = "比赛时间尚未决定";
+                    else {
+                        listItem.time = index.contestStart + " — " + index.contestEnd;
+                    }
+
+                    let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
+                    let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
+                    if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+                        listItem.state = '正在报名'; 
+                    } 
+                    else if(new Date(nowTime) <= enrollStart) {
+                        listItem.state = '即将报名';
+                    }
+                    else {
+                        listItem.state = '报名结束';
+                    }
+                    this.recentList.push(listItem);
+                })
+            })
+        },
         toCom() {
             this.$router.push({
                 path: '/competition'
@@ -156,7 +175,8 @@ export default {
                 path: '/myTeam'
             })
         },
-        toComInfo() {
+        lookMoreInfo(e) {
+            localStorage.setItem("contestId", e);
             this.$router.push({
                 path: '/competitionInfo'
             })
@@ -170,6 +190,9 @@ export default {
             this.$router.push({
                 path: '/moreRoute'
             })
+        },
+        formSubmit () {
+            return false; 
         }
     }
 }
@@ -196,6 +219,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 .myRouteTitleTxt, .recentTitleTxt {
     font-size: 20px;
@@ -281,6 +305,7 @@ export default {
 .eventItem {
     display: flex;
     margin-top: 10px;
+    align-items: center;
 }
 .eventInfo {
     margin-left: 20px;
@@ -291,7 +316,7 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
-    width: 90%;
+    width: 50vw;
 }
 .eventState {
     background: rgba(112, 182, 3, 0.23921568627451);
