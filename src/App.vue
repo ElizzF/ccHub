@@ -75,7 +75,7 @@ li {
     outline: none;
 }
 #app {
-    height: calc( 100% - 65px);
+    height: 100%;
 }
 #nav {
     padding: 30px;
