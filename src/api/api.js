@@ -201,6 +201,28 @@ export class Message{
             })
         })
     }
+
+    static async GetMessageDetail(messageid){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/message/get/${messageid}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
 }
 
 export class User{

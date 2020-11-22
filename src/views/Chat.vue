@@ -8,44 +8,77 @@
                 v-model="search_value"
                 shape="round"
                 placeholder="搜索"
-                style="padding-top: 57px;"
+                style="padding-top: 57px"
             />
         </form>
 
         <div class="chatList">
-            <van-swipe-cell
-                v-for="(item, index) in messageList"
-                :key="`${index}-${item.mid}`"
-                style="align-items: center"
-                class="chatListItem"
-            >
-                <van-cell
-                    :title="item.send_userName"
-                    label="查看详情"
-                    value="昨天"
-                    to="/chatPage"
+            <template v-for="(item, index) in messageList">
+                <van-swipe-cell
+                    :key="`${index}-${item.mid}`"
+                    v-if="(item.type == 0 || item.type == 1) && item.user"
                     style="align-items: center"
+                    class="chatListItem"
                 >
-                    <template #icon>
-                        <van-image
-                            round
-                            width="3rem"
-                            height="3rem"
-                            :src="item.user.avatar_url"
-                            style="margin-right: 10px"
+                    <van-cell
+                        :title="item.send_userName"
+                        label="查看详情"
+                        value="昨天"
+                        to="/chatPage"
+                        style="align-items: center"
+                    >
+                        <template #icon>
+                            <van-image
+                                round
+                                width="3rem"
+                                height="3rem"
+                                :src="item.user.avatar_url"
+                                style="margin-right: 10px"
+                            />
+                        </template>
+                    </van-cell>
+                    <template #right>
+                        <van-button
+                            square
+                            text="删除"
+                            type="danger"
+                            class="delete-button"
                         />
                     </template>
-                </van-cell>
-                <template #right>
-                    <van-button
-                        square
-                        text="删除"
-                        type="danger"
-                        class="delete-button"
-                    />
-                </template>
-            </van-swipe-cell>
- <!--
+                </van-swipe-cell>
+                <van-swipe-cell
+                    v-if="item.type == 2"
+                    :key="`${index}-${item.mid}`"
+                    style="align-items: center"
+                    class="chatListItem"
+                >
+                    <van-cell
+                        title="消息"
+                        :label="`${item.send_userName} 申请加入你的xxx队伍`"
+                        value="周六"
+                        to="/application"
+                        style="align-items: center"
+                    >
+                        <template #icon>
+                            <van-button type="info" class="infoAvatar"
+                                ><van-icon
+                                    class-prefix="iconfont icon"
+                                    name="bell"
+                                    size="23px"
+                            /></van-button>
+                        </template>
+                    </van-cell>
+                    <template #right>
+                        <van-button
+                            square
+                            text="删除"
+                            type="danger"
+                            class="delete-button"
+                        />
+                    </template>
+                </van-swipe-cell>
+            </template>
+            <!--
             <van-swipe-cell style="align-items: center" class="chatListItem">
                 <van-cell
                     title="路人丁"
@@ -102,32 +135,7 @@
                 </template>
             </van-swipe-cell>
 
-            <van-swipe-cell style="align-items: center" class="chatListItem">
-                <van-cell
-                    title="消息"
-                    label="某人申请加入你的xxx队伍"
-                    value="周六"
-                    to="/application"
-                    style="align-items: center"
-                >
-                    <template #icon>
-                        <van-button type="info" class="infoAvatar"
-                            ><van-icon
-                                class-prefix="iconfont icon"
-                                name="bell"
-                                size="23px"
-                        /></van-button>
-                    </template>
-                </van-cell>
-                <template #right>
-                    <van-button
-                        square
-                        text="删除"
-                        type="danger"
-                        class="delete-button"
-                    />
-                </template>
-            </van-swipe-cell>-->
+            -->
         </div>
 
         <van-tabbar v-model="active" route>
@@ -150,7 +158,7 @@
                 >聊天</van-tabbar-item
             >
             <van-tabbar-item icon="user-o" to="/mine">我的</van-tabbar-item>
-        </van-tabbar> 
+        </van-tabbar>
     </div>
 </template>
 
@@ -172,15 +180,18 @@ export default {
                 let tasks = [];
                 for (let message of data.data) {
                     {
-                        if (message.type == 0) {
-                            tasks.push(
-                                this.$api.User.GetUserInfoById(
-                                    message.send_uid
-                                ).then((data) => {
-                                    this.$set(message, "user", data.data);
-                                })
-                            );
-                        }
+                        tasks.push(
+                            this.$api.User.GetUserInfoById(
+                                message.send_uid
+                            ).then((data) => {
+                                this.$set(message, "user", data.data);
+                            })
+                        );
+                        // if (message.type==2 || message.type==3){
+                            this.$api.Message.GetMessageDetail(message.mid).then(data=>{
+                                console.log(data)
+                            })
+                        // }
                     }
                 }
                 Promise.all(tasks).then(() => {
@@ -189,9 +200,9 @@ export default {
             });
             // TODO: 时间格式化
         },
-        formSubmit () {
-            return false; 
-        }
+        formSubmit() {
+            return false;
+        },
     },
 };
 </script>
