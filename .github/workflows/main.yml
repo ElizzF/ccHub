@@ -21,6 +21,6 @@ jobs:
       with:
         server: 112.74.61.151
         username: sas
-        password: saser
+        password: ${{ secrets.FTPSECRET }}
         local-dir: "./dist/"
         server-dir: "./cc/"  

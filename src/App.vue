@@ -65,18 +65,17 @@ export default {
 /* Reset Css */
 body,
 html {
-    margin: 0;
-    padding: 0;
+    margin: 0  !important;
+    padding: 0  !important;
+    height: calc(100% - 25px)!important;
 }
 ul,
 li {
     list-style: none;
     outline: none;
 }
-html,
-body,
 #app {
-    height: 100%;
+    height: calc( 100% - 65px);
 }
 #nav {
     padding: 30px;

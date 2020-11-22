@@ -12,21 +12,21 @@
         
        
         <div class="cellList" style="padding-top: 47px;">
-            <div class='title'>路人甲的队伍</div>
+            <div class='title'>{{teaminfo.name}}</div>
         </div>
 
         <div class='cellList' style="margin-top: 10px;">
-            <van-cell title="拉人宣言" label="这是拉人宣言" size="large" title-style="color: black"></van-cell>
+            <van-cell title="拉人宣言" :label="teaminfo.team_description" size="large" title-style="color: black"></van-cell>
         </div>
 
         <van-cell class='teamCellTxt' title="成员简介" title-class="teamTxt"/>
 
         <div class='cellList' style="margin-top: 10px;">
-            <van-cell label="个人简介：想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉" size='large' style="align-items: center;position: relative; margin-bottom: 7px">
+            <van-cell v-for="(item,index) in teaminfo.teamPartners" :key="`${item.uid}-${index}`" :label="`个人简介:${item.info.description}`" size='large' style="align-items: center;position: relative; margin-bottom: 7px">
                 <template #title>
                     <div style="display: flex;">
-                        <span class="custom-title">{{ teammateName }}</span>
-                        <div class='tag'>队长</div>
+                        <span class="custom-title">{{item.uname}}</span>
+                        <div class='tag'>{{item.position==1?"队长":"队员"}}</div>
                     </div>
                 </template>
                 <template #icon>
@@ -35,45 +35,7 @@
                         width="3rem"
                         height="3rem"
                         style="margin-right: 15px;"
-                        :src="avatarImg"
-                    />
-                
-                </template>
-            </van-cell>
-
-            <van-cell label="个人简介：想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉" size='large' style="align-items: center;position: relative; margin-bottom: 7px;">
-                <template #title>
-                    <div style="display: flex;">
-                        <span class="custom-title">{{ teammateName }}</span>
-                        <div class='tag'>队员</div>
-                    </div>
-                </template>
-                <template #icon>
-                    <van-image
-                        round
-                        width="3rem"
-                        height="3rem"
-                        style="margin-right: 15px;"
-                        :src="avatarImg"
-                    />
-                
-                </template>
-            </van-cell>
-
-            <van-cell label="个人简介：想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉想睡觉" size='large' style="align-items: center;position: relative; margin-bottom: 7px;">
-                <template #title>
-                    <div style="display: flex;">
-                        <span class="custom-title">{{ teammateName }}</span>
-                        <div class='tag'>队员</div>
-                    </div>
-                </template>
-                <template #icon>
-                    <van-image
-                        round
-                        width="3rem"
-                        height="3rem"
-                        style="margin-right: 15px;"
-                        :src="avatarImg"
+                        :src="item.info.avatar_url"
                     />
                 
                 </template>
@@ -89,42 +51,71 @@
                    
                 </div>
                 <div style="margin-right: 10px;">
-                    <van-button round type="info" style="height: 35px; margin-right: 10px;">私聊队长</van-button>
-                    <van-button round type="info" style="height: 35px;">立即加入</van-button>
+                    <van-button round type="info" style="height: 35px; margin-right: 10px;" v-show="!isLeader">私聊队长</van-button>
+                    <van-button round type="info" style="height: 35px;" v-show="!isJoined">立即加入</van-button>
                 </div>
             </van-goods-action>
         </div>
-        
-
-
         
       
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 // import { Dialog } from 'vant'
 export default {
     data() {
         return {
-            teammateName: '路人甲',
+            teaminfo:{
+                team_description:"",
+                name:""
+            },
             checked: true,
         };
     },
+    computed:{
+        ...mapState([
+            "userinfo"
+        ]),
+        isJoined(){
+            if (!this.teaminfo.teamPartners) return false     
+            let index = this.teaminfo.teamPartners.findIndex(e=>e.uid==this.userinfo.id);
+            return index!=-1
+        },
+        isLeader(){
+            if (!this.teaminfo.teamPartners) return false     
+            let index = this.teaminfo.teamPartners.findIndex(e=>e.uid==this.userinfo.id && e.position==1);
+            return index!=-1
+        }
+    },
     created() {
-        this.initUserData();
+        
+    },
+    mounted(){
+        this.teamid = this.$route.query.teamid
+        if (!this.teamid){
+            this.$router.back()
+        }
+        this.GetTeamInfo()
     },
     methods: {
-        initUserData() {
-            
-        },
-        
-       
-        onClickLeft() {
-            this.$router.push({
-                path: '/competitionInfo'
+        GetTeamInfo(){
+            this.$api.Team.GetDetail(this.teamid).then(async data=>{
+                data.data.teamPartners.sort((a,b)=>a.position>b.position)
+                for (let userInfo of data.data.teamPartners){
+                    await this.$api.User.GetUserInfoById(userInfo.uid).then(data=>{
+                        if (data.data)
+                            data.data.description=data.data.description?data.data.description:"无";
+                        this.$set(userInfo,"info",data.data)
+                    })
+                }              
+                this.teaminfo = data.data
             })
         },
+        onClickLeft() {
+            this.$router.back()
+        }
 
         
     }

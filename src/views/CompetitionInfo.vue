@@ -33,24 +33,13 @@
     <van-cell class='allTroopscellTxt' title="全部队伍" title-class="allTroopsTxt"/>
 
     <div class='cellGroup' style="padding-bottom: 50px;">
-      <van-cell title="路人甲 的队伍" label="小组成员数：2" is-link to="/teamInfo" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
+      <van-cell  v-for="(team,index) in teams" :key="`${team.tid}-${index}`" :title="`队伍名:${team.tname}`" :label="`小组成员数：${team.teamPartnerUrls.length+1}`" is-link :to="`/teamInfo?teamid=${team.tid}`" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
         <template #icon>
           <van-image
               round
               width="4rem"
               height="4rem"
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
-              style="margin-right: 10px;"
-          />
-        </template>
-      </van-cell>
-      <van-cell title="路人甲 的队伍" label="该小组暂时还没有成员" is-link to="/" title-class='cellStyle' label-class='labelStyle' style="align-items: center;">
-        <template #icon>
-          <van-image
-              round
-              width="4rem"
-              height="4rem"
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
+              :src="team.leaderAvatarUrl"
               style="margin-right: 10px;"
           />
         </template>
@@ -86,6 +75,7 @@ export default {
       enrollTime: '',
       contestTime: '',
       info: '',
+      teams:[],
 
       showShare: false,
       options: [
@@ -101,11 +91,13 @@ export default {
   },
   created() {
     this.initContestInfo();
+    this.getTeams()
   },
   methods: {
     initContestInfo() {
       let contestId = localStorage.getItem("contestId");
       this.contestId = contestId
+
       this.axios({
         method: "GET",
         url: "https://soft.leavessoft.cn/contest/" + contestId,
@@ -127,6 +119,12 @@ export default {
       this.$router.push({
         path: '/competition'
       })
+    },
+    getTeams(){
+        this.$api.Team.GetContestTeam(this.contestId).then(data=>{
+            data=data.data
+            this.teams = data
+        })
     },
     goCreateTeam() {
       this.$router.push({

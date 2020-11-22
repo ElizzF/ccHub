@@ -3,8 +3,10 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+
 export default new Vuex.Store({
   state: {
+      userinfo:JSON.parse(localStorage.getItem("userData")?localStorage.getItem("userData"):"{}")
   },
   mutations: {
   },

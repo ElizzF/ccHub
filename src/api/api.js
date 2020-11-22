@@ -119,7 +119,54 @@ export class Team{
                 headers:{
                     "Content-Type":"application/json"
                 },
-                data:{teamName,description}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+}
+
+export class Contest{
+    static async GetContestById(contestId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/contest/${contestId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+}
+
+export class User{
+    static async GetUserInfoById(userId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/user/getInfo/${userId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
             }
             axios(options).then(res=>{
                 resolve(res.data)
