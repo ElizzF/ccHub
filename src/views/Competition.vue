@@ -22,12 +22,13 @@
             </van-dropdown-menu>
         </div>
 
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class='comList'>
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class='comList' ref="pullRefresh">
             <div v-if='noData' style="text-align: center">
                 暂无数据
             </div>
             <template v-else>
                 <van-list
+                    class="listMain"
                     v-model="loading"
                     :finished="finished"
                     finished-text="- 没有更多了 -"
@@ -46,16 +47,6 @@
                 </van-list>
             </template>
 
-            <!-- <div v-for="item in competitionList" :key="item.id" class='comListItem' @click="lookMoreInfo()">
-                <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl" />
-                <div class='itemTop'>
-                    <div class='itemState'>{{ item.state }}</div>
-                    <div class='itemDistance'>离报名截止还有45天</div>
-                </div>
-                <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-                <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-            </div> -->
-           <!-- :src="require('../assets/image/imgTest.jpg')" -->
         </van-pull-refresh>
 
    
@@ -163,16 +154,27 @@ export default {
                 { text: '比赛时间', value: 1 },
             ],
 
-            competitionList: []
+            competitionList: [],
+            scroll: 0
         };
     },
     created() {
         this.initCompetitionList();
     },
+    destroyed() {
+        //保存当前页面状态
+        this.scroll = document.documentElement.scrollTop;
+        this.$store.state.comtestData = this.$data;
+    },
     methods: {
         initCompetitionList() {
+            if(this.$store.state.comtestData != null) {
+                this.replaceCompetitionList();
+                this.$store.state.comtestData = null;
+                return ;
+            }
             let nowDate = new Date();
-            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  //
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
             
             let level = null;   //级别
             let type = null;  //类别
@@ -183,12 +185,12 @@ export default {
                 type = this.styleTitle;
             }
             let orderBy = null;  //排序
-            if(this.sortTitle == "报名时间") orderBy = "enrollStart";
+            if(this.sortTitle == "报名时间") orderBy = "enrollEnd";
             else if(this.sortTitle == "比赛时间") orderBy = "contestStart";
 
             this.axios({
                 method: "GET",
-                url: "https://soft.leavessoft.cn/contest",
+                url: "/contest",
                 params: {
                     pageNum: this.page,
                     level: level,
@@ -238,6 +240,33 @@ export default {
                 this.noData = true;
             });
         },
+
+        //恢复保存的页面状态
+        replaceCompetitionList() {
+            let tempData = this.$store.state.comtestData;
+            this.activeId = tempData.activeId;
+            this.activeIndex = tempData.activeIndex;
+
+            this.page = tempData.page;
+            this.loading = tempData.loading;
+            this.finished = tempData.finished;
+            this.noData = tempData.noData;
+            this.isLoading = tempData.isLoading;
+
+            this.active = tempData.active;
+            this.value1 = tempData.value1;
+            this.styleTitle = tempData.styleTitle;
+            this.value2 = tempData.value2;
+            this.levelTitle = tempData.levelTitle;
+            this.value3 = tempData.value3;
+            this.sortTitle = tempData.sortTitle;
+            this.competitionList = tempData.competitionList;
+            this.scroll = tempData.scroll;
+            this.$nextTick(() => {
+                document.documentElement.scrollTop = tempData.scroll;
+            })
+        },
+
         changeStyleTitle () {
             if(this.activeIndex != 0) 
                 this.styleTitle = this.items[this.activeIndex].children[this.activeId - 1].text;
@@ -276,7 +305,7 @@ export default {
             this.finished = false
             this.noData = false
             // 请求信息
-            this.initCompetitionList()
+            this.initCompetitionList();
         },
 
         lookMoreInfo(e) {

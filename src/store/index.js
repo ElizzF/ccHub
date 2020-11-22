@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-      userinfo:JSON.parse(localStorage.getItem("userData")?localStorage.getItem("userData"):"{}")
+    comtestData: null,
+    userinfo:JSON.parse(localStorage.getItem("userData")?localStorage.getItem("userData"):"{}")
   },
   mutations: {
   },

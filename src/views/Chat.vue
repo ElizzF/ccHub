@@ -3,12 +3,14 @@
         <!-- 导航栏 -->
         <van-nav-bar title="聊天" class="navbar" />
 
-        <van-search
-            v-model="search_value"
-            shape="round"
-            placeholder="搜索"
-            style="padding-top: 57px"
-        />
+        <form action="javascript:return true" @submit.prevent="formSubmit">
+            <van-search
+                v-model="search_value"
+                shape="round"
+                placeholder="搜索"
+                style="padding-top: 57px;"
+            />
+        </form>
 
         <div class="chatList">
             <van-swipe-cell
@@ -187,6 +189,9 @@ export default {
             });
             // TODO: 时间格式化
         },
+        formSubmit () {
+            return false; 
+        }
     },
 };
 </script>
