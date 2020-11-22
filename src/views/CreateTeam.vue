@@ -11,7 +11,7 @@
         
         <div class='main' style="margin-top: 46px;">
             <div class='top'>
-                <div class='topTitle'>2020年工业大数据创新竞赛</div>
+                <div class='topTitle'>{{contestInfo.name}}</div>
                 <div class='subTitle'>队伍人数1-3人</div>
             </div>
 
@@ -61,6 +61,9 @@ export default {
                     this.onClickLeft()
                 }
                 this.contestId = this.$route.query.contestId
+                this.$api.Contest.GetContestById(this.contestId).then(data=>{
+                    this.contestInfo=data.data 
+                })
             }
         },
         onClickLeft() {
