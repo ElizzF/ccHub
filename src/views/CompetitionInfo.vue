@@ -13,7 +13,7 @@
     </van-image>
     <van-cell-group>
       <van-cell :title="title" 
-                label="8888 浏览 | 624 关注" 
+                :label="watch" 
                 title-class='comTitle'
                 label-class="comLabel"
       />
@@ -74,8 +74,10 @@ export default {
       originator: '',
       enrollTime: '',
       contestTime: '',
+      watch: '',
       info: '',
       teams:[],
+
 
       showShare: false,
       options: [
@@ -104,6 +106,7 @@ export default {
       }).then((res) => {
         this.title = res.data.data.name;
         this.imgUrl = res.data.data.picUrl;
+        this.watch = res.data.data.watched + " 浏览";
         this.originator = "主办方 " + res.data.data.originator;
         this.enrollTime = "报名时间 " + res.data.data.enrollStart + " — " + res.data.data.enrollEnd;
         if(res.data.data.contestStart == res.data.data.contestEnd) 
@@ -116,7 +119,9 @@ export default {
       });
     },
     onClickLeft() {
-      this.$router.back();
+      this.$router.push({
+        path: '/competition'
+      })
     },
     getTeams(){
         this.$api.Team.GetContestTeam(this.contestId).then(data=>{
