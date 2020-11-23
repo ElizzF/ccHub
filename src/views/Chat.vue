@@ -16,14 +16,14 @@
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"
-                    v-if="item.type == 2  && item.user && item.detail"
+                    v-if="item.type == 0  && item.user && item.detail"
                     style="align-items: center"
                     class="chatListItem"
                 >
                     <van-cell
                         :title="item.send_userName"
-                        :label="item.detail.contain"
-                        :to="`/chatPage?mid=${item.mid}`"
+                        :label="`申请加入${item.detail.team_name}请求已处理`"
+                        :to="`/application?mid=${item.mid}`"
                         style="align-items: center"
                     >
                         <template #icon>

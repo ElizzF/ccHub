@@ -15,7 +15,7 @@ if (workbox) {
         // Cache CSS files
         /.*\.css/,
         // 使用缓存，但尽快在后台更新
-        workbox.strategies.staleWhileRevalidate({})
+        new workbox.strategies.StaleWhileRevalidate({})
     );
 
     // 缓存web的js资源
@@ -23,14 +23,14 @@ if (workbox) {
         // 缓存JS文件
         /.*\.js/,
         // 使用缓存，但尽快在后台更新
-        workbox.strategies.staleWhileRevalidate({
+        new workbox.strategies.StaleWhileRevalidate({
         })
     );
 
     // 缓存web的图片资源
     workbox.routing.registerRoute(
         /\.(?:png|gif|jpg|jpeg|svg)$/,
-        workbox.strategies.staleWhileRevalidate({
+        new workbox.strategies.StaleWhileRevalidate({
             cacheName: `${CACHE_NAME}-images`,
             plugins: [
                 new workbox.expiration.Plugin({
@@ -40,6 +40,19 @@ if (workbox) {
             ]
         })
     );
+
+    workbox.routing.registerRoute(
+        ({ request }) => request.destination === 'image',
+        new workbox.strategies.CacheFirst({
+            cacheName:`${CACHE_NAME}-avatar`,
+            plugins:[
+                new workbox.expiration.Plugin({
+                    maxEntries: 60,
+                    maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为1天
+                })
+            ]
+        })
+    )
 
     self.addEventListener("install", () => {
         self.skipWaiting();
