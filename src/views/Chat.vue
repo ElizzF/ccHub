@@ -76,6 +76,37 @@
                         />
                     </template>
                 </van-swipe-cell>
+                <van-swipe-cell
+                    :key="`${index}-${item.mid}`"
+                    v-if="item.type == 2  && item.user && item.detail"
+                    style="align-items: center"
+                    class="chatListItem"
+                >
+                    <van-cell
+                        :title="item.send_userName"
+                        :label="`${item.detail.contain}`"
+                        :to="`/application?mid=${item.mid}`"
+                        style="align-items: center"
+                    >
+                        <template #icon>
+                            <van-image
+                                round
+                                width="3rem"
+                                height="3rem"
+                                :src="item.user.avatar_url"
+                                style="margin-right: 10px"
+                            />
+                        </template>
+                    </van-cell>
+                    <template #right>
+                        <van-button
+                            square
+                            text="删除"
+                            type="danger"
+                            class="delete-button"
+                        />
+                    </template>
+                </van-swipe-cell>
             </template>
             <!--
             <van-swipe-cell style="align-items: center" class="chatListItem">
