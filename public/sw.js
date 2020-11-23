@@ -1,4 +1,4 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js')
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.0.0/workbox-sw.js')
 
 if (workbox) {
     workbox.core.setCacheNameDetails({
@@ -33,7 +33,7 @@ if (workbox) {
         new workbox.strategies.StaleWhileRevalidate({
             cacheName: `${CACHE_NAME}-images`,
             plugins: [
-                new workbox.expiration.Plugin({
+                new workbox.expiration.ExpirationPlugin({
                     maxEntries: 60,
                     maxAgeSeconds: 30 * 24 * 60 * 60 // 设置缓存有效期为30天
                 })
@@ -44,9 +44,12 @@ if (workbox) {
     workbox.routing.registerRoute(
         ({ request }) => request.destination === 'image',
         new workbox.strategies.CacheFirst({
-            cacheName:`${CACHE_NAME}-avatar`,
-            plugins:[
-                new workbox.expiration.Plugin({
+            cacheName: `${CACHE_NAME}-avatar`,
+            plugins: [
+                new workbox.cacheableResponse.CacheableResponsePlugin({
+                    statuses: [0],
+                }),
+                new workbox.expiration.ExpirationPlugin({
                     maxEntries: 60,
                     maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为1天
                 })
