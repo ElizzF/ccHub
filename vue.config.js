@@ -22,9 +22,11 @@ module.exports = {
             background_color: "#0079fe"
         },
         workboxPluginMode: 'InjectManifest',
+        appleMobileWebAppCapable:"yes",
+        appleMobileWebAppStatusBarStyle:"#0079fe",
         workboxOptions: {
             // swSrc is required in InjectManifest mode.
-            swSrc: 'public/sw.js',
+            swSrc: './public/sw.js',
             // ...other Workbox options...
         }
     }

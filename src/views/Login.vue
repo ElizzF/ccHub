@@ -78,7 +78,7 @@ export default {
                 .then((res) => {
                     this.setUserInfo(res.data.data);
                     if (
-                        !this.$route.query.redirect &&
+                        this.$route.query.redirect &&
                         this.$route.query.redirect.indexOf("/login")==-1
                     ) {
                         this.$router.push({
