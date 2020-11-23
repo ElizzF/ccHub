@@ -36,7 +36,7 @@
                         @load="onLoad"
                         :offset="130"
                     >
-                        <van-cell v-for="item in searchList" :key="item.id" :title="item.title" title-class="titleStyle">
+                        <van-cell @click="lookMoreInfo(item.id)" v-for="item in searchList" :key="item.id" :title="item.title" title-class="titleStyle">
                             <template #label>
                                 <div class="labelDistance" :style="{ color: item.stateColor }">{{ item.state }}</div>
                                 <div class="labelTime">{{ item.time }}</div>
@@ -44,7 +44,7 @@
                         </van-cell>
                     </van-list>
                 </template>
-        </van-pull-refresh>
+            </van-pull-refresh>
        </div>
        <!-- <div class='searchMain'>
            <div class='hotSearch'>
@@ -141,7 +141,6 @@ export default {
                     if(index.contestStart == index.contestEnd) listItem.time = "比赛时间尚未决定";
                     else listItem.time = index.contestStart + " — " + index.contestEnd;
                     
-
                     let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
                     let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
                     if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
@@ -175,6 +174,13 @@ export default {
             if(event.keyCode==13) { 
                 this.onLoad();
             }
+        },
+
+        lookMoreInfo(e) {
+            localStorage.setItem("contestId", e);
+            this.$router.push({
+                path: '/competitionInfo'
+            })
         },
 
         // 列表加载

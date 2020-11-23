@@ -20,7 +20,7 @@
                     style="position: absolute; right: 16px; pointer-events: none; z-index: 1;"
                     :src="avatarImg"
                 />
-                <van-uploader  :after-read="afterRead" multiple :max-count="1"/>
+                <van-uploader :after-read="afterRead" multiple :max-count="1"/>
             </template>
         </van-cell>
        
@@ -62,9 +62,7 @@ export default {
             description: '',
             sex: '',
 
-            fileList: [],
             avatarImg: '',
-
             flag: 0
         };
     },
@@ -86,7 +84,7 @@ export default {
                 this.phone = userData.phone;
                 this.email = userData.email;
                 this.description = userData.description;
-                this.avatarImg = userData.avatar_url + "?id="+ Math.random();
+                this.avatarImg = userData.avatar_url;
                 this.name = userData.name;
                 if(userData.sex == 1) this.sex = '男';
                 else this.sex = '女';
@@ -142,6 +140,16 @@ export default {
             })
         },
         afterRead(file) {
+            if(file.length != undefined) {
+                 Dialog.alert({
+                    title: '警告',
+                    theme: 'round-button',
+                    message: "只能选择一张图片，请重新选择！",
+                    confirmButtonColor: '#1989FA'
+                })
+                this.flag = 0;
+                return ;
+            }
             // 此时可以自行将文件上传至服务器
             this.avatarImg = file.content;
             this.flag = 1;  //表明已经换头像了
@@ -157,7 +165,6 @@ export default {
         },
 
         dataURLtoBlob(dataurl) {
-            console.log(dataurl);
             var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                 bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
             while (n--) {

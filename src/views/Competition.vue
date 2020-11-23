@@ -42,7 +42,8 @@
                             <div class='itemDistance'>{{ item.distance }}</div>
                         </div>
                         <div class='itemTitle'>{{ item.title }}</div>
-                        <div class='itemInfo'>8888 浏览 | 624 关注 | {{ item.level }}</div>
+                        <div><van-icon color="red" v-for="fire in item.fireNum" :key="fire" class-prefix="iconfont icon" name="fire" size='23px' /></div>
+                        <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.level }} </div>
                     </div>
                 </van-list>
             </template>
@@ -151,11 +152,11 @@ export default {
             ],
             option3: [
                 { text: '报名时间', value: 0 },
-                { text: '比赛时间', value: 1 },
+                { text: '浏览量', value: 1 },
             ],
 
             competitionList: [],
-            scroll: 0
+            scroll: 0,
         };
     },
     created() {
@@ -186,7 +187,7 @@ export default {
             }
             let orderBy = null;  //排序
             if(this.sortTitle == "报名时间") orderBy = "enrollEnd";
-            else if(this.sortTitle == "比赛时间") orderBy = "contestStart";
+            else if(this.sortTitle == "浏览量") orderBy = "watched";
 
             this.axios({
                 method: "GET",
@@ -205,13 +206,17 @@ export default {
                 if (list.length == 0 && this.page == 1) {
                     this.noData = true
                 }
-                
                 list.forEach((index) => {
                     let listItem = {};
                     listItem.title = index.name;
                     listItem.imageUrl = index.picUrl;
                     listItem.level = index.level;
                     listItem.id = index.id;
+                    listItem.watch = index.watched;
+
+                    let fireNum = parseInt(index.watched / 99);
+                    if(fireNum > 5) fireNum = 5;
+                    listItem.fireNum = fireNum;
 
                     let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
                     let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
