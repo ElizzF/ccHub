@@ -25,7 +25,7 @@
             v-if="isDisplayJ"
             style="background: rgba(242, 242, 242)"
         >
-            <div class="item" v-for="(item,index) in joined" :key="`${item.tid}${index}`">
+            <div class="item" v-for="(item,index) in joined" :key="`${item.tid}-${index}`">
                 <div class="itemTitle" >{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
@@ -35,6 +35,7 @@
                     title-class="cellStyle"
                     label-class="labelStyle"
                     style="align-items: center"
+                    size="small"
                 >
                     <template #icon>
                         <van-image
@@ -54,7 +55,7 @@
             v-else
             style="background: rgba(249, 249, 249)"
         >
-            <div class="item" v-for="(item,index) in created" :key="`${item.tid}${index}`">
+            <div class="item" v-for="(item,index) in created" :key="`${item.tid}-${index}`">
                 <div class="itemTitle" >{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
@@ -64,6 +65,7 @@
                     title-class="cellStyle"
                     label-class="labelStyle"
                     style="align-items: center"
+                   
                 >
                     <template #icon>
                         <van-image
@@ -114,6 +116,8 @@ export default {
         },
         init() {},
         getData() {
+            this.joined=[]
+            this.created=[]
             this.$api.Team.GetMyTeams().then((data) => {
                 data.data.forEach((teaminfo) => {
                     this.$api.Team.GetDetail(teaminfo.tid).then(async (data) => {

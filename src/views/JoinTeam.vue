@@ -14,11 +14,12 @@
         </van-nav-bar>
         <div class="main" style="margin-top: 46px">
             <div class="top">
-                <div class="topTitle">{{teaminfo.name}}</div>
-                <div class="subTitle">目前队伍人数:{{teaminfo.teamPartners.length}}</div>
+                <div class="topTitle">{{ teaminfo.name }}</div>
+                <div class="subTitle">
+                    目前队伍人数:{{ teaminfo.teamPartners.length }}
+                </div>
             </div>
             <div class="dataList">
-
                 <van-field
                     v-model="requestText"
                     type="textarea"
@@ -42,55 +43,61 @@
 </template>
 
 <script>
-import { Dialog, Notify } from 'vant';
+import { Dialog, Notify } from "vant";
 export default {
-    data(){
+    data() {
         return {
-            requestText:"",
-            teamid:null,
-            teaminfo:{
-                teamPartners:[]
-            }
-        }
+            requestText: "",
+            teamid: null,
+            teaminfo: {
+                teamPartners: [],
+            },
+        };
     },
-    mounted(){
-        this.teamid = this.$route.query.teamid
-        if (!this.teamid){
-            this.$router.back()
+    mounted() {
+        this.teamid = this.$route.query.teamid;
+        if (!this.teamid) {
+            this.$router.back();
         }
-        this.getTeamInfo()
+        this.getTeamInfo();
     },
-    methods:{
-        onClickLeft(){
-            this.$router.back()
+    methods: {
+        
+        onClickLeft() {
+            this.$router.back();
         },
-        getTeamInfo(){
-            this.$api.Team.GetDetail(this.teamid).then(data=>{
-                this.teaminfo = data.data
-            })
+        getTeamInfo() {
+            this.$api.Team.GetDetail(this.teamid).then((data) => {
+                this.teaminfo = data.data;
+            });
         },
-        joinTeam(){
-            if (this.requestText==""){
+        joinTeam() {
+            if (this.requestText == "") {
                 Dialog({
-                    message:"请填写您的申请理由哦"
-                })
+                    message: "请填写您的申请理由哦",
+                });
                 return;
             }
-            this.$api.Team.JoinTeam(this.teamid,this.requestText).then(data=>{
-                if (data.status==0){
-                    Notify({type:"success",message:"申请成功，请等待答复"})
-                }
-            }).catch(err=>{
-                Notify({type:"warning",message:err.message})
-            })
-        }
-    }
+            this.$api.Team.JoinTeam(this.teamid, this.requestText)
+                .then((data) => {
+                    if (data.status == 0) {
+                        Notify({
+                            type: "success",
+                            message: "申请成功，请等待答复",
+                        });
+                    }
+                })
+                .catch((err) => {
+                    Notify({ type: "warning", message: err.message });
+                });
+        },
+    },
 };
 </script>
 
 <style scoped>
 .navbar {
-    background: #0079FE;
+    background: #0079fe;
     position: fixed;
     top: 0;
     left: 0;
@@ -113,8 +120,8 @@ export default {
     font-size: 14px;
 }
 .dataList {
-    margin:5px 10px;
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+    margin: 5px 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 .bottom {
     display: flex;

@@ -6,3 +6,5 @@ export default {
         Vue.prototype.$api = api;
     }
 };
+
+export {api}

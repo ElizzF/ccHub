@@ -1,56 +1,71 @@
 <template>
-    <div class='container' style="background: rgba(242,242,242); height:100%">
+    <div
+        class="container"
+        style="background: rgba(242, 242, 242); height: 100%"
+    >
         <!-- 导航栏 -->
         <van-nav-bar
-            title="队伍详情"
+            :title="`${message.team_name} 队伍详情`"
             class="navbar"
             left-text="返回"
             left-arrow
             @click-left="onClickLeft"
         />
-        
-        
-       
-        
-
-        <div class='cellList' style="padding-top: 47px;">
-            <van-cell 
-                size='large' style="align-items: center;position: relative;"
+        <div class="cellList" style="padding-top: 47px">
+            <van-cell
+                size="large"
+                style="align-items: center; position: relative"
             >
                 <template #icon>
                     <van-image
                         round
                         width="3rem"
                         height="3rem"
-                        style="margin-right: 15px;"
-                        :src="avatarImg"
+                        style="margin-right: 15px"
+                        :src="message.userinfo.avatar_url"
                         @click="toAppliInfo"
                     />
                 </template>
-
                 <template #title>
-                    <div class='appliTitle' @click="toAppliInfo">路人丁</div>
+                    <div class="appliTitle" @click="toAppliInfo">
+                        {{ message.send_userName }}
+                    </div>
                 </template>
 
                 <template #label>
-                    <div class='appliLabel' @click="toAppliInfo">我想加入</div>
+                    <div class="appliLabel" @click="toAppliInfo">
+                        {{ message.contain }}
+                    </div>
                 </template>
 
                 <template #right-icon>
-                    <div v-if="display == 0">
-                        <van-button round type="info" @click="accept" class="acceptButton">同意</van-button>
-                        <van-button round color="#D7D7D7" type="info" @click="ignore" class="ignoreButton">忽略</van-button>
+                    <div v-if="message.type == 1">
+                        <van-button
+                            round
+                            type="info"
+                            @click="accept"
+                            class="acceptButton"
+                            >同意</van-button
+                        >
+                        <van-button
+                            round
+                            color="#D7D7D7"
+                            type="info"
+                            @click="ignore"
+                            class="ignoreButton"
+                            >忽略</van-button
+                        >
                     </div>
-                    <div v-if="display == 1">
-                        <div class="acceptTxt">已同意</div>
+                    <div v-if="message.type == 0">
+                        <div class="acceptTxt">已处理</div>
                     </div>
-                    <div v-if="display == 2">
+                    <!-- <div v-if="message.type == 3">
                         <div class="ignoreTxt">已忽略</div>
-                    </div>
+                    </div> -->
                 </template>
             </van-cell>
 
-            <van-cell title="路人丁" label="我想加入" 
+            <!-- <van-cell title="路人丁" label="我想加入" 
                 size='large' style="align-items: center;position: relative;"
             >
                 <template #icon>
@@ -66,15 +81,8 @@
                 <template #right-icon>
                     <div class="acceptTxt">已同意</div>
                 </template>
-            </van-cell>
-            
+            </van-cell> -->
         </div>
-
-        
-
-
-        
-      
     </div>
 </template>
 
@@ -83,44 +91,68 @@
 export default {
     data() {
         return {
-            teammateName: '路人甲',
+            teammateName: "路人甲",
             checked: true,
-            display: 0
+            display: 0,
+            message: {
+                userinfo: {},
+            },
         };
     },
-    created() {
-        this.initUserData();
+    mounted() {
+        this.mid = this.$route.query.mid;
+        if (!this.mid) {
+            this.$router.back();
+        }
+        this.getMessageDetail();
     },
     methods: {
-        initUserData() {
-            
-        },
         accept() {
-            this.display = 1;
+            this.$api.Team.DealRequest(this.mid,1).then(data=>{
+                if (data.status==0){
+                    this.getMessageDetail()
+                }
+            })
         },
         ignore() {
-            this.display = 2;
+             this.$api.Team.DealRequest(this.mid,2).then(data=>{
+                if (data.status==0){
+                    this.getMessageDetail()
+                }
+            })
         },
-       
+
         onClickLeft() {
             this.$router.push({
-                path: '/chat'
-            })
+                path: "/chat",
+            });
         },
         toAppliInfo() {
             this.$router.push({
-                path: '/applicationInfo'
-            })
+                path: "/applicationInfo",
+                query:{mid:this.mid}
+            });
+        },
+        getMessageDetail() {
+            this.$api.Message.GetMessageDetail(this.mid, 1).then(
+                async (data) => {
+                    let message = data.data
+                    await this.$api.User.GetUserInfoById(
+                        message.send_uid
+                    ).then((data) => {
+                        this.$set(message, "userinfo", data.data);
+                    });
+                    this.message = message 
+                }
+            );
         }
-
-        
-    }
-}
+    },
+};
 </script>
 
 <style scoped>
 .navbar {
-    background: #0079FE;
+    background: #0079fe;
     position: fixed;
     top: 0;
     left: 0;
@@ -136,7 +168,7 @@ export default {
     color: black;
 }
 .title {
-    background: #FFF;
+    background: #fff;
     display: flex;
     align-items: center;
     height: 50px;
@@ -145,33 +177,32 @@ export default {
     justify-content: center;
 }
 .teamTxt {
-  font-size: 16px;
-  margin-left: 15px;
-  color: black;
-  margin-top: 10px;
+    font-size: 16px;
+    margin-left: 15px;
+    color: black;
+    margin-top: 10px;
 }
 .acceptButton {
-    height: 30px; 
-    display: inline-block; 
+    height: 30px;
+    display: inline-block;
     margin-right: 10px;
 }
 .ignoreButton {
-    height: 30px; 
-    display: inline-block; 
+    height: 30px;
+    display: inline-block;
 }
-.ignoreTxt, .acceptTxt {
+.ignoreTxt,
+.acceptTxt {
     margin-right: 10px;
 }
-
-
 </style>
 
 <style>
 .navbar .van-nav-bar__title {
-    color: #FFF;
+    color: #fff;
 }
-.van-nav-bar .van-icon, .van-nav-bar__text {
-    color: #FFF;
+.van-nav-bar .van-icon,
+.van-nav-bar__text {
+    color: #fff;
 }
-
 </style>

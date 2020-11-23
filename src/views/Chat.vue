@@ -16,15 +16,14 @@
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"
-                    v-if="item.type == 0  && item.user && item.detail"
+                    v-if="item.type == 2  && item.user && item.detail"
                     style="align-items: center"
                     class="chatListItem"
                 >
                     <van-cell
                         :title="item.send_userName"
                         :label="item.detail.contain"
-                        value="昨天"
-                        to="/chatPage"
+                        :to="`/chatPage?mid=${item.mid}`"
                         style="align-items: center"
                     >
                         <template #icon>
@@ -55,8 +54,8 @@
                     <van-cell
                         title="消息"
                         :label="`${item.send_userName} 申请加入你的${item.tname}队伍`"
-                        value="周六"
-                        to="/application"
+                        :value="item.create_time | timeFormat"
+                        :to="`/application?mid=${item.mid}`"
                         style="align-items: center"
                     >
                         <template #icon>
@@ -134,74 +133,54 @@
                     />
                 </template>
             </van-swipe-cell>
-
             -->
         </div>
-
-        <van-tabbar v-model="active" route>
-            <van-tabbar-item icon="wap-home-o" to="/">首页</van-tabbar-item>
-            <van-tabbar-item
-                class="trophy"
-                icon-prefix="iconfont icon"
-                icon="trophy"
-                to="/competition"
-                >竞赛</van-tabbar-item
-            >
-            <van-tabbar-item
-                class="trophy"
-                icon-prefix="iconfont icon"
-                icon="jiangbei"
-                to="/certificate"
-                >证书</van-tabbar-item
-            >
-            <van-tabbar-item icon="chat-o" badge="20" to="/chat"
-                >聊天</van-tabbar-item
-            >
-            <van-tabbar-item icon="user-o" to="/mine">我的</van-tabbar-item>
-        </van-tabbar>
+        <nav-bottom v-model="active"></nav-bottom>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import NavBottom from '@/components/common/navBottom.vue';
 export default {
     data() {
         return {
             active: 3,
             search_value: "",
-            messageList: {},
         };
     },
+    components:{
+        NavBottom
+    },
+    computed:{
+        ...mapState([
+            "messageList"
+        ])
+    },
     mounted() {
-        this.getMessage();
+    },
+    filters:{
+        timeFormat:function(date){
+            if (!date) return '很久之前'
+            date = new Date(date)
+            let now = new Date()
+            now.setHours(0)
+            // 今天
+            if (date>now){
+                return `${date.getHours()}`.padStart(2,'0')+':'+`${date.getMinutes()}`.padStart(2,'0')
+            }   
+            now.setDate(now.getDate()-1)
+            // 昨天
+            if (date>now){
+                return `昨天`
+            }
+            // 几天前
+            now = new Date()
+            return `${parseInt((now.getTime()-date.getTime())/1000/24/60/60)}天前`
+            
+        }
     },
     methods: {
-        getMessage() {
-            this.$api.Message.GetMessageList().then((data) => {
-                let tasks = [];
-                for (let message of data.data) {
-                    {
-                        tasks.push(
-                            this.$api.User.GetUserInfoById(
-                                message.send_uid
-                            ).then((data) => {
-                                this.$set(message, "user", data.data);
-                            })
-                        );
-                        // if (message.type==2 || message.type==3){
-                        tasks.push(
-                            this.$api.Message.GetMessageDetail(message.mid).then(data=>{
-                                this.$set(message,"detail",data.data)
-                            })
-                        )
-                        // }
-                    }
-                }
-                Promise.all(tasks).then(() => {
-                    this.messageList = data.data;
-                });
-            });
-            // TODO: 时间格式化
-        },
         formSubmit() {
             return false;
         },

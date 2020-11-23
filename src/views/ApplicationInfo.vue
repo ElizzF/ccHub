@@ -2,7 +2,7 @@
     <div class='container' style="background: rgba(242,242,242); height:100%">
         <!-- 导航栏 -->
         <van-nav-bar
-            title="路人丁的申请"
+            :title="`${message.send_userName}的申请`"
             class="navbar"
             left-text="返回"
             left-arrow
@@ -11,14 +11,14 @@
         
        
         <div class="cellList" style="padding-top: 47px;">
-            <van-cell :title="username" :label="sex" size='large' style="align-items: center;position: relative">
+            <van-cell :title="message.send_userName" :label="message.userinfo.sex | gender" size='large' style="align-items: center;position: relative">
                 <template #icon>
                     <van-image
                         round
                         width="3rem"
                         height="3rem"
                         style="margin-right: 15px;"
-                        :src="avatarImg"
+                        :src="message.userinfo.avatar_url"
                     />
                 </template>
             </van-cell>            
@@ -26,22 +26,25 @@
 
         <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>个人简介</div>
-            <van-field  class='appliTxt' v-model="description" type="textarea" autosize disabled />
+            <van-field  class='appliTxt' v-model="message.userinfo.description" type="textarea" autosize disabled />
         </div>
 
-        <div class='cellList' style="margin-top: 10px;">
+        <!-- <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>获奖经历</div>
             <van-field class='appliTxt' size='large' v-model="history" type="textarea" autosize disabled />
-        </div>
+        </div> -->
 
          <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>申请理由</div>
-            <van-field class='appliTxt' size='large' v-model="reason" type="textarea" autosize disabled />
+            <van-field class='appliTxt' size='large' v-model="message.contain" type="textarea" autosize disabled />
         </div>
 
-        <div class='buttonList'>
-            <van-button round type="info">同意</van-button>
-            <van-button round type="info" color="#D7D7D7">忽略</van-button>
+        <div class='buttonList' v-if="message.type==1">
+            <van-button round type="info" @click="accept">同意</van-button>
+            <van-button round type="info" color="#D7D7D7" @click="ignore">忽略</van-button>
+        </div>
+         <div class='buttonList' v-if="message.type==0">
+            <van-button round @click="accept">已同意</van-button>
         </div>
 
 
@@ -56,8 +59,10 @@
 export default {
     data() {
         return {
-            username: '路人丁',
-           
+            message:{
+                userinfo:{}
+            },
+            username: '路人丁',       
             description: '巴拉巴拉',
             sex: '男',
             avatarImg: '',
@@ -65,18 +70,51 @@ export default {
             reason: '我认为我有能力干嘛巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉'
         };
     },
-    created() {
-        this.initUserData();
+    mounted(){
+        this.mid = this.$route.query.mid
+        if (!this.mid){
+            this.$router.back()
+        }
+        this.getMessageDetail()
+    },
+    filters:{
+        gender(val){
+            if (!val) return "";
+            if (val==0) return "女";
+            return "男"
+        }
     },
     methods: {
-        initUserData() {
-            
+        accept() {
+            this.$api.Team.DealRequest(this.mid, 1).then((data) => {
+                if (data.status == 0) {
+                    this.getMessageDetail();
+                }
+            });
+        },
+        ignore() {
+            this.$api.Team.DealRequest(this.mid, 2).then((data) => {
+                if (data.status == 0) {
+                    this.getMessageDetail();
+                }
+            });
         },
         onClickLeft() {
-            this.$router.push({
-                path: '/application'
-            })
+            this.$router.back()
         },
+        getMessageDetail() {
+            this.$api.Message.GetMessageDetail(this.mid, 1).then(
+                async (data) => {
+                    let message = data.data
+                    await this.$api.User.GetUserInfoById(
+                        message.send_uid
+                    ).then((data) => {
+                        this.$set(message, "userinfo", data.data);
+                    });
+                    this.message = message 
+                }
+            );
+        }
     }
 }
 </script>
