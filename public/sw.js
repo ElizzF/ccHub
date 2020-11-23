@@ -44,28 +44,5 @@ if (workbox) {
     self.addEventListener("install", () => {
         self.skipWaiting();
     })
-
-    // 缓存头像
-    self.addEventListener('fetch', e => {
-        e.respondWith(
-            caches.match(e.request).then(r => {
-                var request = e.request.clone()
-                return r || fetch(request).then(response => {
-                    // Check if we received a valid response
-                    // 不缓存
-                    if (request.url.indexOf('avatar')==-1){
-                        return response;
-                    }
-                    // 缓存
-                    var responseToCache = response.clone();
-                    caches.open(workbox.core.cacheNames.runtime+"avatar")
-                        .then(function (cache) {
-                            cache.put(e.request, responseToCache);
-                        });
-                    return response
-                })
-            })
-        )
-    })
 }
 
