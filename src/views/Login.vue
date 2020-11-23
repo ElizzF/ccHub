@@ -1,22 +1,26 @@
 <template>
-    <div class='container'>
-        <van-nav-bar
-            title="竞枢"
-            class="navbar"
-        />
+    <div class="container">
+        <van-nav-bar title="竞枢" class="navbar" />
 
-        <van-image width="100" height="100" :src="require('../assets/image/logo.jpg')" />
-        <div class='main' style="margin-top: 40px;">
+        <van-image
+            width="100"
+            height="100"
+            :src="require('../assets/image/logo.jpg')"
+        />
+        <div class="main" style="margin-top: 40px">
             <van-field
                 v-model="phone"
-                name="手机号码" 
-                placeholder="手机号码"                
+                name="手机号码"
+                placeholder="手机号码"
                 center
                 autocomplete="off"
-                style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
+                style="
+                    border-bottom: 1px solid rgb(204, 204, 204);
+                    width: 284px;
+                "
             >
                 <template #left-icon>
-                    <van-icon class-prefix="iconfont icon" name="phone"  />
+                    <van-icon class-prefix="iconfont icon" name="phone" />
                 </template>
             </van-field>
             <van-field
@@ -26,91 +30,114 @@
                 placeholder="密码"
                 center
                 autocomplete="off"
-                style="border-bottom: 1px solid rgb(204, 204, 204); width: 284px;"
+                style="
+                    border-bottom: 1px solid rgb(204, 204, 204);
+                    width: 284px;
+                "
             >
                 <template #left-icon>
-                    <van-icon class-prefix="iconfont icon" name="password"  />
+                    <van-icon class-prefix="iconfont icon" name="password" />
                 </template>
             </van-field>
-            <div class='forgetPassword' @click='forgetPassword'>忘记密码</div>
-            <van-button type="info" @click="login" round block style="margin-top: 20px;">登录</van-button>
-            <div class='createUser' @click='register'>创建账号</div>
+            <div class="forgetPassword" @click="forgetPassword">忘记密码</div>
+            <van-button
+                type="info"
+                @click="login"
+                round
+                block
+                style="margin-top: 20px"
+                >登录</van-button
+            >
+            <div class="createUser" @click="register">创建账号</div>
         </div>
     </div>
 </template>
 
 <script>
-import { Dialog } from 'vant' 
+import { Dialog } from "vant";
+import { mapMutations } from "vuex";
 export default {
     data() {
         return {
-            phone: '',
-            password: '',
-        }
+            phone: "",
+            password: "",
+        };
     },
+    mounted() {},
     methods: {
+        ...mapMutations(["setUserInfo"]),
         login() {
             this.axios({
                 method: "POST",
                 url: "/user/login",
                 data: {
-                    "phone": this.phone,
-                    "password": this.password,
+                    phone: this.phone,
+                    password: this.password,
                 },
-            }).then((res) => {
-                localStorage.setItem('userData', JSON.stringify(res.data.data));
-                this.$router.push({
-                    path: '/'
+            })
+                .then((res) => {
+                    this.setUserInfo(res.data.data);
+                    if (
+                        !this.$route.query.redirect &&
+                        this.$route.query.redirect.indexOf("/login")==-1
+                    ) {
+                        this.$router.push({
+                            path: this.$route.query.redirect,
+                        });
+                    } else {
+                        this.$router.push({
+                            path: "/",
+                        });
+                    }
                 })
-            }).catch((error) => {
-                Dialog.alert({
-                    title: '警告',
-                    theme: 'round-button',
-                    message: error.response.data.message,
-                    confirmButtonColor: '#1989FA'
-                })
-            });
-            
+                .catch((error) => {
+                    Dialog.alert({
+                        title: "警告",
+                        theme: "round-button",
+                        message: error.response.data.message,
+                        confirmButtonColor: "#1989FA",
+                    });
+                });
         },
         register() {
             this.$router.push({
-                path: '/register'
-            })
+                path: "/register",
+            });
         },
         forgetPassword() {
             this.$router.push({
-                path: 'forgetPassword'
-            })
-        }
-    }
-}
+                path: "forgetPassword",
+            });
+        },
+    },
+};
 </script>
 
 <style scoped>
 .container {
     height: 100%;
-    background: #FFF;
+    background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 .navbar {
-    background: #0079FE;
+    background: #0079fe;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
 }
 .forgetPassword {
-    color: #0079FE;
+    color: #0079fe;
     margin-top: 15px;
     font-size: 13px;
     display: flex;
     flex-direction: row-reverse;
 }
 .createUser {
-    color: #0079FE;
+    color: #0079fe;
     margin-top: 15px;
     font-size: 13px;
     display: flex;
@@ -121,7 +148,7 @@ export default {
 
 <style>
 .navbar .van-nav-bar__title {
-    color: #FFF;
+    color: #fff;
 }
 .van-cell__value {
     margin-left: 20px !important;

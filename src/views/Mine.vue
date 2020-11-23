@@ -42,11 +42,11 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
-            active: 4,
-            
+            active: 4,     
             username: '',
             description: '',
             avatarImg: ''
@@ -56,6 +56,9 @@ export default {
         this.initUserData();
     },
     methods: {
+        ...mapMutations({
+            clearUserInfo:"Logout"
+        }),
         initUserData() {
             let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
@@ -72,6 +75,7 @@ export default {
             })
         },
         logout() {
+            this.clearUserInfo()
             this.$router.push({
                 path: '/login'
             })
