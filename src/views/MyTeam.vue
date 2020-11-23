@@ -25,7 +25,7 @@
             v-if="isDisplayJ"
             style="background: rgba(242, 242, 242)"
         >
-            <div class="item" v-for="(item,index) in joined" :key="`${item.tid}-${index}`">
+            <div class="item" v-for="(item,index) in created" :key="`${item.tid}-${index}`">
                 <div class="itemTitle" >{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
@@ -35,7 +35,7 @@
                     title-class="cellStyle"
                     label-class="labelStyle"
                     style="align-items: center"
-                    size="small"
+                    
                 >
                     <template #icon>
                         <van-image
@@ -55,13 +55,13 @@
             v-else
             style="background: rgba(249, 249, 249)"
         >
-            <div class="item" v-for="(item,index) in created" :key="`${item.tid}-${index}`">
+            <div class="item" v-for="(item,index) in joined" :key="`${item.tid}-${index}`">
                 <div class="itemTitle" >{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
                     :label="`小组成员数：${item.detail.teamPartners.length}`"
                     is-link
-                    to="/"
+                    :to="`/teaminfo?teamid=${item.tid}`"
                     title-class="cellStyle"
                     label-class="labelStyle"
                     style="align-items: center"
@@ -118,13 +118,16 @@ export default {
         getData() {
             this.joined=[]
             this.created=[]
-            this.$api.Team.GetMyTeams().then((data) => {
+            this.$api.Team.GetMyTeams().then(async (data) => {
+                let joined=[],created=[]
+                let tasks = []
                 data.data.forEach((teaminfo) => {
-                    this.$api.Team.GetDetail(teaminfo.tid).then(async (data) => {
+                    tasks.push(this.$api.Team.GetDetail(teaminfo.tid).then(async (data) => {
                         data = data.data;
                         let me = data.teamPartners.find(
-                            (e) => e.uid == this.userinfo.id
+                            (e) => e.uid == this.userinfo.id && e.position==0
                         );
+                        console.log(data.teamPartners,this.userinfo.id)
                         this.$set(teaminfo, "detail", data);
                         await this.$api.Contest.GetContestById(
                             teaminfo.contestid
@@ -133,12 +136,16 @@ export default {
                             this.$set(teaminfo,"contestDetail",data);
                         });
                         if (me) {
-                            this.joined.push(teaminfo);
+                            joined.push(teaminfo);
                         } else {
-                            this.created.push(teaminfo);
+                            created.push(teaminfo);
                         }
-                    });
+                    }));
                 });
+                await Promise.all(tasks)
+                console.log(joined,created)
+                this.joined=joined
+                this.created=created
             });
         },
     },
@@ -227,6 +234,6 @@ export default {
 }
 .item .van-cell,
 .item .van-image {
-    position: static;
+    /* position: static; */
 }
 </style>
