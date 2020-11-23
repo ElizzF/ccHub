@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 export default {
     data() {
         return {
@@ -55,23 +55,21 @@ export default {
     created() {
         this.initUserData();
     },
+    computed:{
+        ...mapState([
+            "userinfo"
+        ])
+    },
     methods: {
         ...mapMutations({
             clearUserInfo:"Logout"
         }),
         initUserData() {
-            let userKey = JSON.parse(localStorage.getItem('userData'));
-            this.axios({
-                method: "GET",
-                url: "/user/getInfo/0",
-                headers: {
-                    'Authorization': userKey.accesstoken
-                }
-            }).then((res) => {
-                let userData = res.data.data;
+            this.$api.User.GetUserInfoById(0).then(data=>{
+                let userData = data.data;
                 this.username = userData.username;
                 this.description = userData.description;
-                this.avatarImg = userData.avatar_url + "?id="+Math.random();
+                this.avatarImg = userData.avatar_url;
             })
         },
         logout() {

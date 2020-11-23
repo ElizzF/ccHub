@@ -202,11 +202,11 @@ export class Message{
         })
     }
 
-    static async GetMessageDetail(messageid){
+    static async GetMessageDetail(messageid,read=2){
         return await new Promise((resolve,reject)=>{
             let options = {
                 method: 'get',
-                url:`/message/get/${messageid}`,
+                url:`/message/get/${messageid}?read=${read}`,
                 headers:{
                     "Content-Type":"application/json"
                 },
@@ -235,6 +235,28 @@ export class User{
                     "Content-Type":"application/json"
                 },
                 data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async Login(phone,password){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'post',
+                url:`/user/login`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{phone,password}
             }
             axios(options).then(res=>{
                 resolve(res.data)

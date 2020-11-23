@@ -67,19 +67,12 @@ export default {
     methods: {
         ...mapMutations(["setUserInfo"]),
         login() {
-            this.axios({
-                method: "POST",
-                url: "/user/login",
-                data: {
-                    phone: this.phone,
-                    password: this.password,
-                },
-            })
-                .then((res) => {
-                    this.setUserInfo(res.data.data);
+            this.$api.User.Login(this.phone, this.password)
+                .then((data) => {
+                    this.setUserInfo(data.data);
                     if (
                         this.$route.query.redirect &&
-                        this.$route.query.redirect.indexOf("/login")==-1
+                        this.$route.query.redirect.indexOf("/login") == -1
                     ) {
                         this.$router.push({
                             path: this.$route.query.redirect,
@@ -94,7 +87,7 @@ export default {
                     Dialog.alert({
                         title: "警告",
                         theme: "round-button",
-                        message: error.response.data.message,
+                        message: error.message,
                         confirmButtonColor: "#1989FA",
                     });
                 });

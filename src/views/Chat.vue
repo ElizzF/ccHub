@@ -16,13 +16,13 @@
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"
-                    v-if="(item.type == 0 || item.type == 1) && item.user"
+                    v-if="item.type == 0  && item.user && item.detail"
                     style="align-items: center"
                     class="chatListItem"
                 >
                     <van-cell
                         :title="item.send_userName"
-                        label="查看详情"
+                        :label="item.detail.contain"
                         value="昨天"
                         to="/chatPage"
                         style="align-items: center"
@@ -47,14 +47,14 @@
                     </template>
                 </van-swipe-cell>
                 <van-swipe-cell
-                    v-if="item.type == 2"
+                    v-if="item.type == 1 && item.detail"
                     :key="`${index}-${item.mid}`"
                     style="align-items: center"
                     class="chatListItem"
                 >
                     <van-cell
                         title="消息"
-                        :label="`${item.send_userName} 申请加入你的xxx队伍`"
+                        :label="`${item.send_userName} 申请加入你的${item.tname}队伍`"
                         value="周六"
                         to="/application"
                         style="align-items: center"
@@ -188,9 +188,11 @@ export default {
                             })
                         );
                         // if (message.type==2 || message.type==3){
+                        tasks.push(
                             this.$api.Message.GetMessageDetail(message.mid).then(data=>{
-                                console.log(data)
+                                this.$set(message,"detail",data.data)
                             })
+                        )
                         // }
                     }
                 }
