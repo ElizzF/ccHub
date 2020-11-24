@@ -129,15 +129,10 @@ export default {
     methods: {
         initRecentEventList() {
             let nowDate = new Date();
-            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
-            this.axios({
-                method: "GET",
-                url: "/contest",
-                params: {
-                    pageSize: 6
-                }
-            }).then((res) => {
-                let list = res.data.data.list;
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false });
+
+            this.$api.Contest.GetContest(null, null, null, null, 6).then(res=>{
+                let list = res.data.list;
                 list.forEach((index) => {
                     let listItem = {};
                     listItem.title = index.name;
@@ -159,9 +154,9 @@ export default {
                     else {
                         listItem.state = '报名结束';
                     }
-                    this.recentList.push(listItem);
+                    this.recentList.push(listItem);   
                 })
-            })
+            }) 
         },
         toCom() {
             this.$router.push({

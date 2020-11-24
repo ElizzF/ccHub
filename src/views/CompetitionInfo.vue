@@ -49,7 +49,7 @@
     <van-goods-action class='bottomBar'>
       <div class='barIcon'>
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
-        <van-goods-action-icon icon="star-o" text="收藏"  />
+        <van-goods-action-icon :icon="isCollection" text="收藏" @click="goCollection" />
       </div>
       <div style="margin-right: 10px;">
           <van-button round type="info" @click="goCreateTeam" style="height: 35px; margin-right: 10px;">创建队伍</van-button>
@@ -89,35 +89,34 @@ export default {
       ],
       activeNames1: [],
       activeNames2: [],
+
+      isCollection: 'star-o'
     }
   },
   created() {
     this.initContestInfo();
     this.getTeams()
+    this.getContestStatus();
   },
   methods: {
     initContestInfo() {
       let contestId = localStorage.getItem("contestId");
-      this.contestId = contestId
+      this.contestId = contestId;
 
-      this.axios({
-        method: "GET",
-        url: "/contest/" + contestId,
-      }).then((res) => {
-        this.title = res.data.data.name;
-        this.imgUrl = res.data.data.picUrl;
-        this.watch = res.data.data.watched + " 浏览";
-        this.originator = "主办方 " + res.data.data.originator;
-        this.enrollTime = "报名时间 " + res.data.data.enrollStart + " — " + res.data.data.enrollEnd;
-        if(res.data.data.contestStart == res.data.data.contestEnd) 
+      this.$api.Contest.GetContestById(this.contestId).then(res=>{
+        this.title = res.data.name;
+        this.imgUrl = res.data.picUrl;
+        this.watch = res.data.watched + " 浏览 | " + res.data.collected + " 关注";
+        this.originator = "主办方 " + res.data.originator;
+        this.enrollTime = "报名时间 " + res.data.enrollStart + " — " + res.data.enrollEnd;
+        if(res.data.contestStart == res.data.contestEnd) 
           this.contestTime = "比赛时间 未知";
         else
-          this.contestTime = "比赛时间 " + res.data.data.contestStart + " — " + res.data.data.contestEnd;
-        this.info = res.data.data.info;              
-      }).catch(() => {
-          
-      });
+          this.contestTime = "比赛时间 " + res.data.contestStart + " — " + res.data.contestEnd;
+        this.info = res.data.info;    
+      })
     },
+
     onClickLeft() {
       this.$router.push({
         path: '/competition'
@@ -133,6 +132,17 @@ export default {
       this.$router.push({
         path: '/createTeam',
         query: {contestId:this.contestId}
+      })
+    },
+    getContestStatus() {
+      this.$api.Contest.GetContestStatusById(this.contestId).then(data=>{
+        if(data.data == 1) this.isCollection = "star";
+        else this.isCollection = "star-o";
+      })
+    },
+    goCollection() {
+      this.$api.Contest.AddOrDeleteCollectContestById(this.contestId).then(data=>{
+        if(data.status == 0) this.isCollection = this.isCollection == "star" ? "star-o" : "star";
       })
     }
   }

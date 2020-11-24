@@ -44,8 +44,8 @@
                         </div>
                         <div class='itemTitle'>{{ item.title }}</div>
                         <div class='itemBottom'>
-                            <div><van-icon color="red" v-for="fire in item.fireNum" :key="fire" class-prefix="iconfont icon" name="fire" size='23px' /></div>
-                            <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.level }} </div>
+                            <div style="color: red;"><van-icon color="red" class-prefix="iconfont icon" name="fire" size='23px' />{{ item.fireNum }}</div>
+                            <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.collected }} 关注 | {{ item.level }} </div>
                         </div>
                     </div>
                 </van-list>
@@ -194,20 +194,11 @@ export default {
             let orderBy = null;  //排序
             if(this.sortTitle == "报名时间") orderBy = "enrollEnd";
             else if(this.sortTitle == "浏览量") orderBy = "watched";
-
-            this.axios({
-                method: "GET",
-                url: "/contest",
-                params: {
-                    pageNum: this.page,
-                    level: level,
-                    type: type,
-                    orderBy: orderBy
-                }
-            }).then((res) => {
+            
+            this.$api.Contest.GetContest(this.page, level, type, orderBy, null).then(res=>{
                 this.loading = false
-
-                let list = res.data.data.list;
+            
+                let list = res.data.list;
                 // 如果没有数据，显示暂无数据
                 if (list.length == 0 && this.page == 1) {
                     this.noData = true
@@ -219,9 +210,9 @@ export default {
                     listItem.level = index.level;
                     listItem.id = index.id;
                     listItem.watch = index.watched;
+                    listItem.collected = index.collected;
 
-                    let fireNum = parseInt(index.watched / 99);
-                    if(fireNum > 5) fireNum = 5;
+                    let fireNum = parseInt(index.watched / 9);
                     listItem.fireNum = fireNum;
 
                     let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
@@ -244,12 +235,67 @@ export default {
                 })
                 this.page++;
                 // 如果加载完毕，显示没有更多了
-                if (this.page == res.data.data.pages + 1) {
+                if (this.page == res.data.pages + 1) {
                     this.finished = true;
                 }
             }).catch(() => {
                 this.noData = true;
             });
+            // this.axios({
+            //     method: "GET",
+            //     url: "/contest",
+            //     params: {
+            //         pageNum: this.page,
+            //         level: level,
+            //         type: type,
+            //         orderBy: orderBy
+            //     }
+            // }).then((res) => {
+            //     this.loading = false
+
+            //     let list = res.data.data.list;
+            //     // 如果没有数据，显示暂无数据
+            //     if (list.length == 0 && this.page == 1) {
+            //         this.noData = true
+            //     }
+            //     list.forEach((index) => {
+            //         let listItem = {};
+            //         listItem.title = index.name;
+            //         listItem.imageUrl = index.picUrl;
+            //         listItem.level = index.level;
+            //         listItem.id = index.id;
+            //         listItem.watch = index.watched;
+            //         listItem.collected = index.collected;
+
+            //         let fireNum = parseInt(index.watched / 9);
+            //         listItem.fireNum = fireNum;
+
+            //         let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
+            //         let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
+            //         if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+            //             let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+            //             listItem.distance = '离报名截止还有' + distance + '天';
+            //             listItem.state = '正在报名'; 
+            //             listItem.stateColor = '#22BFA7';
+            //         } 
+            //         else if(new Date(nowTime) <= enrollStart) {
+            //             listItem.state = '即将报名';
+            //             listItem.stateColor = '#05C0FF';
+            //         }
+            //         else {
+            //             listItem.state = '报名结束';
+            //             listItem.stateColor = '#AAAAAA';
+            //         }
+            //         this.competitionList.push(listItem);
+            //     })
+            //     this.page++;
+            //     // 如果加载完毕，显示没有更多了
+            //     if (this.page == res.data.data.pages + 1) {
+            //         this.finished = true;
+            //     }
+            // }).catch(() => {
+            //     this.noData = true;
+            // });
         },
 
         //恢复保存的页面状态

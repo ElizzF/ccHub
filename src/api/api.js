@@ -156,11 +156,83 @@ export class Team{
 }
 
 export class Contest{
+    static async GetContest(pageNum, level, type, orderBy, pageSize){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/contest`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                params: {
+                    pageSize: pageSize,
+                    pageNum: pageNum,
+                    level: level,
+                    type: type,
+                    orderBy: orderBy
+                }
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
     static async GetContestById(contestId){
         return await new Promise((resolve,reject)=>{
             let options = {
                 method: 'get',
                 url:`/contest/${contestId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async GetContestStatusById(contestId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/collect/contest/collectStatus/${contestId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async AddOrDeleteCollectContestById(contestId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/collect/contest/${contestId}`,
                 headers:{
                     "Content-Type":"application/json"
                 },
