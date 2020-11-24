@@ -26,7 +26,7 @@
             style="background: rgba(242, 242, 242)"
         >
             <div class="item" v-for="(item,index) in created" :key="`${item.tid}-${index}`">
-                <div class="itemTitle" >{{item.contestDetail.name}}</div>
+                <div class="itemTitle" v-if="item.contestDetail">{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
                     :label="`小组成员数：${item.detail.teamPartners.length}`"
@@ -56,7 +56,7 @@
             style="background: rgba(249, 249, 249)"
         >
             <div class="item" v-for="(item,index) in joined" :key="`${item.tid}-${index}`">
-                <div class="itemTitle" >{{item.contestDetail.name}}</div>
+                <div class="itemTitle" v-if="item.contestDetail" >{{item.contestDetail.name}}</div>
                 <van-cell
                     :title="item.tname"
                     :label="`小组成员数：${item.detail.teamPartners.length}`"
