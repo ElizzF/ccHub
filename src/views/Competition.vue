@@ -10,6 +10,7 @@
             <van-dropdown-menu>
                 <van-dropdown-item v-model="value1" :title="styleTitle" ref="item">
                     <van-tree-select 
+                        class="styleSelect"
                         @click-nav="initItem"
                         @click-item="changeStyleTitle"
                         :items="items"
@@ -42,8 +43,10 @@
                             <div class='itemDistance'>{{ item.distance }}</div>
                         </div>
                         <div class='itemTitle'>{{ item.title }}</div>
-                        <div><van-icon color="red" v-for="fire in item.fireNum" :key="fire" class-prefix="iconfont icon" name="fire" size='23px' /></div>
-                        <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.level }} </div>
+                        <div class='itemBottom'>
+                            <div><van-icon color="red" v-for="fire in item.fireNum" :key="fire" class-prefix="iconfont icon" name="fire" size='23px' /></div>
+                            <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.level }} </div>
+                        </div>
                     </div>
                 </van-list>
             </template>
@@ -419,6 +422,10 @@ export default {
     color: #AAAAAA;
     font-size: 16px;
 }
+.itemBottom {
+    display: flex;
+    justify-content: space-between;
+}
 </style>
 
 <style>
@@ -428,5 +435,8 @@ export default {
 }
 .trophy .iconfont {
     font-size: 22px;
+}
+.styleSelect .van-sidebar-item--select::before {
+    background: none;
 }
 </style>

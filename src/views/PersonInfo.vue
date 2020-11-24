@@ -32,7 +32,6 @@
             <van-action-sheet v-model="show" :actions="actions" @select="sexSelect" />
             <van-field label="电话号码" size='large' v-model="phone" clearable input-align="right"/>
             <van-field label="邮箱" size='large' v-model="email" clearable input-align="right"/>
-            <van-field label="签名" size='large' v-model="description" clearable input-align="right"/>
           
         </div>
 
@@ -40,10 +39,6 @@
             <van-cell title="个人简介" size='large' is-link to="/personalIntroduce" />
         </div>
 
-
-
-        
-      
     </div>
 </template>
 
@@ -59,7 +54,6 @@ export default {
             name: '张三',
             phone: '',
             email: '',
-            description: '',
             sex: '',
 
             avatarImg: '',
@@ -83,7 +77,6 @@ export default {
                 this.username = userData.username;
                 this.phone = userData.phone;
                 this.email = userData.email;
-                this.description = userData.description;
                 this.avatarImg = userData.avatar_url;
                 this.name = userData.name;
                 if(userData.sex == 1) this.sex = '男';

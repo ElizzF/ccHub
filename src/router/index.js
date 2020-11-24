@@ -22,6 +22,11 @@ const routes = [
         component: () => import('../views/Register.vue')
     },
     {
+        path: '/forgetPassword',
+        name: 'ForgetPassword',
+        component: () => import('../views/ForgetPassword.vue')
+    },
+    {
         path: '/competition',
         name: 'Competition',
         component: () => import('../views/Competition.vue'),
@@ -97,12 +102,6 @@ const routes = [
         path: '/modifyPassword',
         name: 'ModifyPassword',
         component: () => import('../views/ModifyPassword.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/forgetPassword',
-        name: 'ForgetPassword',
-        component: () => import('../views/ForgetPassword.vue'),
         meta: { requiresAuth: true }
     },
     {

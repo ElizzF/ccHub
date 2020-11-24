@@ -99,7 +99,7 @@ export default {
         },
         forgetPassword() {
             this.$router.push({
-                path: "forgetPassword",
+                path: "/forgetPassword",
             });
         },
     },
