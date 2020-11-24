@@ -75,7 +75,7 @@ export default {
                 this.username = userData.username;
                 
                 this.description = userData.description;
-                this.avatarImg = userData.avatar_url + "?id="+ Math.random();
+                this.avatarImg = userData.avatar_url;
    
                 if(userData.sex == 1) this.sex = '男';
                 else this.sex = '女';
