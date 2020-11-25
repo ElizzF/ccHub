@@ -16,46 +16,24 @@
                 </van-tabs>
         </van-cell>
     </div>
+
     <div class='itemList' v-if="isDisplayJ">
-        <div class='item'>
-          <van-image class='comImg' width="95%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+        <div class='item' v-for="contest in contestList" :key="contest.id" @click="lookMoreInfo(contest.id)">
+          <van-image class='comImg' width="95%" height="140" :src="contest.imgUrl" />
           <div class='itemTxtList'>
             <div class='itemTop'>
-                <div class='itemState'>正在报名</div>
-                <div class='itemDistance'>离报名截止还有45天</div>
+                <div class='itemState' :style="{ color: contest.stateColor }">{{ contest.state }}</div>
+                <div class='itemDistance'>{{ contest.distance }}</div>
             </div>
-            <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-            <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
+            <div class='itemTitle'>{{ contest.title }}</div>
+            <div class='itemInfo'>{{ contest.watched }} 浏览 | {{ contest.collected }} 关注 | {{ contest.level }}</div>
           </div>
         </div>
 
-        <div class='item'>
-          <van-image class='comImg' width="95%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <div class='itemTxtList'>
-            <div class='itemTop'>
-                <div class='itemState'>正在报名</div>
-                <div class='itemDistance'>离报名截止还有45天</div>
-            </div>
-            <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-            <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-          </div>
-        </div>
-
-        <div class='item'>
-          <van-image class='comImg' width="95%" height="140" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <div class='itemTxtList'>
-            <div class='itemTop'>
-                <div class='itemState'>正在报名</div>
-                <div class='itemDistance'>离报名截止还有45天</div>
-            </div>
-            <div class='itemTitle'>2020年工业大数据创新竞赛</div>
-            <div class='itemInfo'>8888 浏览 | 624 关注 | 国家级比赛</div>
-          </div>
-        </div>
-      </div>
+    </div>
       
 
-       <div class='itemList' v-if="isDisplayZ">
+    <div class='itemList' v-if="isDisplayZ">
         
          
 
@@ -92,10 +70,53 @@ export default {
   data() {
     return {
       isDisplayJ: true,
-      isDisplayZ: false
+      isDisplayZ: false,
+      
+      contestList: []
     }
   },
+  created() {
+    this.getContestCollections();
+  },
   methods: {
+    getContestCollections() {
+      this.$api.Collect.GetContestCollect().then(data=>{
+          let list = data.data;
+          list.forEach((index) => {
+              let listItem = {};
+              listItem.title = index.contestName;
+              listItem.imgUrl = index.pic_url;
+              listItem.level = index.level;
+              listItem.id = index.contestId;
+              listItem.watched = index.views;
+              listItem.collected = index.collections;
+
+              let fireNum = parseInt(index.views / 9);
+              listItem.fireNum = fireNum;
+
+              if(index.status == 2) {
+                  listItem.distance = index.restTime;
+                  listItem.state = '正在报名'; 
+                  listItem.stateColor = '#22BFA7';
+              } 
+              else if(index.status == 1) {
+                  listItem.state = '即将报名';
+                  listItem.stateColor = '#05C0FF';
+              }
+              else {
+                  listItem.state = '报名已截止';
+                  listItem.stateColor = '#AAAAAA';
+              }
+              this.contestList.push(listItem);
+          })
+      })
+    },
+    lookMoreInfo(e) {
+        localStorage.setItem("contestId", e);
+        this.$router.push({
+            path: '/competitionInfo'
+        })
+    },
     onClickLeft() {
       this.$router.push({
         path: '/mine'

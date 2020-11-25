@@ -342,3 +342,27 @@ export class User{
         })
     }
 }
+
+export class Collect{
+    static async GetContestCollect(){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/collect/contest/get`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+}

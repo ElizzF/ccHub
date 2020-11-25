@@ -12,7 +12,7 @@
             />
         </form>
 
-        <div class="chatList">
+        <div class="chatList" >
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"

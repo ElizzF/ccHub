@@ -22,8 +22,18 @@
       <van-cell :title="originator" title-class="cellStyle"/>
     </van-cell-group>
     <van-collapse v-model="activeNames1" >
-        <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">{{ info }}</van-collapse-item>
-      </van-collapse>
+        <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">
+          <van-field
+            class="contestInfoStyle"
+            v-model="info"
+            :autosize="{ maxHeight: 300 }"
+            type="textarea"
+            readonly
+            style="color: #969799"
+          />
+          <!-- {{ info }} -->
+        </van-collapse-item>
+    </van-collapse>
 
     <van-collapse v-model="activeNames2" style="margin-top: 10px;">
       <van-collapse-item class="colItem" title="竞赛附件（0）" name="2" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
@@ -208,5 +218,8 @@ export default {
 .allTroopscellTxt {
   background: rgb(242,242,242);
   padding: 0;
+}
+.contestInfoStyle .van-field__control{
+  color: #969799;
 }
 </style>
