@@ -30,12 +30,10 @@
                 <van-cell
                     :title="item.tname"
                     :label="`小组成员数：${item.detail.teamPartners.length}`"
-                    is-link
                     :to="`/teaminfo?teamid=${item.tid}`"
                     title-class="cellStyle"
                     label-class="labelStyle"
-                    style="align-items: center"
-                    
+                    center
                 >
                     <template #icon>
                         <van-image
@@ -45,6 +43,10 @@
                             :src="item.leaderAvatarUrl"
                             style="margin-right: 10px"
                         />
+                    </template>
+                    
+                    <template #right-icon>
+                        <van-icon name="arrow"></van-icon>
                     </template>
                 </van-cell>
             </div>
@@ -164,7 +166,6 @@ export default {
     border-radius: 15px;
     padding-left: 10px;
     padding-right: 10px;
-    height: 100%;
 }
 
 .navTop {
