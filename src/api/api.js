@@ -411,4 +411,47 @@ export class Route{
             })
         })
     }
+
+    static async EditRouteRemarksByRouteId(routeId, remarks){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'post',
+                url:`/route/remarks/edit/${routeId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data: remarks
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async RemoveRouteById(type, dataId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'delete',
+                url:`/route/remove/${type}/${dataId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
 }

@@ -19,7 +19,7 @@
         </van-cell>
 
         <div class="cellList">
-            <van-cell title="我的报名" is-link to="moreRoute" />
+            <van-cell title="我的路线" is-link to="moreRoute" />
             <van-cell title="我的收藏" is-link to="myCollection" />
             <van-cell title="我的消息" is-link to="myInfo" />
             <van-cell title="我的组队" is-link to="myTeam" />

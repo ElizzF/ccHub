@@ -10,7 +10,8 @@
         />
         
         <div class='main' style="padding-top: 45px; height: 100%;" v-if="display">
-            <div class='majorTxt'>您的专业是：</div>
+            <div style="text-align: center; margin-top: 10px;">暂无数据</div>
+            <!-- <div class='majorTxt'>您的专业是：</div>
             <van-grid :border="false" :column-num="3">
                 <van-grid-item v-for="item in majorItems" :key="item.id" class='selectItem'>
                     <van-button
@@ -41,12 +42,12 @@
                 </van-grid-item>
             </van-grid>
 
-            <van-button type="info" @click="confirm" round block style="width: 230px; margin: 0 auto;">确定</van-button>
+            <van-button type="info" @click="confirm" round block style="width: 230px; margin: 0 auto;">确定</van-button> -->
         </div>
         
         
-        <div class='main' style="padding-top: 60px; margin-left: 20px;" v-if="!display">
-            <a-steps direction="vertical" :current="current" @change="stepsChange">
+        <div class='main' style="padding-top: 70px; margin-left: 20px; margin-right: 20px" v-if="!display">
+            <a-steps direction="vertical" :current="current">
                 <a-step 
                     :title="step.title" 
                     v-for="step in stepList"
@@ -55,23 +56,28 @@
                     <span slot="description">
                         <div>{{ step.time }}</div>
                         <div>{{ step.description }}</div>
+                        <div style="display: flex; align-items: center; margin-top: 5px;">
+                            <van-icon @click="openEdit(step.id)" name="edit" size='23px' />
+                            <van-icon @click="deleteStep(step.data_id, step.type)" style="margin-left: 10px;" name="delete" size='23px' />
+                        </div>
                     </span>
                 </a-step>
-               <!-- :description="step.description" -->
             </a-steps>
         </div>
         
-        
+        <van-dialog v-model="show" title="修改备注" show-cancel-button @confirm="edit" @cancel="cancel">
+            <van-field style="margin-top: 10px;" class="editFieldTxt" clearable v-model="value" label="" placeholder="请输入你对该路径点的备注" />
+        </van-dialog>
       
     </div>
 </template>
 
 <script>
-//import { Dialog } from 'vant'
+import { Dialog } from 'vant'
 export default {
     data() {
         return {
-            display: false,
+            display: true,
 
             majorItems: [
                 { id: '1', name: '理科', plain: true },
@@ -90,20 +96,87 @@ export default {
             gradeSelectedList: [],
 
             current: 0,
-            stepList: []
+            show: false,
+            stepList: [],
+            value: '',
+            contestId: null
         };
     },
     created() {
        this.initRoute();
     },
     methods: {
+        openEdit(e) {
+            this.show = true;
+            this.contestId = e;
+        },
+        deleteStep(id, type) {
+            console.log(id, type);
+            Dialog.confirm({
+                title: '提示',
+                message: '你确定要从路线中移出它吗？',
+               
+            }).then(() => {
+                this.$api.Route.RemoveRouteById(type, id).then(data=>{
+                    if(data.status == 0) {
+                        Dialog.alert({
+                            title: '提示',
+                            theme: 'round-button',
+                            message: '删除成功！',
+                            confirmButtonColor: '#1989FA'
+                        });
+                        this.stepList = [];
+                        this.initRoute();
+                    }
+                }).catch(error=>{
+                    Dialog.alert({
+                        title: '警告',
+                        theme: 'round-button',
+                        message: error.message,
+                        confirmButtonColor: '#1989FA'
+                    })
+                })
+            })
+        },
+        edit() {
+            let jsons = {
+                "remarks": this.value
+            }
+            this.$api.Route.EditRouteRemarksByRouteId(this.contestId, jsons).then(data=>{
+                if(data.status == 0) {
+                    Dialog.alert({
+                        title: '提示',
+                        theme: 'round-button',
+                        message: '修改成功！',
+                        confirmButtonColor: '#1989FA'
+                    });
+                    this.value = "";
+                    this.stepList = [];
+                    this.initRoute();
+                }
+            }).catch(error=>{
+                Dialog.alert({
+                    title: '警告',
+                    theme: 'round-button',
+                    message: error.message,
+                    confirmButtonColor: '#1989FA'
+                })
+            })
+        },
+        cancel() {
+            this.value = "";
+        },
         stepsChange(current) {
             this.current = current;
         },
         initRoute() {
+            let nowDate = new Date();
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false }).substr(0,10);
             this.$api.Route.GetRoute().then(data=>{
                 let list = data.data;
-                list.sort(this.cmp);
+                if(list.length != 0) {
+                    this.display = false;
+                }
                 list.forEach((index) => {
                     let listItem = {};
                     listItem.id = index.id;
@@ -111,6 +184,10 @@ export default {
                     listItem.description = index.remarks;
                     listItem.time = index.time;
                     listItem.type = index.type;
+                    listItem.data_id = index.data_id;
+
+                    let temp = index.time.replace(/-/g,"/");
+                    if(new Date(temp) < new Date(nowTime)) this.current++;
                     this.stepList.push(listItem);
                 })
             })
@@ -201,5 +278,8 @@ export default {
 .selectItem .van-button {
     width: 100px;
     height: 35px;
+}
+.editFieldTxt .van-field__label{
+    width: 2.2em;
 }
 </style>

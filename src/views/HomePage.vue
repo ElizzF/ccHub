@@ -47,7 +47,9 @@
                 <div class='aboutMore' @click="toMoreRoute">更多></div>
             </div>
             <div class='routeTime'>
-                <a-steps progress-dot :current="1">
+                <div v-if="noData" class="noDataTxt" style="text-align: center;">暂无数据</div>
+
+                <a-steps progress-dot :current="current" v-if="!noData">
                     <a-step v-for="step in stepList" :key="step.id" :title="step.time" >
                         <span slot="description">
                             <div class='stepTitle'>{{ step.title }}</div>
@@ -129,7 +131,9 @@ export default {
             active: 0,
             recentList: [],
 
-            stepList: []
+            stepList: [],
+            current: 0,
+            noData: true
         };
     },
     created() {
@@ -138,8 +142,11 @@ export default {
     },
     methods: {
         initRoute() {
+            let nowDate = new Date();
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false }).substr(0,10);
             this.$api.Route.GetRoute().then(data=>{
                 let list = data.data;
+                if(list.length != 0) this.noData = false;
                 list.forEach((index) => {
                     let listItem = {};
                     listItem.id = index.id;
@@ -147,6 +154,9 @@ export default {
                     listItem.description = index.remarks;
                     listItem.time = index.time;
                     listItem.type = index.type;
+
+                    let temp = index.time.replace(/-/g,"/");
+                    if(new Date(temp) < new Date(nowTime)) this.current++;
                     this.stepList.push(listItem);
                 })
             })
