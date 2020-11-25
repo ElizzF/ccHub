@@ -47,7 +47,14 @@
                 <div class='aboutMore' @click="toMoreRoute">更多></div>
             </div>
             <div class='routeTime'>
-                <div class="lineTime">
+                <a-steps progress-dot :current="1">
+                    <a-step v-for="step in stepList" :key="step.id" :title="step.time" >
+                        <span slot="description">
+                            <div class='stepTitle'>{{ step.title }}</div>
+                        </span>
+                    </a-step>
+                </a-steps>
+                <!-- <div class="lineTime">
                     <div class='lineTimeItem'>
                         <div class='itemTop'>3.24</div>
                         <div class='itemBottom'>
@@ -79,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <div class='timeLine'></div>
+                <div class='timeLine'></div> -->
             </div>
         </div>
 
@@ -120,13 +127,30 @@ export default {
         return {
             search_value: '',
             active: 0,
-            recentList: []
+            recentList: [],
+
+            stepList: []
         };
     },
     created() {
         this.initRecentEventList();
+        this.initRoute();
     },
     methods: {
+        initRoute() {
+            this.$api.Route.GetRoute().then(data=>{
+                let list = data.data;
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.id = index.id;
+                    listItem.title = index.name;
+                    listItem.description = index.remarks;
+                    listItem.time = index.time;
+                    listItem.type = index.type;
+                    this.stepList.push(listItem);
+                })
+            })
+        },
         initRecentEventList() {
             let nowDate = new Date();
             let nowTime= nowDate.toLocaleString('zh', { hour12: false });
@@ -213,6 +237,15 @@ export default {
     font-size: 14px;
     text-align: center;
 }
+.stepTitle {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 2; 
+    overflow: hidden; 
+    padding: 0 10px 0 10px
+}
 .myRouteTxt, .recentTxt {
     display: flex;
     flex-direction: row;
@@ -260,7 +293,10 @@ export default {
 .routeTime {
     overflow: auto;
     height: 150px;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* position: relative; */
 }
 .itemTop {
     margin-bottom: 20px;

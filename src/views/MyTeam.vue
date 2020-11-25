@@ -55,7 +55,7 @@
         <div
             class="itemList"
             v-else
-            style="background: rgba(249, 249, 249)"
+            style="background: rgba(242, 242, 242)"
         >
             <div class="item" v-for="(item,index) in joined" :key="`${item.tid}-${index}`">
                 <div class="itemTitle" v-if="item.contestDetail" >{{item.contestDetail.name}}</div>

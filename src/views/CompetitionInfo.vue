@@ -63,7 +63,7 @@
       </div>
       <div style="margin-right: 10px;">
           <van-button round type="info" @click="goCreateTeam" style="height: 35px; margin-right: 10px;">创建队伍</van-button>
-          <van-button round type="info" style="height: 35px;">我要报名</van-button>
+          <van-button round type="info" style="height: 35px;" @click="addRoute">加入我的路线</van-button>
       </div>
     </van-goods-action>
 
@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { Dialog } from 'vant'
 export default {
   data() {
     return {
@@ -153,6 +154,25 @@ export default {
     goCollection() {
       this.$api.Contest.AddOrDeleteCollectContestById(this.contestId).then(data=>{
         if(data.status == 0) this.isCollection = this.isCollection == "star" ? "star-o" : "star";
+      })
+    },
+    addRoute() {
+      this.$api.Route.AddRouteByContestId(this.contestId).then(data=>{
+        if(data.status == 0) {
+          Dialog.alert({
+              title: '提示',
+              theme: 'round-button',
+              message: '添加成功！',
+              confirmButtonColor: '#1989FA'
+          })
+        }
+      }).catch(error=>{
+        Dialog.alert({
+          title: '警告',
+          theme: 'round-button',
+          message: error.message,
+          confirmButtonColor: '#1989FA'
+        })
       })
     }
   }

@@ -366,3 +366,49 @@ export class Collect{
         })
     }
 }
+
+export class Route{
+    static async AddRouteByContestId(contestId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'put',
+                url:`/route/add/${contestId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async GetRoute(){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/route/get`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+}

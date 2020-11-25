@@ -46,16 +46,18 @@
         
         
         <div class='main' style="padding-top: 60px; margin-left: 20px;" v-if="!display">
-            <a-steps direction="vertical" :current="1">
+            <a-steps direction="vertical" :current="current" @change="stepsChange">
                 <a-step 
                     :title="step.title" 
-                    :description="step.description"
                     v-for="step in stepList"
                     :key="step.id"
                 >
+                    <span slot="description">
+                        <div>{{ step.time }}</div>
+                        <div>{{ step.description }}</div>
+                    </span>
                 </a-step>
-              
-               
+               <!-- :description="step.description" -->
             </a-steps>
         </div>
         
@@ -69,7 +71,7 @@
 export default {
     data() {
         return {
-            display: true,
+            display: false,
 
             majorItems: [
                 { id: '1', name: '理科', plain: true },
@@ -87,27 +89,41 @@ export default {
             ],
             gradeSelectedList: [],
 
-            stepList: [
-                { id: '1', title: '3.24 中国大学生知识竞赛', description: '规划：巴拉巴拉巴拉' },
-                { id: '2', title: '6.24 CET-4英语考试', description: '规划：巴拉巴拉巴拉' },
-                { id: '3', title: '8.24 中国大学生某某大赛', description: '规划：巴拉巴拉巴拉' },
-                { id: '4', title: '9.22 中国大学生互联网+创新创业大赛', description: '规划：巴拉巴拉巴拉' },
-            ]
+            current: 0,
+            stepList: []
         };
     },
     created() {
-       
+       this.initRoute();
     },
     methods: {
+        stepsChange(current) {
+            this.current = current;
+        },
+        initRoute() {
+            this.$api.Route.GetRoute().then(data=>{
+                let list = data.data;
+                list.sort(this.cmp);
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.id = index.id;
+                    listItem.title = index.name;
+                    listItem.description = index.remarks;
+                    listItem.time = index.time;
+                    listItem.type = index.type;
+                    this.stepList.push(listItem);
+                })
+            })
+        },
         onClickLeft() {
-            if(this.display == false) {
-                this.display = true;
-            }
-            else {
+            // if(this.display == false) {
+            //     this.display = true;
+            // }
+            // else {
                 this.$router.push({
                     path: '/'
                 })
-            }
+            // }
         },
         selectMajor(e) {
             //console.log(e.currentTarget.id);
