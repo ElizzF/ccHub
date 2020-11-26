@@ -54,11 +54,11 @@ export default {
             );
         };
         // 提示安装pwa 应用
-        window.addEventListener("beforeinstallprompt", (evt) => {
-            evt.preventDefault();
-            this.pwaButtonVisible = true;
-            this.pwaEvent = evt;
-        });
+        // window.addEventListener("beforeinstallprompt", (evt) => {
+        //     evt.preventDefault();
+        //     this.pwaButtonVisible = true;
+        //     this.pwaEvent = evt;
+        // });
     },
     beforeDestroy(){
         if (this.messageEvents){
