@@ -19,7 +19,7 @@ module.exports = {
         themeColor: "#0079fe",
         msTileColor: "#0079fe",
         manifestOptions: {
-            background_color: "#0079fe"
+            background_color: "#ffffff"
         },
         workboxPluginMode: 'InjectManifest',
         appleMobileWebAppCapable:"yes",

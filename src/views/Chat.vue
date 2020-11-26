@@ -228,6 +228,10 @@ export default {
     width: 100%;
     z-index: 1;
 }
+.chatList{
+    max-height:calc(100vh - 151px);
+    overflow: auto;
+}
 .chatListItem {
     margin-bottom: 1px;
 }
