@@ -6,7 +6,9 @@
             class="navbar"
             left-text="返回"
             left-arrow
+            right-text="日历模式"
             @click-left="onClickLeft"
+            @click-right="calendar = true"
         />
         
         <div class='main' style="padding-top: 45px; height: 100%;" v-if="display">
@@ -69,6 +71,7 @@
             <van-field style="margin-top: 10px;" class="editFieldTxt" clearable v-model="value" label="" placeholder="请输入你对该路径点的备注" />
         </van-dialog>
       
+        <van-calendar v-model="calendar" @select="dateSelect" :show-confirm="false" color="#0079FE" position="right" :round="false" title="路线日历" :formatter="formatter" />
     </div>
 </template>
 
@@ -99,19 +102,66 @@ export default {
             show: false,
             stepList: [],
             value: '',
-            contestId: null
+            contestId: null,
+
+            calendar: false
         };
     },
     created() {
        this.initRoute();
     },
     methods: {
+        dateSelect(day) {
+            const month = day.getMonth() + 1;
+            const date = day.getDate();
+            this.stepList.forEach((index) => {
+                let stepMonth = new Date(index.time.replace(/-/g,"/")).getMonth() + 1;
+                let stepDate = new Date(index.time.replace(/-/g,"/")).getDate();
+                if(month == stepMonth && date == stepDate) {
+                    Dialog.confirm({
+                        title: index.title,
+                        message: index.description,
+                        confirmButtonText: '前往',
+                        confirmButtonColor: '#1989FA'
+                    }).then(() => {
+                        this.toMoreInfo(index.data_id, index.type);
+                    })
+                }
+            })
+        },
+        formatter(day) {
+            const month = day.date.getMonth() + 1;
+            const date = day.date.getDate();
+
+            this.stepList.forEach((index) => {
+                let stepMonth = new Date(index.time.replace(/-/g,"/")).getMonth() + 1;
+                let stepDate = new Date(index.time.replace(/-/g,"/")).getDate();
+                if(month == stepMonth && date == stepDate) {
+                    day.bottomInfo = "●"
+                    day.className = "dayStyle"
+                }
+            })
+            return day;
+        },
+        toMoreInfo(id, type) {
+           if(type == 1) {
+                localStorage.setItem("contestId", id);
+                this.$router.push({
+                    path: '/competitionInfo'
+                })
+           }
+            else {
+                localStorage.setItem("certificateId", id);
+                this.$router.push({
+                    path: '/certificateInfo'
+                })
+            }
+        },
         openEdit(e) {
             this.show = true;
             this.contestId = e;
         },
         deleteStep(id, type) {
-            console.log(id, type);
             Dialog.confirm({
                 title: '提示',
                 message: '你确定要从路线中移出它吗？',
@@ -238,7 +288,8 @@ export default {
 
         confirm() {
             this.display = false;
-        }
+        },
+
     }
 }
 </script>
@@ -258,6 +309,7 @@ export default {
     display: flex;
     flex-direction: column;   
 }
+
 .majorTxt, .gradeTxt {
     margin-top: 20px;
     margin-left: 10px;
@@ -281,5 +333,16 @@ export default {
 }
 .editFieldTxt .van-field__label{
     width: 2.2em;
+}
+.dayStyle {
+    background: #ee0a24;
+    color: #FFF;
+    border-radius: 4px;
+    width: 54px;
+    height: 54px;
+}
+.van-dialog__header {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 </style>

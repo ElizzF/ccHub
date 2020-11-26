@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import { Dialog } from 'vant';
 import navBottom from '../components/common/navBottom.vue';
 export default {
     components: { navBottom },
@@ -139,8 +140,24 @@ export default {
     created() {
         this.initRecentEventList();
         this.initRoute();
+        this.alertRouteMessage();
     },
     methods: {
+        alertRouteMessage() {
+            this.$api.Route.AlertRouteMessage().then(data=>{
+                if(data.data.length != 0) {
+                    let mes = data.data[0];
+                    Dialog.confirm({
+                        title: '提示',
+                        confirmButtonText: '前往',
+                        message: "你报名的<a>" + mes.name + "</a>还剩" + mes.countdown + "天",
+                        confirmButtonColor: '#1989FA'
+                    }).then(() => {
+                        this.toMoreInfo(mes.data_id, mes.type);
+                    })
+                }
+            })
+        },
         initRoute() {
             let nowDate = new Date();
             let nowTime= nowDate.toLocaleString('zh', { hour12: false }).substr(0,10);
@@ -191,6 +208,20 @@ export default {
                     this.recentList.push(listItem);   
                 })
             }) 
+        },
+        toMoreInfo(id, type) {
+           if(type == 1) {
+                localStorage.setItem("contestId", id);
+                this.$router.push({
+                    path: '/competitionInfo'
+                })
+           }
+            else {
+                localStorage.setItem("certificateId", id);
+                this.$router.push({
+                    path: '/certificateInfo'
+                })
+            }
         },
         toCom() {
             this.$router.push({
