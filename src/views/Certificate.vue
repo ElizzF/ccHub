@@ -113,11 +113,11 @@ export default {
     },
     methods: {
         initCompetitionList() {
-            if(this.$store.state.certificateData != null) {
-                this.replaceCompetitionList();
-                this.$store.state.certificateData = null;
-                return ;
-            }
+            // if(this.$store.state.certificateData != null) {
+            //     this.replaceCompetitionList();
+            //     this.$store.state.certificateData = null;
+            //     return ;
+            // }
             let nowDate = new Date();
             let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
             
@@ -136,7 +136,7 @@ export default {
                 list.forEach((index) => {
                     let listItem = {};
                     listItem.title = index.name;
-                    listItem.imageUrl = '';
+                    listItem.imageUrl = index.pic_url;
                     listItem.id = index.id;
                     listItem.watch = index.watched;
                     listItem.collected = index.collected;
@@ -172,25 +172,25 @@ export default {
             });
         },
 
-        //恢复保存的页面状态
-        replaceCompetitionList() {
-            let tempData = this.$store.state.certificateData;
-            this.activeId = tempData.activeId;
-            this.activeIndex = tempData.activeIndex;
+        // //恢复保存的页面状态
+        // replaceCompetitionList() {
+        //     let tempData = this.$store.state.certificateData;
+        //     this.activeId = tempData.activeId;
+        //     this.activeIndex = tempData.activeIndex;
 
-            this.page = tempData.page;
-            this.loading = tempData.loading;
-            this.finished = tempData.finished;
-            this.noData = tempData.noData;
-            this.isLoading = tempData.isLoading;
+        //     this.page = tempData.page;
+        //     this.loading = tempData.loading;
+        //     this.finished = tempData.finished;
+        //     this.noData = tempData.noData;
+        //     this.isLoading = tempData.isLoading;
 
             
-            this.certificateList = tempData.certificateList;
-            this.scroll = tempData.scroll;
-            this.$nextTick(() => {
-                document.documentElement.scrollTop = tempData.scroll;
-            })
-        },
+        //     this.certificateList = tempData.certificateList;
+        //     this.scroll = tempData.scroll;
+        //     this.$nextTick(() => {
+        //         document.documentElement.scrollTop = tempData.scroll;
+        //     })
+        // },
 
         lookMoreInfo(e) {
             localStorage.setItem("certificateId", e);

@@ -97,7 +97,7 @@ export default {
 
       this.$api.Certificate.GetCertificateById(this.certificateId).then(res=>{
         this.title = res.data.name;
-        this.imgUrl = '';
+        this.imgUrl = res.data.pic_url;
         this.watch = res.data.watched + " 浏览 | " + res.data.collected + " 关注";
         this.originator = "官网 " + res.data.office_web;
         this.enrollTime = "报名时间 " + res.data.enroll_start + " — " + res.data.enroll_end;
