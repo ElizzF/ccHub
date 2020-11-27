@@ -48,18 +48,16 @@
         <van-collapse v-model="activeNames2" style="margin-top: 10px">
             <van-collapse-item
                 class="colItem"
-                title="竞赛附件（0）"
+                title="竞赛附件"
                 name="2"
                 title-class="collapseCellStyle"
-                >巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item
-            >
+            ></van-collapse-item>
             <van-collapse-item
                 class="colItem"
-                title="通知公告（0）"
+                title="通知公告"
                 name="3"
                 title-class="collapseCellStyle"
-                >巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item
-            >
+            ></van-collapse-item>
         </van-collapse>
 
         <van-cell
@@ -67,7 +65,6 @@
             title="全部队伍"
             title-class="allTroopsTxt"
         />
-
         <div class="cellGroup" style="padding-bottom: 50px">
             <van-cell
                 v-for="(team, index) in teams"
@@ -122,20 +119,22 @@
                 >
             </div>
         </van-goods-action>
-
+        
+        
         <van-share-sheet
             v-model="showShare"
             title="立即分享给好友"
             :options="options"
             @select="shareItem"
         />
-        <button ref="share" style="display: none" :text="copyText" />
+        <button ref="share" style="display: none"></button>
     </div>
 </template>
 
 <script>
 import { Dialog } from "vant";
 import ClipBoardJs from "clipboard";
+import { mapActions, mapState } from 'vuex';
 export default {
     data() {
         return {
@@ -158,24 +157,52 @@ export default {
             ],
             activeNames1: [],
             activeNames2: [],
-
             isCollection: "star-o",
         };
+    },
+    computed:{
+        ...mapState(["user"])
     },
     created() {
         this.initContestInfo();
         this.getTeams();
         this.getContestStatus();
+        this.getUser();
     },
     mounted() {
+        let el = this;
         this.clip = new ClipBoardJs(this.$refs.share, {
-            text: function (trigger) {
-                console.log(trigger);
-                return trigger.getAttribute("text");
+            text: function () {
+                return el.copyText;
             },
         });
+        this.clip.on("success", () => {
+            Dialog.alert({
+                title: "提示",
+                theme: "round-button",
+                message: "链接已复制",
+                confirmButtonColor: "#1989FA",
+            });
+        });
+        this.clip.on("error", () => {
+            Dialog.alert({
+                title: "提示",
+                theme: "round-button",
+                message: "链接复制失败",
+                confirmButtonColor: "#1989FA",
+            });
+        });
+    },
+    beforeDestroy() {
+        this.clip.destroy();
     },
     methods: {
+        ...mapActions([
+            "updateUser"
+        ]),
+        getUser(){
+            this.updateUser();
+        },
         initContestInfo() {
             //   let contestId = localStorage.getItem("contestId");
             let contestId = this.$route.query.contestId;
@@ -211,15 +238,9 @@ export default {
         },
         shareItem(item) {
             if (item.name == "复制链接") {
-                this.copyText = document.documentURI;
+                this.copyText = `${this.user.name} 邀请你参加比赛！比赛链接: ${document.documentURI}`;
                 this.$refs.share.click();
-                Dialog.alert({
-                    title: "提示",
-                    theme: "round-button",
-                    message: "链接已复制",
-                    confirmButtonColor: "#1989FA",
-                });
-                this.copyText = "";
+                // this.copyText = "";
             }
         },
         onClickLeft() {

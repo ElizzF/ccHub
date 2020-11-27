@@ -9,6 +9,7 @@ export default new Vuex.Store({
         comtestData: null,
         userinfo: JSON.parse(localStorage.getItem("userData") ? localStorage.getItem("userData") : "{}"),
         messageList: [],
+        user:{},
         showAlert:true
     },
     mutations: {
@@ -72,6 +73,12 @@ export default new Vuex.Store({
                     commit("MergeMessageList", messageList);
                 })
             }
+        },
+        updateUser({state}){
+            api.User.GetUserInfoById(state.userinfo.id).then(data=>{
+                console.log(data)
+                state.user= data.data;
+            })
         }
     },
     modules: {

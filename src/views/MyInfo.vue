@@ -9,8 +9,8 @@
         </van-nav-bar>
 
         <van-cell-group>
-            <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center; padding-top: 57px;"/>
-            <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center;"/>
+            <!-- <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center; padding-top: 57px;"/>
+            <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center;"/> -->
         </van-cell-group>
   </div>
 </template>
@@ -20,8 +20,6 @@ export default {
   data() {
     return {
       infoList: '你报名的竞赛《捡垃圾大赛》，主办方提醒您：捡垃圾大赛的初试名单已公布，快去看看吧〜',
-          
-      
     }
   },
   methods: {

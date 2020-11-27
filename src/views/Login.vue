@@ -57,7 +57,7 @@
 
 <script>
 import { Dialog } from "vant";
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 export default {
     data() {
         return {
@@ -68,6 +68,7 @@ export default {
     mounted() {},
     methods: {
         ...mapMutations(["setUserInfo"]),
+        ...mapActions(["updateUser"]),
         loginEvent(event) {
             if (event.key == "Enter") {
                 this.login();
@@ -77,6 +78,7 @@ export default {
             this.$api.User.Login(this.phone, this.password)
                 .then((data) => {
                     this.setUserInfo(data.data);
+                    this.updateUser();
                     if (
                         this.$route.query.redirect &&
                         this.$route.query.redirect.indexOf("/login") == -1
