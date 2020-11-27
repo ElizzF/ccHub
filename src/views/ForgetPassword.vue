@@ -76,7 +76,7 @@ export default {
         onClickLeft() {
             if(this.display == true) {
                 this.$router.push({
-                    path: '/login'
+                    path: '/'
                 })
             }
             else {
@@ -133,7 +133,7 @@ export default {
                     confirmButtonColor: '#1989FA'
                 })
                 this.$router.push({
-                    path: '/login'
+                    path: '/'
                 });
             }).catch((error) => {
                 Dialog.alert({

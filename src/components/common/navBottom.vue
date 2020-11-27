@@ -1,6 +1,6 @@
 <template>
     <van-tabbar class="navbar-bottom" v-model="routeIndex" route>
-        <van-tabbar-item icon="wap-home-o" to="/">首页</van-tabbar-item>
+        <van-tabbar-item icon="wap-home-o" to="/home">首页</van-tabbar-item>
         <van-tabbar-item
             class="trophy"
             icon-prefix="iconfont icon"

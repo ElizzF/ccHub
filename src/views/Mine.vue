@@ -78,7 +78,7 @@ export default {
         logout() {
             this.clearUserInfo()
             this.$router.push({
-                path: '/login'
+                path: '/'
             })
         }
     }

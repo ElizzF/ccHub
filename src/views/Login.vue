@@ -81,14 +81,14 @@ export default {
                     this.updateUser();
                     if (
                         this.$route.query.redirect &&
-                        this.$route.query.redirect.indexOf("/login") == -1
+                        this.$route.query.redirect.indexOf("/") == -1
                     ) {
                         this.$router.push({
                             path: this.$route.query.redirect,
                         });
                     } else {
                         this.$router.push({
-                            path: "/",
+                            path: "/home",
                         });
                     }
                 })

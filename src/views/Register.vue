@@ -127,7 +127,7 @@ export default {
                     this.email = "";
                     this.sno = "";
                     this.$router.push({
-                        path: '/login'
+                        path: '/'
                     })
                 })
             }).catch((error) => {
@@ -142,7 +142,7 @@ export default {
         },
         onClickLeft() {
             this.$router.push({
-                path: '/login'
+                path: '/'
             })
         },
         isChecked() {
