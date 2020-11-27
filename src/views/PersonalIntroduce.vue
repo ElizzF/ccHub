@@ -1,19 +1,17 @@
 <template>
-    <div class='container' style="background: rgba(242,242,242); height:100%">
+    <div class='container' style="background: rgba(242,242,242); height:100%;">
         <!-- 导航栏 -->
         <van-nav-bar
-            title="个人简介"
+            title="获奖经历"
             class="navbar"
             left-text="返回"
-            right-text="保存"
             left-arrow
             @click-left="onClickLeft"
-            @click-right="updateUserData"
         />
         
        
         <div class="cellList" style="padding-top: 47px;">
-            <van-cell :title="username" :label="sex" size='large' style="align-items: center;position: relative">
+            <!-- <van-cell :title="username" :label="sex" size='large' style="align-items: center;position: relative">
                 <template #icon>
                     <van-image
                         round
@@ -24,10 +22,24 @@
                     />
                 
                 </template>
-            </van-cell>            
+            </van-cell>             -->
+            <van-cell v-for="item in list" :key="item.id" :title="item.title" class='labeltype' size="large">
+                <template #label>
+                    <van-image width="60%" height="60%" :src="item.imgUrl"></van-image>
+                </template>
+                <template #right-icon>
+                    <van-icon name='arrow-down'></van-icon>
+                </template>
+            </van-cell>
+           
+            
+           
+           
         </div>
-
-        <div class='cellList' style="margin-top: 10px;">
+        <div class='button-box' style="position: relative">
+            <van-button @click="addCertificateImg" class="add_button" icon="plus" type="info" round />
+        </div>
+        <!-- <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>个人简介</div>
             <van-field  v-model="description" clearable type="textarea" autosize />
         </div>
@@ -35,7 +47,7 @@
         <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>获奖经历</div>
             <van-field size='large' v-model="history" clearable type="textarea" autosize />
-        </div>
+        </div> -->
 
 
 
@@ -46,39 +58,41 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 // import { Dialog } from 'vant'
 export default {
     data() {
         return {
-            username: '',
-           
-            description: '',
-            sex: '',
-            avatarImg: '',
-            history: "2020.01.02 巴拉巴拉大赛二等奖" +"\n" + "2020.01.02 巴拉巴拉大赛二等奖"
+            list: []
         };
     },
     created() {
         this.initUserData();
     },
+    computed:{
+        ...mapState(["userinfo"])
+    },
     methods: {
+        addCertificateImg() {
+            this.$router.push({
+                path: '/addImg'
+            })
+        },
         initUserData() {
-            let userKey = JSON.parse(localStorage.getItem('userData'));
             this.axios({
                 method: "GET",
-                url: "/user/getInfo/0",
-                headers: {
-                    'Authorization': userKey.accesstoken
-                }
+                url: "/user/getCertificates/" + this.userinfo.id,
             }).then((res) => {
-                let userData = res.data.data;
-                this.username = userData.username;
-                
-                this.description = userData.description;
-                this.avatarImg = userData.avatar_url;
-   
-                if(userData.sex == 1) this.sex = '男';
-                else this.sex = '女';
+                let datas = res.data.data;
+                let tempList = [];
+                datas.forEach((index) => {
+                    let dataItem = {};
+                    dataItem.title = index.name;
+                    dataItem.imgUrl = index.url;
+                    dataItem.id = index.id;
+                    tempList.push(dataItem);
+                })
+                this.list = tempList;
             })
         },
         
@@ -110,9 +124,23 @@ export default {
     padding-left: 16px;
     margin-bottom: -5px;
 }
+.add_button {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    right: 15px;
+}
+.button-box {
+    margin-top: 10px;
+}
+
 </style>
 
 <style>
+.labeltype .van-cell__label {
+    display: flex;
+    justify-content: center;
+}
 .navbar .van-nav-bar__title {
     color: #FFF;
 }

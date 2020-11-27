@@ -175,7 +175,13 @@ const routes = [
         name: 'JoinTeam',
         component: () => import('@/views/JoinTeam.vue'),
         meta: { requiresAuth: true }
-    }
+    },
+    {
+        path: "/addImg",
+        name: 'AddImg',
+        component: () => import('@/views/AddImg.vue'),
+        meta: { requiresAuth: true }
+    },
 ]
 
 const router = new VueRouter({

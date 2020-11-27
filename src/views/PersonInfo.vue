@@ -20,7 +20,7 @@
                     style="position: absolute; right: 16px; pointer-events: none; z-index: 1;"
                     :src="avatarImg"
                 />
-                <van-uploader :after-read="afterRead" multiple :max-count="1"/>
+                <van-uploader class="avatarUpload" :after-read="afterRead" multiple :max-count="1"/>
             </template>
         </van-cell>
        
@@ -32,11 +32,11 @@
             <van-action-sheet v-model="show" :actions="actions" @select="sexSelect" />
             <van-field label="电话号码" size='large' v-model="phone" clearable input-align="right"/>
             <van-field label="邮箱" size='large' v-model="email" clearable input-align="right"/>
-          
+            <van-field label="个人简介" size='large' v-model="description" clearable input-align="right"/>
         </div>
 
         <div class='cellList'>
-            <van-cell title="个人简介" size='large' is-link to="/personalIntroduce" />
+            <van-cell title="获奖经历" size='large' is-link to="/personalIntroduce" />
         </div>
 
     </div>
@@ -55,6 +55,7 @@ export default {
             phone: '',
             email: '',
             sex: '',
+            description: '',
 
             avatarImg: '',
             flag: 0
@@ -79,6 +80,7 @@ export default {
                 this.email = userData.email;
                 this.avatarImg = userData.avatar_url;
                 this.name = userData.name;
+                this.description = userData.description;
                 if(userData.sex == 1) this.sex = '男';
                 else this.sex = '女';
             })
@@ -215,12 +217,12 @@ export default {
 .van-field__control {
     color: #969799;
 }
-.van-uploader__upload, .van-uploader__preview-image {
+.avatarUpload .van-uploader__upload, .avatarUpload .van-uploader__preview-image {
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
 }
-.van-uploader__upload, .van-uploader__preview {
+.avatarUpload .van-uploader__upload, .avatarUpload .van-uploader__preview {
     margin: 0;
 }
 

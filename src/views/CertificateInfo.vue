@@ -8,25 +8,35 @@
         left-arrow
         @click-left="onClickLeft"
     />
-    <van-image class='topImg' style="padding-top: 45px;" :src="require('../assets/image/u808.png')" height="200px" width="100%">
+    <van-image class='topImg' style="padding-top: 45px;" :src="imgUrl" height="200px" width="100%">
       <template v-slot:loading>
         <van-loading type="spinner" size="20" />
       </template>
     </van-image>
     <div style="padding-bottom: 50px;">
       <van-cell-group>
-        <van-cell title="2020年下半年CET考试" 
-                  label="8888 浏览 | 624 关注" 
+        <van-cell :title="title" 
+                  :label="watch" 
                   title-class='comTitle'
                   label-class="comLabel"
         />
-        <van-cell title="报名时间 2020.10.01——2020.12.01" title-class="cellStyle"/>
-        <van-cell title="比赛时间 2020.12.01——2020.12.31" title-class="cellStyle"/>
-        <van-cell title="主办方 巴拉巴拉考试中心" title-class="cellStyle"/>
+        <van-cell :title="enrollTime" title-class="cellStyle"/>
+        <van-cell :title="contestTime" title-class="cellStyle"/>
+        <van-cell :title="originator" title-class="cellStyle"/>
       </van-cell-group>
       <van-collapse v-model="activeNames1" >
-          <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
-        </van-collapse>
+          <van-collapse-item title="详细内容" name="1" title-class="collapseCellStyle">
+          <van-field
+            class="contestInfoStyle"
+            v-model="info"
+            :autosize="{ maxHeight: 300 }"
+            type="textarea"
+            readonly
+            style="color: #969799"
+          />
+          <!-- {{ info }} -->
+        </van-collapse-item>
+      </van-collapse>
 
       <van-collapse v-model="activeNames2" style="margin-top: 10px;">
         <van-collapse-item title="备考材料" name="1" title-class="collapseCellStyle">巴拉巴拉巴拉巴拉巴拉巴拉</van-collapse-item>
@@ -38,7 +48,7 @@
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
         <van-goods-action-icon icon="star-o" text="收藏"  />
       </div>
-      <van-button round type="info">我要报名</van-button>
+      <van-button round type="info" style="height: 35px;" @click="addRoute">加入我的路线</van-button>
     </van-goods-action>
 
 
@@ -55,6 +65,14 @@
 export default {
   data() {
     return {
+      title: '',
+      imgUrl: '',
+      originator: '',
+      enrollTime: '',
+      contestTime: '',
+      watch: '',
+      info: '',
+
       showShare: false,
       options: [
         { name: '微信', icon: 'wechat' },
@@ -65,13 +83,54 @@ export default {
       ],
       activeNames1: ['1'],
       activeNames2: [],
+
+      certificateId: null
     }
   },
+  created() {
+    this.initContestInfo();
+  },
   methods: {
+    initContestInfo() {
+      let certificateId = localStorage.getItem("certificateId");
+      this.certificateId = certificateId;
+
+      this.$api.Certificate.GetCertificateById(this.certificateId).then(res=>{
+        this.title = res.data.name;
+        this.imgUrl = '';
+        this.watch = res.data.watched + " 浏览 | " + res.data.collected + " 关注";
+        this.originator = "官网 " + res.data.office_web;
+        this.enrollTime = "报名时间 " + res.data.enroll_start + " — " + res.data.enroll_end;
+        if(res.data.contest_start == res.data.contest_end) 
+          this.contestTime = "比赛时间 未知";
+        else
+          this.contestTime = "比赛时间 " + res.data.contest_start + " — " + res.data.contest_end;
+        this.info = res.data.info;    
+      })
+    },
     onClickLeft() {
       this.$router.push({
         path: '/certificate'
       })
+    },
+    addRoute() {
+      // this.$api.Route.AddRouteByContestId(this.certificateId).then(data=>{
+      //   if(data.status == 0) {
+      //     Dialog.alert({
+      //         title: '提示',
+      //         theme: 'round-button',
+      //         message: '添加成功！',
+      //         confirmButtonColor: '#1989FA'
+      //     })
+      //   }
+      // }).catch(error=>{
+      //   Dialog.alert({
+      //     title: '警告',
+      //     theme: 'round-button',
+      //     message: error.message,
+      //     confirmButtonColor: '#1989FA'
+      //   })
+      // })
     }
   }
 }

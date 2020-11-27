@@ -241,61 +241,6 @@ export default {
             }).catch(() => {
                 this.noData = true;
             });
-            // this.axios({
-            //     method: "GET",
-            //     url: "/contest",
-            //     params: {
-            //         pageNum: this.page,
-            //         level: level,
-            //         type: type,
-            //         orderBy: orderBy
-            //     }
-            // }).then((res) => {
-            //     this.loading = false
-
-            //     let list = res.data.data.list;
-            //     // 如果没有数据，显示暂无数据
-            //     if (list.length == 0 && this.page == 1) {
-            //         this.noData = true
-            //     }
-            //     list.forEach((index) => {
-            //         let listItem = {};
-            //         listItem.title = index.name;
-            //         listItem.imageUrl = index.picUrl;
-            //         listItem.level = index.level;
-            //         listItem.id = index.id;
-            //         listItem.watch = index.watched;
-            //         listItem.collected = index.collected;
-
-            //         let fireNum = parseInt(index.watched / 9);
-            //         listItem.fireNum = fireNum;
-
-            //         let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
-            //         let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
-            //         if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
-            //             let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
-            //             listItem.distance = '离报名截止还有' + distance + '天';
-            //             listItem.state = '正在报名'; 
-            //             listItem.stateColor = '#22BFA7';
-            //         } 
-            //         else if(new Date(nowTime) <= enrollStart) {
-            //             listItem.state = '即将报名';
-            //             listItem.stateColor = '#05C0FF';
-            //         }
-            //         else {
-            //             listItem.state = '报名结束';
-            //             listItem.stateColor = '#AAAAAA';
-            //         }
-            //         this.competitionList.push(listItem);
-            //     })
-            //     this.page++;
-            //     // 如果加载完毕，显示没有更多了
-            //     if (this.page == res.data.data.pages + 1) {
-            //         this.finished = true;
-            //     }
-            // }).catch(() => {
-            //     this.noData = true;
-            // });
         },
 
         //恢复保存的页面状态
@@ -372,6 +317,7 @@ export default {
             })
         },
         onClickRight() {
+            localStorage.setItem("ccflag", true);
             this.$router.push({
                 path: '/searchPage'
             })

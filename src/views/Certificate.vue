@@ -13,7 +13,36 @@
             </van-dropdown-menu>
         </div>
 
-        <div class='comList'>
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class='comList' ref="pullRefresh">
+            <div v-if='noData' style="text-align: center">
+                暂无数据
+            </div>
+            <template v-else>
+                <van-list
+                    class="listMain"
+                    v-model="loading"
+                    :finished="finished"
+                    finished-text="- 没有更多了 -"
+                    @load="onLoad"
+                    :offset="130"
+                >
+                    <div v-for="item in certificateList" :key="item.id" class='comListItem' @click="lookMoreInfo(item.id)">
+                        <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl" />
+                        <div class='itemTop'>
+                            <div class='itemState' :style="{ color: item.stateColor }">{{ item.state }}</div>
+                            <div class='itemDistance'>{{ item.distance }}</div>
+                        </div>
+                        <div class='itemTitle'>{{ item.title }}</div>
+                        <div class='itemBottom'>
+                            <div style="color: red;"><van-icon color="red" class-prefix="iconfont icon" name="fire" size='23px' />{{ item.fireNum }}</div>
+                            <div class='itemInfo'>{{ item.watch }} 浏览 | {{ item.collected }} 关注 </div>
+                        </div>
+                    </div>
+                </van-list>
+            </template>
+
+        </van-pull-refresh>
+        <!-- <div class='comList'>
             <div class='comListItem' @click="toCerInfo">
                 
                 <van-image width="100%" height="140" :src="require('../assets/image/u808.png')" />
@@ -34,15 +63,8 @@
                 <div class='itemInfo'>8888 浏览 | 624 关注 | 国际级证书</div>
             </div>
             
-        </div>
+        </div> -->
 
-        <!-- <van-tabbar v-model="active" route>
-            <van-tabbar-item icon='wap-home-o' to='/'>首页</van-tabbar-item>
-            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='trophy' to='/competition'>竞赛</van-tabbar-item>
-            <van-tabbar-item class='trophy' icon-prefix='iconfont icon' icon='jiangbei' to='/certificate'>证书</van-tabbar-item>
-            <van-tabbar-item icon="chat-o" badge="20" to='/chat'>聊天</van-tabbar-item>
-            <van-tabbar-item icon="user-o" to='/mine'>我的</van-tabbar-item>
-        </van-tabbar> -->
         <nav-bottom v-model="active"/>
     </div>
 </template>
@@ -70,9 +92,81 @@ export default {
                 { text: '近期报名', value: 1 },
                 { text: '考试费用', value: 2 },
             ],
+
+            page: 1,
+            loading: false, // 当loading为true时，转圈圈
+            finished: false, // 数据是否请求结束，结束会先显示- 没有更多了 -
+            noData: false, // 如果没有数据，显示暂无数据
+            isLoading:false, // 下拉的加载图案
+
+            certificateList: [],
         };
     },
+    created() {
+        this.initCompetitionList();
+    },
     methods: {
+        initCompetitionList() {
+            
+            let nowDate = new Date();
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
+            
+            let orderBy = null;  //排序
+            if(this.sortTitle == "报名时间") orderBy = "enroll_end";
+            else if(this.sortTitle == "浏览量") orderBy = "watched";
+            
+            this.$api.Certificate.GetCertificate(this.page, orderBy, null).then(res=>{
+                this.loading = false
+            
+                let list = res.data.list;
+                // 如果没有数据，显示暂无数据
+                if (list.length == 0 && this.page == 1) {
+                    this.noData = true
+                }
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.title = index.name;
+                    listItem.imageUrl = '';
+                    listItem.id = index.id;
+                    listItem.watch = index.watched;
+                    listItem.collected = index.collected;
+
+                    let fireNum = parseInt(index.watched / 9);
+                    listItem.fireNum = fireNum;
+
+                    let enrollStart = new Date(index.enroll_start.replace(/-/g,"/"));
+                    let enrollEnd = new Date(index.enroll_end.replace(/-/g,"/"));
+                    if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+                        let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                        listItem.distance = '离报名截止还有' + distance + '天';
+                        listItem.state = '正在报名'; 
+                        listItem.stateColor = '#22BFA7';
+                    } 
+                    else if(new Date(nowTime) <= enrollStart) {
+                        listItem.state = '即将报名';
+                        listItem.stateColor = '#05C0FF';
+                    }
+                    else {
+                        listItem.state = '报名结束';
+                        listItem.stateColor = '#AAAAAA';
+                    }
+                    this.certificateList.push(listItem);
+                })
+                this.page++;
+                // 如果加载完毕，显示没有更多了
+                if (this.page == res.data.pages + 1) {
+                    this.finished = true;
+                }
+            }).catch(() => {
+                this.noData = true;
+            });
+        },
+        lookMoreInfo(e) {
+            localStorage.setItem("certificateId", e);
+            this.$router.push({
+                path: '/certificateInfo'
+            })
+        },
         changeStyleTitle (i) {
             this.styleTitle = this.option1[i].text;
         },
@@ -85,10 +179,31 @@ export default {
             })
         },
         onClickRight() {
+            localStorage.setItem("ccflag", false);
             this.$router.push({
                 path: '/searchPage'
             })
         },
+        // 列表加载
+        onLoad () {
+            setTimeout(() => {
+                this.initCompetitionList()
+                this.loading = true
+            }, 500)
+        },
+        onRefresh () {
+            setTimeout(() => {
+                // 重新初始化这些属性
+                this.isLoading = false
+                this.certificateList = []
+                this.page = 1
+                this.loading = false
+                this.finished = false
+                this.noData = false
+                // 请求信息
+                this.initCompetitionList()
+            }, 500)
+        }
     }
 }
 </script>
@@ -131,6 +246,10 @@ export default {
     display: flex;
     margin-top: 5px;
     align-items: center;
+}
+.itemBottom {
+    display: flex;
+    justify-content: space-between;
 }
 .itemState {
     font-size: 16px;

@@ -69,7 +69,7 @@
            <!-- 搜索404页面 -->
            <div class="">
                <img src="@/assets/image/search-404.jpg" />
-               <div style="text-align:center;margin-top:5px;">搜不到想要的竞赛</div>
+               <div style="text-align:center;margin-top:5px;">搜不到想要的竞赛/证书</div>
                <div style="text-align:center;margin-top:2px;"><a href="feedback">点击我反馈</a></div>
            </div>
        </div>
@@ -100,74 +100,136 @@ export default {
             isLoading:false, // 下拉的加载图案
 
             searchList: [],
-            tempFlagValue: ''   //判断现在写的关键词与上一次是否一致
+            tempFlagValue: '',   //判断现在写的关键词与上一次是否一致
         };
     },
     created() {
-       
+      
     },
     methods: {
         onClickLeft() {
-            this.$router.push({
-                path: '/competition'
-            })
+            let flag = localStorage.getItem("ccflag");
+            console.log(flag);
+            if(flag == true) {
+                this.$router.push({
+                    path: '/competition'
+                })
+            } else {
+                this.$router.push({
+                    path: '/certificate'
+                })
+            }
         },
         formSubmit () {
             return false; 
         },
         search() {
             let nowDate = new Date();
-            let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
-            this.axios({
-                method: "GET",
-                url: "/contest/search",
-                params: {
-                    keyword: this.search_value,
-                    pageNum: this.page,
-                }
-            }).then((res) => {
-                this.IsNotFound = false;
-                this.loading = false;
+            let nowTime= nowDate.toLocaleString('zh', { hour12: false }); 
+            let flag = localStorage.getItem("ccflag");
+            if(flag == true) {
+                this.axios({
+                    method: "GET",
+                    url: "/contest/search",
+                    params: {
+                        keyword: this.search_value,
+                        pageNum: this.page,
+                    }
+                }).then((res) => {
+                    this.IsNotFound = false;
+                    this.loading = false;
 
-                let list = res.data.data.content;
-                if (list.length == 0 && this.page == 1) {
+                    let list = res.data.data.content;
+                    if (list.length == 0 && this.page == 1) {
+                        this.IsNotFound = true;
+                    }
+
+                    list.forEach((index) => {
+                        let listItem = {};
+                        listItem.title = index.name;
+                        listItem.id = index.id;
+                        if(index.contestStart == index.contestEnd) listItem.time = "比赛时间尚未决定";
+                        else listItem.time = index.contestStart + " — " + index.contestEnd;
+                        
+                        let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
+                        let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
+                        if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+                            let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                            listItem.state = '距报名结束还有' + distance + '天'; 
+                            listItem.stateColor = '#22BFA7';
+                        } 
+                        else if(new Date(nowTime) <= enrollStart) {
+                            let distance = parseInt((Date.parse(enrollStart) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                            listItem.state = '距报名报名开始还有' + distance + '天';
+                            listItem.stateColor = '#05C0FF';
+                        }
+                        else {
+                            listItem.state = '报名已结束';
+                            listItem.stateColor = '#AAAAAA';
+                        }
+                        this.searchList.push(listItem);
+                    })
+
+                    this.page++;
+                    // 如果加载完毕，显示没有更多了
+                    if (this.page == res.data.data.totalPages + 1) {
+                        this.finished = true;
+                    }
+                }).catch(() => {
                     this.IsNotFound = true;
-                }
-
-                list.forEach((index) => {
-                    let listItem = {};
-                    listItem.title = index.name;
-                    listItem.id = index.id;
-                    if(index.contestStart == index.contestEnd) listItem.time = "比赛时间尚未决定";
-                    else listItem.time = index.contestStart + " — " + index.contestEnd;
-                    
-                    let enrollStart = new Date(index.enrollStart.replace(/-/g,"/"));
-                    let enrollEnd = new Date(index.enrollEnd.replace(/-/g,"/"));
-                    if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
-                        let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
-                        listItem.state = '距报名结束还有' + distance + '天'; 
-                        listItem.stateColor = '#22BFA7';
-                    } 
-                    else if(new Date(nowTime) <= enrollStart) {
-                        let distance = parseInt((Date.parse(enrollStart) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
-                        listItem.state = '距报名报名开始还有' + distance + '天';
-                        listItem.stateColor = '#05C0FF';
+                });
+            } else {
+                this.axios({
+                    method: "GET",
+                    url: "/certificate/search",
+                    params: {
+                        keyword: this.search_value,
+                        pageNum: this.page,
                     }
-                    else {
-                        listItem.state = '报名已结束';
-                        listItem.stateColor = '#AAAAAA';
-                    }
-                    this.searchList.push(listItem);
-                })
+                }).then((res) => {
+                    this.IsNotFound = false;
+                    this.loading = false;
 
-                this.page++;
-                // 如果加载完毕，显示没有更多了
-                if (this.page == res.data.data.totalPages + 1) {
-                    this.finished = true;
-                }
-            }).catch(() => {
-                this.IsNotFound = true;
-            });
+                    let list = res.data.data.content;
+                    if (list.length == 0 && this.page == 1) {
+                        this.IsNotFound = true;
+                    }
+
+                    list.forEach((index) => {
+                        let listItem = {};
+                        listItem.title = index.name;
+                        listItem.id = index.id;
+                        if(index.contest_start == index.contest_end) listItem.time = "比赛时间尚未决定";
+                        else listItem.time = index.contest_start + " — " + index.contest_end;
+                        
+                        let enrollStart = new Date(index.enroll_start.replace(/-/g,"/"));
+                        let enrollEnd = new Date(index.enroll_end.replace(/-/g,"/"));
+                        if(new Date(nowTime) >= enrollStart && new Date(nowTime) <= enrollEnd) {
+                            let distance = parseInt((Date.parse(enrollEnd) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                            listItem.state = '距报名结束还有' + distance + '天'; 
+                            listItem.stateColor = '#22BFA7';
+                        } 
+                        else if(new Date(nowTime) <= enrollStart) {
+                            let distance = parseInt((Date.parse(enrollStart) - Date.parse(new Date(nowTime))) / (1000 * 60 * 60 * 24)); 
+                            listItem.state = '距报名报名开始还有' + distance + '天';
+                            listItem.stateColor = '#05C0FF';
+                        }
+                        else {
+                            listItem.state = '报名已结束';
+                            listItem.stateColor = '#AAAAAA';
+                        }
+                        this.searchList.push(listItem);
+                    })
+
+                    this.page++;
+                    // 如果加载完毕，显示没有更多了
+                    if (this.page == res.data.data.totalPages + 1) {
+                        this.finished = true;
+                    }
+                }).catch(() => {
+                    this.IsNotFound = true;
+                });
+            }
         },
         //手机键盘事件
         searchTo(event){
@@ -177,10 +239,19 @@ export default {
         },
 
         lookMoreInfo(e) {
-            localStorage.setItem("contestId", e);
-            this.$router.push({
-                path: '/competitionInfo'
-            })
+            let flag = localStorage.getItem("ccflag");
+            if(flag == true) {
+                localStorage.setItem("contestId", e);
+                this.$router.push({
+                    path: '/competitionInfo'
+                })
+            } else {
+                localStorage.setItem("certificateId", e);
+                this.$router.push({
+                    path: '/certificateInfo'
+                })
+            }
+            
         },
 
         // 列表加载
