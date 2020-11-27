@@ -108,13 +108,12 @@ export default {
     },
     methods: {
         onClickLeft() {
-            let flag = localStorage.getItem("ccflag");
-            console.log(flag);
+            let flag = this.$store.state.flag;
             if(flag == true) {
                 this.$router.push({
                     path: '/competition'
                 })
-            } else {
+            } else if(flag == false) {
                 this.$router.push({
                     path: '/certificate'
                 })
@@ -126,8 +125,8 @@ export default {
         search() {
             let nowDate = new Date();
             let nowTime= nowDate.toLocaleString('zh', { hour12: false }); 
-            let flag = localStorage.getItem("ccflag");
-            if(flag == true) {
+            let flag = this.$store.state.flag;
+            if(flag === true) {
                 this.axios({
                     method: "GET",
                     url: "/contest/search",
@@ -178,7 +177,7 @@ export default {
                 }).catch(() => {
                     this.IsNotFound = true;
                 });
-            } else {
+            } else if(flag === false){
                 this.axios({
                     method: "GET",
                     url: "/certificate/search",
@@ -239,7 +238,7 @@ export default {
         },
 
         lookMoreInfo(e) {
-            let flag = localStorage.getItem("ccflag");
+            let flag = this.$store.state.flag;
             if(flag == true) {
                 localStorage.setItem("contestId", e);
                 this.$router.push({

@@ -7,9 +7,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         comtestData: null,
+        certificateData: null,
         userinfo: JSON.parse(localStorage.getItem("userData") ? localStorage.getItem("userData") : "{}"),
         messageList: [],
-        showAlert:true
+        showAlert:true,
+        flag: true
     },
     mutations: {
         toggleAlert(state){

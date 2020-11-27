@@ -318,7 +318,7 @@ export default {
             })
         },
         onClickRight() {
-            localStorage.setItem("ccflag", true);
+            this.$store.state.flag = true;
             this.$router.push({
                 path: '/searchPage'
             })

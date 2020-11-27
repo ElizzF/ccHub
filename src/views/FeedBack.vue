@@ -10,7 +10,7 @@
         />
         <div class="cc-contest-feedback__container">
             <div class="form">
-                <van-field type="text" label="竞赛名称" v-model="name" />
+                <van-field type="text" label="竞赛/证书名称" v-model="name" />
                 <van-field type="text" label="相关网址" v-model="url" />
                 <van-field type="textarea" label="备注" v-model="mark" /> 
             </div>

@@ -100,14 +100,24 @@ export default {
             isLoading:false, // 下拉的加载图案
 
             certificateList: [],
+            scroll: 0
         };
     },
     created() {
         this.initCompetitionList();
     },
+    destroyed() {
+        //保存当前页面状态
+        this.scroll = document.documentElement.scrollTop;
+        this.$store.state.certificateData = this.$data;
+    },
     methods: {
         initCompetitionList() {
-            
+            if(this.$store.state.certificateData != null) {
+                this.replaceCompetitionList();
+                this.$store.state.certificateData = null;
+                return ;
+            }
             let nowDate = new Date();
             let nowTime= nowDate.toLocaleString('zh', { hour12: false });  
             
@@ -161,6 +171,27 @@ export default {
                 this.noData = true;
             });
         },
+
+        //恢复保存的页面状态
+        replaceCompetitionList() {
+            let tempData = this.$store.state.certificateData;
+            this.activeId = tempData.activeId;
+            this.activeIndex = tempData.activeIndex;
+
+            this.page = tempData.page;
+            this.loading = tempData.loading;
+            this.finished = tempData.finished;
+            this.noData = tempData.noData;
+            this.isLoading = tempData.isLoading;
+
+            
+            this.certificateList = tempData.certificateList;
+            this.scroll = tempData.scroll;
+            this.$nextTick(() => {
+                document.documentElement.scrollTop = tempData.scroll;
+            })
+        },
+
         lookMoreInfo(e) {
             localStorage.setItem("certificateId", e);
             this.$router.push({
@@ -179,7 +210,7 @@ export default {
             })
         },
         onClickRight() {
-            localStorage.setItem("ccflag", false);
+            this.$store.state.flag = false;
             this.$router.push({
                 path: '/searchPage'
             })

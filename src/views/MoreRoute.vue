@@ -176,6 +176,7 @@ export default {
                             confirmButtonColor: '#1989FA'
                         });
                         this.stepList = [];
+                        this.current = 0;
                         this.initRoute();
                     }
                 }).catch(error=>{
