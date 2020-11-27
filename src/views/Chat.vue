@@ -15,37 +15,6 @@
         <div class="chatList" >
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
-                    :key="`${index}-${item.mid}`"
-                    v-if="item.type == 0  && item.user && item.detail"
-                    style="align-items: center"
-                    class="chatListItem"
-                >
-                    <van-cell
-                        :title="item.send_userName"
-                        :label="`申请加入${item.detail.team_name}请求已处理`"
-                        :to="`/application?mid=${item.mid}`"
-                        style="align-items: center"
-                    >
-                        <template #icon>
-                            <van-image
-                                round
-                                width="3rem"
-                                height="3rem"
-                                :src="item.user.avatar_url"
-                                style="margin-right: 10px"
-                            />
-                        </template>
-                    </van-cell>
-                    <template #right>
-                        <van-button
-                            square
-                            text="删除"
-                            type="danger"
-                            class="delete-button"
-                        />
-                    </template>
-                </van-swipe-cell>
-                <van-swipe-cell
                     v-if="item.type == 1 && item.detail"
                     :key="`${index}-${item.mid}`"
                     style="align-items: center"
@@ -78,7 +47,7 @@
                 </van-swipe-cell>
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"
-                    v-if="item.type == 2  && item.user && item.detail"
+                    v-if="item.type == 3  && item.user && item.detail"
                     style="align-items: center"
                     class="chatListItem"
                 >
@@ -165,6 +134,40 @@
                 </template>
             </van-swipe-cell>
             -->
+            <template  v-for="(item, index) in chatPreviewBox">
+                <van-swipe-cell
+                    :key="`${index}-${item. uid}-chat`"
+                    v-if="item.user"
+                    style="align-items: center"
+                    class="chatListItem"
+                >
+                    <van-cell
+                        :title="item.user.username"
+                        :label="`${item.content}`"
+                        :value="item.lasttime | timeFormat"
+                        style="align-items: center"
+                        @click="goChat(item)"
+                    >
+                        <template #icon>
+                            <van-image
+                                round
+                                width="3rem"
+                                height="3rem"
+                                :src="item.user.avatar_url"
+                                style="margin-right: 10px"
+                            />
+                        </template>
+                    </van-cell>
+                    <template #right>
+                        <van-button
+                            square
+                            text="删除"
+                            type="danger"
+                            class="delete-button"
+                        />
+                    </template>
+                </van-swipe-cell>
+            </template>
         </div>
         <nav-bottom v-model="active"></nav-bottom>
     </div>
@@ -185,8 +188,17 @@ export default {
     },
     computed:{
         ...mapState([
-            "messageList"
-        ])
+            "messageList","chatList"
+        ]),
+        chatPreviewBox(){
+            let box = []
+            for (let item of this.chatList){
+                if (item.box.length>0){
+                    box.push(item.box[item.box.length-1])
+                }
+            }
+            return box
+        }
     },
     mounted() {
     },
@@ -215,6 +227,12 @@ export default {
         formSubmit() {
             return false;
         },
+        goChat(item){
+            this.$router.push({
+                name:"PrivateChat",
+                params:{user:{uid:item.uid},teaminfo:{tid:item.tid}}
+            })
+        }
     },
 };
 </script>

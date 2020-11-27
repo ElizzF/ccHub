@@ -5,7 +5,8 @@
     >
         <!-- 导航栏 -->
         <van-nav-bar
-            :title="chatUser.uname"
+            v-if="chatUser && chatUser.info"
+            :title="chatUser.info.username"
             class="navbar"
             left-text="返回"
             left-arrow
@@ -22,6 +23,53 @@
             </template>
         </van-nav-bar>
 
+        <div
+            class="chatbox"
+            ref="chatBox"
+            :style="{ height: `calc(100vh - ${showDialog ? '300' : '50'}px)` }"
+        >
+            <div
+                class=""
+                v-for="(item, index) in box()"
+                :key="`${item.uid}-${index}`"
+            >
+                <div
+                    style="display: flex; margin-bottom: 10px"
+                    :style="{
+                        flexDirection: item.owner ? 'row-reverse' : 'row',
+                    }"
+                >
+                    <van-image
+                        round
+                        width="3rem"
+                        height="3rem"
+                        v-if="chatUser && chatUser.info"
+                        :src="
+                            item.owner
+                                ? user.avatar_url
+                                    ? user.avatar_url
+                                    : 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3994862347,1268351928&fm=26&gp=0.jpg'
+                                : chatUser.info.avatar_url
+                                ? chatUser.info.avatar_url
+                                : 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3994862347,1268351928&fm=26&gp=0.jpg'
+                        "
+                        style="margin: 0 10px"
+                    />
+                    <div
+                        style="
+                            width: 60%;
+                            min-height: 50px;
+                            padding: 10px;
+                            background-color: white;
+                            border-radius: 10px;
+                        "
+                    >
+                        {{ item.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <van-tabbar class="chatBar" :style="{ height: barHeight }">
             <div class="chatBarTop" :style="{ height: barTopHeight }">
                 <input class="chatInput" type="text" v-model="valueInput" />
@@ -32,12 +80,20 @@
                     color="rgba(170, 170, 170, 1)"
                     @click="toogleDialogEmoji"
                 />
-                <van-icon
+                <!-- <van-icon
                     class="add"
                     name="add-o"
                     size="32"
                     color="rgba(170, 170, 170, 1)"
-                />
+                /> -->
+                <van-button
+                    size="small"
+                    type="info"
+                    style="width: 50px; margin: 0 5px"
+                    @click="sendMessage(valueInput)"
+                >
+                    发送
+                </van-button>
             </div>
             <VEmojiPicker
                 class="emojiPicker"
@@ -53,6 +109,8 @@
 
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
+import { mapActions, mapMutations, mapState } from "vuex";
+import { Dialog } from "vant";
 export default {
     components: {
         VEmojiPicker,
@@ -63,19 +121,38 @@ export default {
             valueInput: "",
             barHeight: "",
             barTopHeight: "50px",
-            chatUser:{}
+            chatUser: {},
         };
+    },
+    computed: {
+        ...mapState(["wss", "chatList", "userinfo", "user"]),
     },
     mounted() {
         this.chatUser = this.$route.params.user;
         this.teaminfo = this.$route.params.teaminfo;
-        if (!this.chatUser || !this.teaminfo){
+        if (!this.chatUser || !this.teaminfo) {
             this.onClickLeft();
         }
-        console.log(this.teaminfo)
-        console.log(this.chatUser)
+        if (!this.chatUser.info) {
+            this.$api.User.GetUserInfoById(this.chatUser.uid).then((data) => {
+                this.$set(this.chatUser, "info", data.data);
+            });
+        }
     },
     methods: {
+        ...mapMutations(["MergeChatList"]),
+        ...mapActions(["registerWSS"]),
+        box() {
+            if (this.$refs.chatBox)
+                this.$refs.chatBox.scrollTo(
+                    0,
+                    this.$refs.chatBox.scrollHeight -
+                        this.$refs.chatBox.clientHeight
+                );
+            let box = this.chatList.find((e) => e.uid == this.chatUser.uid);
+            if (!box) return [];
+            return box.box;
+        },
         onClickLeft() {
             this.$router.push({
                 path: "/chat",
@@ -94,11 +171,47 @@ export default {
         onSelectEmoji(emoji) {
             this.valueInput += emoji.data;
         },
+        sendMessage(message) {
+            if (message == "") return;
+            let messagePackage = {
+                message: message,
+                tid: this.teaminfo.tid,
+                uid: this.chatUser.uid,
+            };
+            if (this.wss) {
+                this.wss.send(JSON.stringify(messagePackage));
+                messagePackage.owner = this.userinfo.id;
+                this.$api.User.GetUserInfoById(this.chatUser.uid).then(
+                    (data) => {
+                        messagePackage.user = data.data;
+                    }
+                );
+                this.MergeChatList(messagePackage);
+                this.$refs[`chatBox`].scrollTo(
+                    0,
+                    this.$refs.chatBox.scrollHeight -
+                        this.$refs.chatBox.clientHeight
+                );
+            } else {
+                Dialog.alert({
+                    message: "当前已离线",
+                });
+                this.registerWSS();
+            }
+            this.valueInput = "";
+        },
     },
 };
 </script>
 
 <style scoped>
+.chatbox {
+    margin-top: 45px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow: auto;
+}
 .navbar {
     background: #0079fe;
     position: fixed;

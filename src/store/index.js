@@ -14,7 +14,9 @@ export default new Vuex.Store({
         showAlert: true,
         flag: true,
         user: {},
-        wss: null
+        wss: null,
+        chatList: [],
+        reconnectCount:0
     },
     mutations: {
         toggleAlert(state) {
@@ -28,10 +30,58 @@ export default new Vuex.Store({
             state.userinfo = userinfo
             state.messageList = []
         },
+        setUser(state,user){
+            state.user=user;
+        },
         Logout(state) {
             localStorage.removeItem("userData");
             state.userinfo = {}
             state.messageList = []
+        },
+        setWSS(state,wss){
+            state.wss =wss;
+        },
+        /**
+         * 合并聊天记录
+         * @param {*} state 
+         * @param {*} chatMessage 
+         */
+        MergeChatList(state, chatMessage) {
+            let chatList = state.chatList;
+            // 统一化聊天记录
+            if (!chatMessage.lasttime) {
+                chatMessage.lasttime = chatMessage.last_time ? new Date(chatMessage.last_time) : new Date();
+            }
+            if (!chatMessage.content) {
+                chatMessage.content = chatMessage.message
+            }
+            if (!chatMessage.uid) {
+                chatMessage.uid = chatMessage.send_id
+            }
+            if ((chatMessage.type && chatMessage.type == 2) || chatMessage.recvice_id) {
+                // 群聊
+                let teamChat = chatList.find(e => e.tid == chatMessage.tid);
+                if (!teamChat) {
+                    teamChat = {
+                        tid: chatMessage.tid,
+                        box: []
+                    }
+                    chatList.unshift(teamChat);
+                }
+                teamChat.box.push(chatMessage);
+            } else {
+                // 私聊
+                let userChat = chatList.find(e => e.uid == chatMessage.uid);
+                if (!userChat) {
+                    userChat = {
+                        uid: chatMessage.uid,
+                        box: []
+                    }
+                    chatList.unshift(userChat)
+                }
+                userChat.box.push(chatMessage)
+            }
+            console.log(chatList)
         },
         MergeMessageList(state, messageList) {
             let oldMessageList = state.messageList;
@@ -81,35 +131,53 @@ export default new Vuex.Store({
         updateUser({ state }) {
             api.User.GetUserInfoById(state.userinfo.id).then(data => {
                 state.user = data.data;
+                
             })
         },
-        registerWSS({state,dispatch}) {
+        getChatHistory({commit}){
+            api.Chat.GetChatList().then(data=>{
+                data.data.forEach(async element => {
+                    await api.User.GetUserInfoById(element.uid).then(res=>{
+                        element.user = res.data
+                        commit("MergeChatList", element)
+                    })
+                });
+            })
+        },
+        registerWSS({ state, dispatch, commit }) {
             if (!state.userinfo.id) {
                 return
             }
-            if (state.wss!=null){
+            if (state.wss != null) {
                 state.wss.close();
             }
+            state.reconnectCount++;
             let ws = new WebSocket(`wss://soft.leavessoft.cn/chat/single/${state.userinfo.id}`);
             // 初始化ws
             ws.onmessage = message => {
-                console.log(message)
                 // message 处理方法
+                let data = JSON.parse(message.data)?.chat;
+                api.User.GetUserInfoById(data.send_id).then(res=>{
+                    data.user = res.data
+                    commit("MergeChatList", data)
+                })
             }
             ws.onopen = () => {
+                commit("setWSS",ws);
                 Toast.success("用户当前登陆成功")
             }
             ws.onclose = () => {
-                state.wss = null;
+                commit("setWSS",null);
             }
             ws.onerror = () => {
                 Toast.success("用户当前登陆失败")
+                if (state.reconnectCount<=3 && state.userinfo.id)
                 // 如果发生错误，则延迟3s后重新注册
-                setTimeout(() => {
-                    dispatch("registerWSS")
-                }, 3000);
+                    setTimeout(() => {
+                        dispatch("registerWSS")
+                    }, 3000);
             }
-            state.wss = ws;
+
         },
     },
     modules: {

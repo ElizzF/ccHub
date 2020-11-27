@@ -7,20 +7,26 @@
         @click-left="onClickLeft"
         >
         </van-nav-bar>
-
-        <van-cell-group>
-            <!-- <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center; padding-top: 57px;"/>
-            <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center;"/> -->
+        <van-cell-group style="margin-top:45px;">
+            <!-- <van-cell :title="infoList" label="2020-01-02 09:50:23" is-link style="align-items: center; padding-top: 57px;"/>-->      
+            <van-cell :title="item.type==2?item.detail.contain:`${item.user.username}加入${item.detail.team_name}的请求已经同意`" v-for="(item,index) in readMessage" :key="`${index}-${item.mid}`" :label="item.create_time" is-link style="align-items: center;"/> 
         </van-cell-group>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       infoList: '你报名的竞赛《捡垃圾大赛》，主办方提醒您：捡垃圾大赛的初试名单已公布，快去看看吧〜',
     }
+  },
+  computed:{
+      ...mapState(["messageList"]),
+      readMessage(){
+          return this.messageList.filter(e=>e.type==1 || e.type==2)
+      }
   },
   methods: {
     onClickLeft() {

@@ -12,7 +12,7 @@
 
 <script>
 import PwaButton from "@/components/common/pwaButton.vue";
-import { mapActions,  mapState } from "vuex";
+import { mapActions,  mapMutations,  mapState } from "vuex";
 export default {
     components: {
         PwaButton,
@@ -22,16 +22,12 @@ export default {
             pwaButtonVisible: false,
             pwaEvent: null,
             messageEvents: null,
-            wss:null
         };
     },
     computed:{
-        ...mapState(["userinfo"])
+        ...mapState(["userinfo","wss"])
     },
     mounted() {
-        // setTimeout(()=>{
-        //     this.pwaButtonVisible=true
-        // },1000)
         if (!this.messageEvents) {
             this.UpdateMessageList();
             this.messageEvents = setInterval(() => {
@@ -68,10 +64,17 @@ export default {
             this.pwaButtonVisible = true;
             this.pwaEvent = evt;
         });
+        this.getChatHistory();
+        this.$api.User.GetUserInfoById(this.userinfo.id).then(data=>{
+            this.setUser(data.data);
+        })
     },
     beforeDestroy(){
         if (this.messageEvents){
             clearInterval(this.messageEvents)
+        }
+        if (this.wss){
+            this.wss.close()
         }
     },
     methods: {
@@ -92,7 +95,8 @@ export default {
                 this.pwaEvent = null;
             });
         },
-        ...mapActions(["UpdateMessageList", "registerWSS"]),
+        ...mapActions(["UpdateMessageList", "registerWSS","getChatHistory"]),
+        ...mapMutations(["setUser"])
     },
 };
 </script>
