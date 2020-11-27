@@ -28,7 +28,7 @@
                     <van-image width="60%" height="60%" :src="item.imgUrl"></van-image>
                 </template>
                 <template #right-icon>
-                    <van-icon name='arrow-down'></van-icon>
+                    <van-icon name='delete' size="23" @click="deleteImg(item.id)"></van-icon>
                 </template>
             </van-cell>
            
@@ -58,7 +58,7 @@
 
 <script>
 import { mapState } from 'vuex';
-// import { Dialog } from 'vant'
+import { Dialog } from 'vant';
 export default {
     data() {
         return {
@@ -75,6 +75,48 @@ export default {
         addCertificateImg() {
             this.$router.push({
                 path: '/addImg'
+            })
+        },
+        deleteImg(e) {
+            Dialog.confirm({
+                title: '提示',
+                message: "确认要删除吗？",
+                confirmButtonColor: '#1989FA'
+            }).then(() => {
+                let userKey = JSON.parse(localStorage.getItem('userData'));
+                this.axios({
+                    method: "DELETE",
+                    url: "/user/deleteCertificate/" + e,
+                    headers: {
+                        'Authorization': userKey.accesstoken
+                    },
+                }).then(() => {
+                    Dialog.alert({
+                        title: '提示',
+                        message: "删除成功",
+                        theme: 'round-button',
+                        confirmButtonColor: '#1989FA'
+                    })
+                    this.initUserData();
+                })
+            }).catch(() => {
+                return;
+            })
+            let userKey = JSON.parse(localStorage.getItem('userData'));
+            this.axios({
+                method: "DELETE",
+                url: "/user/deleteCertificate/" + e,
+                 headers: {
+                    'Authorization': userKey.accesstoken
+                },
+            }).then(() => {
+                Dialog.alert({
+                    title: '提示',
+                    message: "删除成功",
+                    theme: 'round-button',
+                    confirmButtonColor: '#1989FA'
+                })
+                this.initUserData();
             })
         },
         initUserData() {
