@@ -368,7 +368,8 @@ export default {
         lookMoreInfo(e) {
             localStorage.setItem("contestId", e);
             this.$router.push({
-                path: '/competitionInfo'
+                path: '/competitionInfo',
+                query:{"contestId":e}
             })
         },
         onClickRight() {
