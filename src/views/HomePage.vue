@@ -222,7 +222,8 @@ export default {
            if(type == 1) {
                 localStorage.setItem("contestId", id);
                 this.$router.push({
-                    path: '/competitionInfo'
+                    path: '/competitionInfo',
+                    query:{"contestId":id}
                 })
            }
             else {
