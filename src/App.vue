@@ -12,7 +12,7 @@
 
 <script>
 import PwaButton from "@/components/common/pwaButton.vue";
-import { mapActions } from "vuex";
+import { mapActions,  mapState } from "vuex";
 export default {
     components: {
         PwaButton,
@@ -22,7 +22,11 @@ export default {
             pwaButtonVisible: false,
             pwaEvent: null,
             messageEvents: null,
+            wss:null
         };
+    },
+    computed:{
+        ...mapState(["userinfo"])
     },
     mounted() {
         // setTimeout(()=>{
@@ -53,6 +57,8 @@ export default {
                 false
             );
         };
+        // 尝试注册长连接
+        this.registerWSS();
         // 提示安装pwa 应用
         window.addEventListener("beforeinstallprompt", (evt) => {
             if (localStorage.getItem("pwaButton")=="false"){
@@ -86,7 +92,7 @@ export default {
                 this.pwaEvent = null;
             });
         },
-        ...mapActions(["UpdateMessageList"]),
+        ...mapActions(["UpdateMessageList", "registerWSS"]),
     },
 };
 </script>

@@ -47,7 +47,7 @@
                     <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />     
                 </div>
                 <div style="margin-right: 10px;">
-                    <van-button round type="info" style="height: 35px; margin-right: 10px;" v-show="!isLeader">私聊队长</van-button>
+                    <van-button round type="info" style="height: 35px; margin-right: 10px;" v-show="!isLeader" @click="GoChat(leader)">私聊队长</van-button>
                     <van-button round type="info" style="height: 35px;" v-show="!isJoined" @click="joinTeam">立即加入</van-button>
                 </div>
             </van-goods-action>
@@ -83,7 +83,10 @@ export default {
             if (!this.teaminfo.teamPartners) return false     
             let index = this.teaminfo.teamPartners.findIndex(e=>e.uid==this.userinfo.id && e.position==1);
             return index!=-1
-        }
+        },
+        leader(){
+            return this.teaminfo.teamPartners.find(e=>e.position==1)
+        }    
     },
     created() {
         
@@ -119,9 +122,13 @@ export default {
                     query:{teamid:this.teamid}
                 })
             }
+        },
+        GoChat(leader){
+            this.$router.push({
+                name:"PrivateChat",
+                params:{user:leader,teaminfo:this.teaminfo}
+            })
         }
-
-        
     }
 }
 </script>

@@ -68,7 +68,7 @@ export default {
     mounted() {},
     methods: {
         ...mapMutations(["setUserInfo"]),
-        ...mapActions(["updateUser"]),
+        ...mapActions(["updateUser","registerWSS"]),
         loginEvent(event) {
             if (event.key == "Enter") {
                 this.login();
@@ -79,6 +79,7 @@ export default {
                 .then((data) => {
                     this.setUserInfo(data.data);
                     this.updateUser();
+                    this.registerWSS();
                     if (
                         this.$route.query.redirect &&
                         this.$route.query.redirect.indexOf("/") == -1

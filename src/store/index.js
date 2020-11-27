@@ -1,3 +1,4 @@
+import { Toast } from 'vant'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { api } from '../api'
@@ -10,13 +11,14 @@ export default new Vuex.Store({
         certificateData: null,
         userinfo: JSON.parse(localStorage.getItem("userData") ? localStorage.getItem("userData") : "{}"),
         messageList: [],
-        showAlert:true,
+        showAlert: true,
         flag: true,
-        user:{},
+        user: {},
+        wss: null
     },
     mutations: {
-        toggleAlert(state){
-            state.showAlert^=true;
+        toggleAlert(state) {
+            state.showAlert ^= true;
         },
         setUserInfo(state, userinfo) {
             localStorage.setItem(
@@ -24,12 +26,12 @@ export default new Vuex.Store({
                 JSON.stringify(userinfo)
             );
             state.userinfo = userinfo
-            state.messageList=[]
+            state.messageList = []
         },
         Logout(state) {
             localStorage.removeItem("userData");
             state.userinfo = {}
-            state.messageList=[]
+            state.messageList = []
         },
         MergeMessageList(state, messageList) {
             let oldMessageList = state.messageList;
@@ -76,11 +78,39 @@ export default new Vuex.Store({
                 })
             }
         },
-        updateUser({state}){
-            api.User.GetUserInfoById(state.userinfo.id).then(data=>{
-                state.user= data.data;
+        updateUser({ state }) {
+            api.User.GetUserInfoById(state.userinfo.id).then(data => {
+                state.user = data.data;
             })
-        }
+        },
+        registerWSS({state,dispatch}) {
+            if (!state.userinfo.id) {
+                return
+            }
+            if (state.wss!=null){
+                state.wss.close();
+            }
+            let ws = new WebSocket(`wss://soft.leavessoft.cn/chat/single/${state.userinfo.id}`);
+            // 初始化ws
+            ws.onmessage = message => {
+                console.log(message)
+                // message 处理方法
+            }
+            ws.onopen = () => {
+                Toast.success("用户当前登陆成功")
+            }
+            ws.onclose = () => {
+                state.wss = null;
+            }
+            ws.onerror = () => {
+                Toast.success("用户当前登陆失败")
+                // 如果发生错误，则延迟3s后重新注册
+                setTimeout(() => {
+                    dispatch("registerWSS")
+                }, 3000);
+            }
+            state.wss = ws;
+        },
     },
     modules: {
 
