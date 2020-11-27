@@ -124,6 +124,7 @@
 <script>
 import { Dialog } from 'vant';
 import navBottom from '../components/common/navBottom.vue';
+import { mapMutations, mapState } from 'vuex';
 export default {
     components: { navBottom },
     data() {
@@ -137,15 +138,23 @@ export default {
             noData: true
         };
     },
+    computed:{
+        ...mapState(["showAlert"])
+    },
     created() {
         this.initRecentEventList();
         this.initRoute();
         this.alertRouteMessage();
     },
     methods: {
+        ...mapMutations(
+            ["toggleAlert"]
+        ),
         alertRouteMessage() {
+            if (!this.showAlert) return;
             this.$api.Route.AlertRouteMessage().then(data=>{
                 if(data.data.length != 0) {
+                    this.toggleAlert();
                     let mes = data.data[0];
                     Dialog.confirm({
                         title: '提示',

@@ -34,6 +34,7 @@
                     border-bottom: 1px solid rgb(204, 204, 204);
                     width: 284px;
                 "
+                @keydown.native="loginEvent"
             >
                 <template #left-icon>
                     <van-icon class-prefix="iconfont icon" name="password" />
@@ -41,6 +42,7 @@
             </van-field>
             <div class="forgetPassword" @click="forgetPassword">忘记密码</div>
             <van-button
+                @keydown.native="loginEvent"
                 type="info"
                 @click="login"
                 round
@@ -66,6 +68,11 @@ export default {
     mounted() {},
     methods: {
         ...mapMutations(["setUserInfo"]),
+        loginEvent(event) {
+            if (event.key == "Enter") {
+                this.login();
+            }
+        },
         login() {
             this.$api.User.Login(this.phone, this.password)
                 .then((data) => {

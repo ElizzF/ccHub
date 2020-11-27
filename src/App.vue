@@ -5,7 +5,7 @@
             ref="button"
             v-show="pwaButtonVisible"
             @click="showPwaApplicationAddWindow"
-            @hide="pwaButtonVisible = false"
+            @hide="hideApplication"
         />
     </div>
 </template>
@@ -54,11 +54,14 @@ export default {
             );
         };
         // 提示安装pwa 应用
-        // window.addEventListener("beforeinstallprompt", (evt) => {
-        //     evt.preventDefault();
-        //     this.pwaButtonVisible = true;
-        //     this.pwaEvent = evt;
-        // });
+        window.addEventListener("beforeinstallprompt", (evt) => {
+            if (localStorage.getItem("pwaButton")=="false"){
+                return;
+            }
+            evt.preventDefault();
+            this.pwaButtonVisible = true;
+            this.pwaEvent = evt;
+        });
     },
     beforeDestroy(){
         if (this.messageEvents){
@@ -66,6 +69,10 @@ export default {
         }
     },
     methods: {
+        hideApplication(){
+            this.pwaButtonVisible=false;
+            localStorage.setItem("pwaButton",false);
+        },
         showPwaApplicationAddWindow() {
             this.pwaButtonVisible = false;
             this.pwaEvent.prompt();
@@ -73,7 +80,8 @@ export default {
                 if (choiceResult.outcome === "accepted") {
                     // console.log("User accepted the A2HS prompt");
                 } else {
-                    // console.log("User dismissed the A2HS prompt");
+                    // 如果用户拒绝了，则加入缓存，下次不再提示
+                    localStorage.setItem("pwaButton","false");
                 }
                 this.pwaEvent = null;
             });
@@ -88,7 +96,7 @@ body,
 html {
     margin: 0 !important;
     padding: 0 !important;
-    height: calc(100% - 25px) !important;
+    /* height: calc(100% - 25px) !important; */
 }
 ul,
 li {
