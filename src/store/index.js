@@ -8,9 +8,13 @@ export default new Vuex.Store({
     state: {
         comtestData: null,
         userinfo: JSON.parse(localStorage.getItem("userData") ? localStorage.getItem("userData") : "{}"),
-        messageList: []
+        messageList: [],
+        showAlert:true
     },
     mutations: {
+        toggleAlert(state){
+            state.showAlert^=true;
+        },
         setUserInfo(state, userinfo) {
             localStorage.setItem(
                 "userData",
