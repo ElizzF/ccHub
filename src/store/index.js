@@ -78,7 +78,6 @@ export default new Vuex.Store({
         },
         updateUser({state}){
             api.User.GetUserInfoById(state.userinfo.id).then(data=>{
-                console.log(data)
                 state.user= data.data;
             })
         }

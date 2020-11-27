@@ -129,7 +129,6 @@ export default {
                         let me = data.teamPartners.find(
                             (e) => e.uid == this.userinfo.id && e.position==0
                         );
-                        console.log(data.teamPartners,this.userinfo.id)
                         this.$set(teaminfo, "detail", data);
                         await this.$api.Contest.GetContestById(
                             teaminfo.contestid
@@ -145,7 +144,6 @@ export default {
                     }));
                 });
                 await Promise.all(tasks)
-                console.log(joined,created)
                 this.joined=joined
                 this.created=created
             });

@@ -27,7 +27,7 @@
                     :offset="130"
                 >
                     <div v-for="item in certificateList" :key="item.id" class='comListItem' @click="lookMoreInfo(item.id)">
-                        <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl" />
+                        <van-image class='comImgs' width="100%" height="140" :src="item.imageUrl.replace('http:','')" />
                         <div class='itemTop'>
                             <div class='itemState' :style="{ color: item.stateColor }">{{ item.state }}</div>
                             <div class='itemDistance'>{{ item.distance }}</div>

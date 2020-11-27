@@ -255,7 +255,6 @@ export default {
             // }
         },
         selectMajor(e) {
-            //console.log(e.currentTarget.id);
             let target = e.currentTarget.id;
             this.majorItems[target - 1].plain = !this.majorItems[target - 1].plain;
             this.majorItems.forEach((item) => {
@@ -272,7 +271,6 @@ export default {
         },
 
         selectGrade(e) {
-            //console.log(e.currentTarget.id);
             let target = e.currentTarget.id;
             this.gradeItems[target - 1].plain = !this.gradeItems[target - 1].plain;
             this.gradeItems.forEach((item) => {

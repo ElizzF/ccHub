@@ -12,53 +12,58 @@
             <div class="form">
                 <van-field type="text" label="竞赛/证书名称" v-model="name" />
                 <van-field type="text" label="相关网址" v-model="url" />
-                <van-field type="textarea" label="备注" v-model="mark" /> 
+                <van-field type="textarea" label="备注" v-model="mark" />
             </div>
             <div class="submit-bottom-button">
-                <van-button type="info" size="small" class="button" @click="submit">提交</van-button>
+                <van-button
+                    type="info"
+                    size="small"
+                    class="button"
+                    @click="submit"
+                    >提交</van-button
+                >
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Dialog } from "vant";
 export default {
-    data(){
+    data() {
         return {
-            form:{
-                name:"",
-                url:"",
-                mark:""
-            }
-        }
+            form: {
+                name: "",
+                url: "",
+                mark: "",
+            },
+        };
     },
-    methods:{
-        back(){
+    methods: {
+        back() {
             this.$router.back();
         },
-        submit(){
-            let url = ""
-            this.axios.post(url,{
-                data:this.form
-            }).then(res=>{
-                console.log(res)               
-            }).catch(err=>{
-                console.log(err)
-            })
-        }
-    }
+        submit() {
+            Dialog.alert({
+                title: "警告",
+                theme: "round-button",
+                message: "当前还没正式上线",
+                confirmButtonColor: "#1989FA",
+            });
+        },
+    },
 };
 </script>
 
 <style scoped>
 .navbar {
-    background: #0079FE;
+    background: #0079fe;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
 }
-.cc-contest-feedback__container{
+.cc-contest-feedback__container {
     margin: 5px;
     margin-top: 45px;
     /* border-radius: 15px; */
@@ -66,24 +71,24 @@ export default {
     height: calc(70vh - 45px);
     position: relative;
 }
-.cc-contest-feedback__container > .form{
+.cc-contest-feedback__container > .form {
     overflow: hidden;
     margin: 60px 5px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.cc-contest-feedback__container > .submit-bottom-button{
+.cc-contest-feedback__container > .submit-bottom-button {
     display: flex;
     align-items: center;
     justify-content: center;
     /* position: absolute; */
     margin-top: 50px;
     bottom: 20px;
-    width:100%;
+    width: 100%;
 }
-.cc-contest-feedback__container > .submit-bottom-button > .button{
+.cc-contest-feedback__container > .submit-bottom-button > .button {
     width: 160px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 25px;
 }
 </style>
@@ -91,11 +96,11 @@ export default {
 
 <style>
 .navbar .van-nav-bar__title {
-    color: #FFF;
+    color: #fff;
 }
 .van-nav-bar .van-icon,
 .van-nav-bar__text {
-    color: #FFF;
+    color: #fff;
 }
 .toSearch .van-cell__value {
     margin-left: 20px !important;
