@@ -36,9 +36,8 @@
            
            
         </div>
-        <div class='button-box' style="position: relative">
-            <van-button @click="addCertificateImg" class="add_button" icon="plus" type="info" round />
-        </div>
+        <van-button @click="addCertificateImg" class="add_button" icon="plus" type="info" round />
+        
         <!-- <div class='cellList' style="margin-top: 10px;">
             <div class='introduceTxt'>个人简介</div>
             <van-field  v-model="description" clearable type="textarea" autosize />
@@ -127,12 +126,12 @@ export default {
 .add_button {
     width: 45px;
     height: 45px;
-    position: absolute;
+    position: fixed;
     right: 15px;
+    bottom: 15px;
+    z-index: 999;
 }
-.button-box {
-    margin-top: 10px;
-}
+
 
 </style>
 

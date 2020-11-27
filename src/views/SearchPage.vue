@@ -242,7 +242,8 @@ export default {
             if(flag == true) {
                 localStorage.setItem("contestId", e);
                 this.$router.push({
-                    path: '/competitionInfo'
+                    path: '/competitionInfo',
+                    query:{"contestId":e}
                 })
             } else {
                 localStorage.setItem("certificateId", e);
