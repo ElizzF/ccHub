@@ -387,7 +387,29 @@ export class Chat{
                 else
                     reject(err)
             })
-        })
+        })        
+    }
+
+    static async GetChatHistory(uid){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/chat/singleHistoryMessage/${uid}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })        
     }
 }
 

@@ -43,7 +43,7 @@ if (workbox) {
 
     workbox.routing.registerRoute(
         ({ request }) => request.destination === 'image',
-        new workbox.strategies.StaleWhileRevalidate({
+        new workbox.strategies.CatchFirst({
             cacheName: `${CACHE_NAME}-avatar`,
             plugins: [
                 new workbox.cacheableResponse.CacheableResponsePlugin({

@@ -46,8 +46,11 @@ export default new Vuex.Store({
          * @param {*} state 
          * @param {*} chatMessage 
          */
-        MergeChatList(state, chatMessage) {
+        MergeChatList(state, payload) {
+            let chatMessage = payload.chatMessage;
+            let isPush = payload.isPush;
             let chatList = state.chatList;
+            let isHistory = payload.isHistory;
             // 统一化聊天记录
             if (!chatMessage.lasttime) {
                 chatMessage.lasttime = chatMessage.last_time ? new Date(chatMessage.last_time) : new Date();
@@ -57,6 +60,9 @@ export default new Vuex.Store({
             }
             if (!chatMessage.uid) {
                 chatMessage.uid = chatMessage.send_id
+            }
+            if (chatMessage.recvice_id){
+                chatMessage.owner = chatMessage.recvice_id
             }
             if ((chatMessage.type && chatMessage.type == 2) || chatMessage.recvice_id) {
                 // 群聊
@@ -68,20 +74,54 @@ export default new Vuex.Store({
                     }
                     chatList.unshift(teamChat);
                 }
-                teamChat.box.push(chatMessage);
+                if (isHistory){
+                    if (teamChat.isHistory){
+                        return;
+                    }else{
+                        teamChat.isHistory=true;
+                    }
+                }             
+                teamChat.preview = chatMessage.content;
+                teamChat.user = chatMessage.user;
+                teamChat.lasttime = chatMessage.lasttime;
+                if (isPush){
+                    if (isHistory){
+                        teamChat.isHistory=true;
+                        teamChat.box.unshift(chatMessage);
+                    }else{
+                        teamChat.box.push(chatMessage);
+                    }
+                }
             } else {
                 // 私聊
                 let userChat = chatList.find(e => e.uid == chatMessage.uid);
                 if (!userChat) {
                     userChat = {
                         uid: chatMessage.uid,
+                        tid: chatMessage.tid,
                         box: []
                     }
                     chatList.unshift(userChat)
                 }
-                userChat.box.push(chatMessage)
+                userChat.preview = chatMessage.content;
+                userChat.user = chatMessage.user;
+                userChat.lasttime = chatMessage.lasttime;
+                if (isPush){
+                    if (isHistory){
+                        if (userChat.isHistory && userChat.isHistory==isHistory){
+                            return;
+                        }
+                        if (userChat.isHistory==undefined){
+                            userChat.isHistory=0;
+                        }
+                        userChat.isHistory++;
+                        userChat.box.unshift(chatMessage);
+                    }else{
+                        userChat.box.push(chatMessage)
+                    }
+                }
+               
             }
-            console.log(chatList)
         },
         MergeMessageList(state, messageList) {
             let oldMessageList = state.messageList;
@@ -134,12 +174,32 @@ export default new Vuex.Store({
                 
             })
         },
+        getHistoryDetail({commit,state},uid){
+            api.Chat.GetChatHistory(uid).then(async data=>{
+
+                for (let index = data.data.length;index>0;--index){
+                    
+                    let message = data.data[index-1];
+                    
+                    if (message.send_id == state.userinfo.id){
+                        message.uid = message.receive_id;
+                        message.owner = message.send_id;
+                    }else{
+                        message.uid = message.send_id
+                    }
+                    await api.User.GetUserInfoById(message.uid).then(res=>{
+                        message.user = res.data;
+                        commit("MergeChatList",{chatMessage:message,isPush:true,isHistory:data.data.length});
+                    })
+                }
+            })
+        },
         getChatHistory({commit}){
             api.Chat.GetChatList().then(data=>{
                 data.data.forEach(async element => {
                     await api.User.GetUserInfoById(element.uid).then(res=>{
                         element.user = res.data
-                        commit("MergeChatList", element)
+                        commit("MergeChatList", {chatMessage:element,isPush:false})
                     })
                 });
             })
@@ -159,7 +219,7 @@ export default new Vuex.Store({
                 let data = JSON.parse(message.data)?.chat;
                 api.User.GetUserInfoById(data.send_id).then(res=>{
                     data.user = res.data
-                    commit("MergeChatList", data)
+                    commit("MergeChatList", {chatMessage:data,isPush:true})
                 })
             }
             ws.onopen = () => {

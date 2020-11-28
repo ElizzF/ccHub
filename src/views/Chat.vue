@@ -143,7 +143,7 @@
                 >
                     <van-cell
                         :title="item.user.username"
-                        :label="`${item.content}`"
+                        :label="`${item.preview}`"
                         :value="item.lasttime | timeFormat"
                         style="align-items: center"
                         @click="goChat(item)"
@@ -193,9 +193,7 @@ export default {
         chatPreviewBox(){
             let box = []
             for (let item of this.chatList){
-                if (item.box.length>0){
-                    box.push(item.box[item.box.length-1])
-                }
+                box.push(item)
             }
             return box
         }
@@ -228,6 +226,7 @@ export default {
             return false;
         },
         goChat(item){
+            console.log(item)
             this.$router.push({
                 name:"PrivateChat",
                 params:{user:{uid:item.uid},teaminfo:{tid:item.tid}}

@@ -36,7 +36,10 @@
                 <div
                     style="display: flex; margin-bottom: 10px"
                     :style="{
-                        flexDirection: item.owner ? 'row-reverse' : 'row',
+                        flexDirection:
+                            item.owner && item.owner == userinfo.id
+                                ? 'row-reverse'
+                                : 'row',
                     }"
                 >
                     <van-image
@@ -138,10 +141,11 @@ export default {
                 this.$set(this.chatUser, "info", data.data);
             });
         }
+        this.getHistoryDetail(this.chatUser.uid);
     },
     methods: {
         ...mapMutations(["MergeChatList"]),
-        ...mapActions(["registerWSS"]),
+        ...mapActions(["registerWSS", "getHistoryDetail"]),
         box() {
             if (this.$refs.chatBox)
                 this.$refs.chatBox.scrollTo(
@@ -183,14 +187,17 @@ export default {
                 messagePackage.owner = this.userinfo.id;
                 this.$api.User.GetUserInfoById(this.chatUser.uid).then(
                     (data) => {
-                        messagePackage.user = data.data;
+                        this.$set(messagePackage, "user", data.data);
+                        this.MergeChatList({
+                            chatMessage: messagePackage,
+                            isPush: true,
+                        });
+                        this.$refs[`chatBox`].scrollTo(
+                            0,
+                            this.$refs.chatBox.scrollHeight -
+                                this.$refs.chatBox.clientHeight
+                        );
                     }
-                );
-                this.MergeChatList(messagePackage);
-                this.$refs[`chatBox`].scrollTo(
-                    0,
-                    this.$refs.chatBox.scrollHeight -
-                        this.$refs.chatBox.clientHeight
                 );
             } else {
                 Dialog.alert({
