@@ -414,6 +414,50 @@ export class Chat{
 }
 
 export class Certificate{
+    static async GetCertificateStatusById(certificateId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/collect/certificate/collectStatus/${certificateId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
+    static async AddOrDeleteCollectCertificateById(certificateId){
+        return await new Promise((resolve,reject)=>{
+            let options = {
+                method: 'get',
+                url:`/collect/certificate/${certificateId}`,
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                data:{}
+            }
+            axios(options).then(res=>{
+                resolve(res.data)
+                return res.data
+            }).catch(err =>{
+                if (err.response && err.response.data)
+                    reject(err.response.data)
+                else
+                    reject(err)
+            })
+        })
+    }
+
     static async GetCertificate(pageNum, orderBy, pageSize){
         return await new Promise((resolve,reject)=>{
             let options = {

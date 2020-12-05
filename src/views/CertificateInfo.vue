@@ -46,7 +46,11 @@
     <van-goods-action class='bottomBar'>
       <div class='barIcon'>
         <van-goods-action-icon icon="chat-o" text="分享" @click="showShare = true" />
-        <van-goods-action-icon icon="star-o" text="收藏"  />
+        <van-goods-action-icon
+          :icon="isCollection"
+          text="收藏"
+          @click="goCollection"
+        />
       </div>
       <van-button round type="info" style="height: 35px;" @click="addRoute">加入我的路线</van-button>
     </van-goods-action>
@@ -56,7 +60,6 @@
       v-model="showShare"
       title="立即分享给好友"
       :options="options"
-      @select="onSelect"
     />
   </div>
 </template>
@@ -84,11 +87,13 @@ export default {
       activeNames1: ['1'],
       activeNames2: [],
 
-      certificateId: null
+      certificateId: null,
+      isCollection: "star-o",
     }
   },
   created() {
     this.initContestInfo();
+    this.getContestStatus();
   },
   methods: {
     initContestInfo() {
@@ -112,6 +117,22 @@ export default {
       this.$router.push({
         path: '/certificate'
       })
+    },
+    getContestStatus() {
+      this.$api.Certificate.GetCertificateStatusById(this.certificateId).then(
+          (data) => {
+              if (data.data == 1) this.isCollection = "star";
+              else this.isCollection = "star-o";
+          }
+      );
+    },
+    goCollection() {
+      this.$api.Certificate.AddOrDeleteCollectCertificateById(
+          this.certificateId
+      ).then((data) => {
+          if (data.status == 0)
+            this.isCollection = this.isCollection == "star" ? "star-o" : "star";
+      });
     },
     addRoute() {
       // this.$api.Route.AddRouteByContestId(this.certificateId).then(data=>{
