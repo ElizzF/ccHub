@@ -239,7 +239,7 @@ export default {
                     this.finished = true;
                 }
             }).catch(() => {
-                this.noData = true;
+                // this.noData = true;
             });
         },
 

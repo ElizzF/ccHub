@@ -67,8 +67,10 @@ export default {
             }
         },
         onClickLeft() {
+            let e = localStorage.getItem("contestId");
             this.$router.push({
-                path: '/competitionInfo'
+                path: '/competitionInfo',
+                query:{"contestId":e}
             })
         },
         createTeam(){
