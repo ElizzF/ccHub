@@ -51,43 +51,35 @@
         </div>
 
         <div class="itemList" v-if="isDisplayZ">
-            <!-- <div class="item">
+            <div
+                class="item"
+                v-for="certificate in certificateList"
+                :key="certificate.id"
+                @click="lookMoreInfoC(certificate.id)"
+            >
                 <van-image
                     class="comImg"
                     width="95%"
                     height="140"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
+                    :src="certificate.imgUrl"
                 />
                 <div class="itemTxtList">
                     <div class="itemTop">
-                        <div class="itemState">正在报名</div>
-                        <div class="itemDistance">离报名截止还有45天</div>
+                        <div
+                            class="itemState"
+                            :style="{ color: certificate.stateColor }"
+                        >
+                            {{ certificate.state }}
+                        </div>
+                        <div class="itemDistance">{{ certificate.distance }}</div>
                     </div>
-                    <div class="itemTitle">2020年工业大数据创新竞赛</div>
+                    <div class="itemTitle">{{ certificate.title }}</div>
                     <div class="itemInfo">
-                        8888 浏览 | 624 关注 | 国家级比赛
+                        {{ certificate.watched }} 浏览 |
+                        {{ certificate.collected }} 关注
                     </div>
                 </div>
             </div>
-
-            <div class="item">
-                <van-image
-                    class="comImg"
-                    width="95%"
-                    height="140"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
-                />
-                <div class="itemTxtList">
-                    <div class="itemTop">
-                        <div class="itemState">正在报名</div>
-                        <div class="itemDistance">离报名截止还有45天</div>
-                    </div>
-                    <div class="itemTitle">2020年工业大数据创新竞赛</div>
-                    <div class="itemInfo">
-                        8888 浏览 | 624 关注 | 国家级比赛
-                    </div>
-                </div> 
-            </div> -->
         </div>
     </div>
 </template>
@@ -100,12 +92,45 @@ export default {
             isDisplayZ: false,
 
             contestList: [],
+
+            certificateList: []
         };
     },
     created() {
         this.getContestCollections();
+        this.getCertificateCollections();
     },
     methods: {
+        getCertificateCollections() {
+            this.$api.Collect.GetCertificateCollect().then((data) => {
+                let list = data.data;
+                list.forEach((index) => {
+                    let listItem = {};
+                    listItem.title = index.certificateName;
+                    listItem.imgUrl = index.pic_url;
+                    listItem.level = index.level;
+                    listItem.id = index.certificateId;
+                    listItem.watched = index.views;
+                    listItem.collected = index.collections;
+
+                    let fireNum = parseInt(index.views / 9);
+                    listItem.fireNum = fireNum;
+
+                    if (index.status == 2) {
+                        listItem.distance = index.restTime;
+                        listItem.state = "正在报名";
+                        listItem.stateColor = "#22BFA7";
+                    } else if (index.status == 1) {
+                        listItem.state = "即将报名";
+                        listItem.stateColor = "#05C0FF";
+                    } else {
+                        listItem.state = "报名已截止";
+                        listItem.stateColor = "#AAAAAA";
+                    }
+                    this.certificateList.push(listItem);
+                });
+            });
+        },
         getContestCollections() {
             this.$api.Collect.GetContestCollect().then((data) => {
                 let list = data.data;
@@ -113,7 +138,7 @@ export default {
                     let listItem = {};
                     listItem.title = index.contestName;
                     listItem.imgUrl = index.pic_url;
-                    listItem.level = index.level;
+  
                     listItem.id = index.contestId;
                     listItem.watched = index.views;
                     listItem.collected = index.collections;
@@ -140,6 +165,12 @@ export default {
             this.$router.push({
                 path: "/competitionInfo",
                 query: { contestId: e },
+            });
+        },
+        lookMoreInfoC(e) {
+            localStorage.setItem("certificateId", e);
+            this.$router.push({
+                path: "/certificateInfo"
             });
         },
         onClickLeft() {
