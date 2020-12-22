@@ -62,7 +62,7 @@ export default new Vuex.Store({
                     state.previewChatList.push(payload);
                 }
             }
-            state.previewChatList = state.previewChatList.sort((a, b) => new Date(a.last_time) < new Date(b.last_time))
+            Vue.set(state,"previewChatList",state.previewChatList.sort((a, b) => new Date(b.last_time) - new Date(a.last_time)))
         },
         /**
          * 合并聊天记录
