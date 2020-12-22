@@ -4,7 +4,7 @@ module.exports = {
         requireModuleExtension: true,// 去掉文件名中的 .module
 
     },
-    
+
     devServer: {
 
         port: 8080, // 设置端口号
@@ -27,8 +27,8 @@ module.exports = {
             background_color: "#ffffff"
         },
         workboxPluginMode: 'InjectManifest',
-        appleMobileWebAppCapable:"yes",
-        appleMobileWebAppStatusBarStyle:"#0079fe",
+        appleMobileWebAppCapable: "yes",
+        appleMobileWebAppStatusBarStyle: "#0079fe",
         workboxOptions: {
             // swSrc is required in InjectManifest mode.
             swSrc: './public/sw.js',

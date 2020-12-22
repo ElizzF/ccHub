@@ -11,7 +11,6 @@
             left-text="返回"
             left-arrow
             @click-left="onClickLeft"
-            @click-right="onClickRight"
         >
             <template #right>
                 <van-icon
@@ -31,13 +30,13 @@
             <div
                 class=""
                 v-for="(item, index) in box()"
-                :key="`${item.uid}-${index}`"
+                :key="`${item.time}-${index}`"
             >
                 <div
                     style="display: flex; margin-bottom: 10px"
                     :style="{
                         flexDirection:
-                            item.owner && item.owner == userinfo.id
+                            item.send_id && item.send_id == userinfo.id
                                 ? 'row-reverse'
                                 : 'row',
                     }"
@@ -46,16 +45,7 @@
                         round
                         width="3rem"
                         height="3rem"
-                        v-if="chatUser && chatUser.info"
-                        :src="
-                            item.owner
-                                ? user.avatar_url
-                                    ? user.avatar_url
-                                    : 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3994862347,1268351928&fm=26&gp=0.jpg'
-                                : chatUser.info.avatar_url
-                                ? chatUser.info.avatar_url
-                                : 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3994862347,1268351928&fm=26&gp=0.jpg'
-                        "
+                        :src="item.send_id && item.send_id == userinfo.id?user.avatar_url:chatUser.info.avatar_url"
                         style="margin: 0 10px"
                     />
                     <div
@@ -144,7 +134,7 @@ export default {
         this.getHistoryDetail(this.chatUser.uid);
     },
     methods: {
-        ...mapMutations(["MergeChatList"]),
+        ...mapMutations(["MergeChatList","updatePreviewChatList"]),
         ...mapActions(["registerWSS", "getHistoryDetail"]),
         box() {
             if (this.$refs.chatBox)
@@ -153,9 +143,9 @@ export default {
                     this.$refs.chatBox.scrollHeight -
                         this.$refs.chatBox.clientHeight
                 );
-            let box = this.chatList.find((e) => e.uid == this.chatUser.uid);
-            if (!box) return [];
-            return box.box;
+            if (!this.chatUser.uid) return []
+            if (!this.chatList[this.chatUser.uid]) return [];
+            return this.chatList[this.chatUser.uid];
         },
         onClickLeft() {
             this.$router.push({
@@ -184,21 +174,21 @@ export default {
             };
             if (this.wss) {
                 this.wss.send(JSON.stringify(messagePackage));
-                messagePackage.owner = this.userinfo.id;
-                this.$api.User.GetUserInfoById(this.chatUser.uid).then(
-                    (data) => {
-                        this.$set(messagePackage, "user", data.data);
-                        this.MergeChatList({
-                            chatMessage: messagePackage,
-                            isPush: true,
-                        });
-                        this.$refs[`chatBox`].scrollTo(
-                            0,
-                            this.$refs.chatBox.scrollHeight -
-                                this.$refs.chatBox.clientHeight
-                        );
-                    }
+                this.MergeChatList({
+                    content: message,
+                    send_id: this.userinfo.id,
+                    receive_id: this.chatUser.uid,
+                    time: new Date(),
+                });
+                this.$refs[`chatBox`].scrollTo(
+                    0,
+                    this.$refs.chatBox.scrollHeight -
+                        this.$refs.chatBox.clientHeight
                 );
+                // 更新预览
+                this.updatePreviewChatList({
+                    uid:this.chatUser.uid,content:message,last_time:new Date()
+                })
             } else {
                 Dialog.alert({
                     message: "当前已离线",

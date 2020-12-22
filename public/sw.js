@@ -42,8 +42,27 @@ if (workbox) {
     );
 
     workbox.routing.registerRoute(
+        ({request})=>{
+            if (request.url.startsWith("https://soft.leavessoft.cn/user/getInfo")){
+                return true
+            }
+            return false
+        },
+        new workbox.strategies.StaleWhileRevalidate({
+            cacheName: `${CACHE_NAME}-userinfo`,
+            statuses: [0, 200],
+            plugins: [
+                new workbox.expiration.ExpirationPlugin({
+                    maxEntries: 60,
+                    maxAgeSeconds: 30 * 24 * 60 * 60 // 设置缓存有效期为30天
+                })
+            ]
+        })
+    )
+
+    workbox.routing.registerRoute(
         ({ request }) => request.destination === 'image',
-        new workbox.strategies.CatchFirst({
+        new workbox.strategies.CacheFirst({
             cacheName: `${CACHE_NAME}-avatar`,
             plugins: [
                 new workbox.cacheableResponse.CacheableResponsePlugin({

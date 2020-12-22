@@ -194,7 +194,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!Store.state.userinfo.id) {
             next({
-                path: '/login',
+                path: '/',
                 query: { redirect: to.fullPath }
             })
         }

@@ -12,7 +12,7 @@
             />
         </form>
 
-        <div class="chatList" >
+        <div class="chatList">
             <template v-for="(item, index) in messageList">
                 <van-swipe-cell
                     v-if="item.type == 1 && item.detail"
@@ -47,7 +47,7 @@
                 </van-swipe-cell>
                 <van-swipe-cell
                     :key="`${index}-${item.mid}`"
-                    v-if="item.type == 3  && item.user && item.detail"
+                    v-if="item.type == 3 && item.user && item.detail"
                     style="align-items: center"
                     class="chatListItem"
                 >
@@ -134,17 +134,16 @@
                 </template>
             </van-swipe-cell>
             -->
-            <template  v-for="(item, index) in chatPreviewBox">
+            <template v-for="(item, index) in previewChatList">
                 <van-swipe-cell
-                    :key="`${index}-${item. uid}-chat`"
-                    v-if="item.user"
+                    :key="`${index}-${item.uid}-chat`"
                     style="align-items: center"
                     class="chatListItem"
                 >
                     <van-cell
-                        :title="item.user.username"
-                        :label="`${item.preview}`"
-                        :value="item.lasttime | timeFormat"
+                        :title="item.uname"
+                        :label="`${item.content}`"
+                        :value="item.last_time | timeFormat"
                         style="align-items: center"
                         @click="goChat(item)"
                     >
@@ -153,7 +152,7 @@
                                 round
                                 width="3rem"
                                 height="3rem"
-                                :src="item.user.avatar_url"
+                                :src="item.avatar_url"
                                 style="margin-right: 10px"
                             />
                         </template>
@@ -174,8 +173,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import NavBottom from '@/components/common/navBottom.vue';
+import { mapState } from "vuex";
+import NavBottom from "@/components/common/navBottom.vue";
 export default {
     data() {
         return {
@@ -183,55 +182,49 @@ export default {
             search_value: "",
         };
     },
-    components:{
-        NavBottom
+    components: {
+        NavBottom,
     },
-    computed:{
-        ...mapState([
-            "messageList","chatList"
-        ]),
-        chatPreviewBox(){
-            let box = []
-            for (let item of this.chatList){
-                box.push(item)
-            }
-            return box
-        }
+    computed: {
+        ...mapState(["messageList", "previewChatList"]),
     },
-    mounted() {
-    },
-    filters:{
-        timeFormat:function(date){
-            if (!date) return '很久之前'
-            date = new Date(date)
-            let now = new Date()
-            now.setHours(0)
+    mounted() {},
+    filters: {
+        timeFormat: function (date) {
+            if (!date) return "很久之前";
+            date = new Date(date);
+            let now = new Date();
+            now.setHours(0);
             // 今天
-            if (date>now){
-                return `${date.getHours()}`.padStart(2,'0')+':'+`${date.getMinutes()}`.padStart(2,'0')
-            }   
-            now.setDate(now.getDate()-1)
+            if (date > now) {
+                return (
+                    `${date.getHours()}`.padStart(2, "0") +
+                    ":" +
+                    `${date.getMinutes()}`.padStart(2, "0")
+                );
+            }
+            now.setDate(now.getDate() - 1);
             // 昨天
-            if (date>now){
-                return `昨天`
+            if (date > now) {
+                return `昨天`;
             }
             // 几天前
-            now = new Date()
-            return `${parseInt((now.getTime()-date.getTime())/1000/24/60/60)}天前`
-            
-        }
+            now = new Date();
+            return `${parseInt(
+                (now.getTime() - date.getTime()) / 1000 / 24 / 60 / 60
+            )}天前`;
+        },
     },
     methods: {
         formSubmit() {
             return false;
         },
-        goChat(item){
-            console.log(item)
+        goChat(item) {
             this.$router.push({
                 name:"PrivateChat",
                 params:{user:{uid:item.uid},teaminfo:{tid:item.tid}}
             })
-        }
+        },
     },
 };
 </script>
@@ -245,8 +238,8 @@ export default {
     width: 100%;
     z-index: 1;
 }
-.chatList{
-    max-height:calc(100vh - 151px);
+.chatList {
+    max-height: calc(100vh - 151px);
     overflow: auto;
 }
 .chatListItem {

@@ -53,9 +53,7 @@ export default {
     methods: {
         initUserData() {
             
-        },
-        
-       
+        },    
         onClickLeft() {
             this.$router.push({
                 path: '/privateChat'
